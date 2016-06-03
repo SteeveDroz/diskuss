@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Diskuss API</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>Diskuss API</h1>
+        <p>This page shows the comprehensive list of request that are included in the Diskuss API.</p>
+        
+        <p>Diskuss is a chat server that can host numerous people in any number of channels. It handles group chat along with private chat.</p>
+        
+        <h2>Connection</h2>
+        <p>In order to connect to the server, the client must request a GUID.</p>
+        <h3>Request</h3>
+        <code>POST /users/register/:nick</code>
+        <h3>Response</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>id</td>
+                    <td>The GUID linked to the client. As this is the only way to identify someone, this must never be lost.</td>
+                </tr>
+                <tr>
+                    <td>nick</td>
+                    <td>The nickname linked to the client.</td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
