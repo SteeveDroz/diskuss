@@ -49,6 +49,28 @@ app.post('/users/register/:nick', function(req, res) {
     console.log();
 });
 
+// Whois
+
+app.get('/users/id/:id/whois/:nick', function(req, res) {
+    var user = null;
+    for (var i in users) {
+        var oneUser = users[i];
+        if (oneUser.nick == req.params.nick) {
+            user = oneUser;
+            break;
+        }
+    }
+    if (user == null) {
+        res.send({ 'error': 'Unknown nick.' });
+    }
+    else {
+        if (user.id != req.params.id) {
+            user.id = undefined;
+        }
+        res.send(user);
+    }
+});
+
 // Error handling
 
 app.get('*', function(req, res) {

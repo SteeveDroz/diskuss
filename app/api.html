@@ -14,6 +14,20 @@
         <p>In order to connect to the server, the client must request a GUID.</p>
         <h3>Request</h3>
         <code>POST /users/register/:nick</code>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>nick</td>
+                    <td>The desired nickname</td>
+                </tr>
+            </tbody>
+        </table>
         <h3>Response</h3>
         <table>
             <thead>
@@ -29,7 +43,49 @@
                 </tr>
                 <tr>
                     <td>nick</td>
-                    <td>The nickname linked to the client.</td>
+                    <td>The nickname linked to the client. If the desired nickname was unavailable, "_1" will be append to it. If thi is also unavailable, "_2" will be append and so on.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>Whois</h2>
+        <p>Anyone can ask the server informations about a connected user.</p>
+        <h3>Request</h3>
+        <code>GET /users/id/:id/whois/:nick</code>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>id</td>
+                    <td>The client own GUID</td>
+                </tr>
+                <tr>
+                    <td>nick</td>
+                    <td>The nickname of the user one wants to have informations about</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Response</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>id</td>
+                    <td>If the client asks for its own informations, its GUID is sent.</td>
+                </tr>
+                <tr>
+                    <td>nick</td>
+                    <td>the nickname of the user about which one wants informations.</td>
                 </tr>
             </tbody>
         </table>
