@@ -65,24 +65,27 @@ app.get('/users/id/:id/whois/:nick', function(req, res) {
     }
     else {
         if (user.id != req.params.id) {
+            user = User.create(user);
             user.id = undefined;
         }
         res.send(user);
     }
+    console.log(users);
 });
 
 // Error handling
 
 app.get('*', function(req, res) {
-   res.send({ 'error': 'Unknown route.' }); 
+    res.send({ 'error': 'Unknown route.' });
 });
 
 app.post('*', function(req, res) {
-   res.send({ 'error': 'Unknown route.' }); 
+    res.send({ 'error': 'Unknown route.' }); 
 });
 
 // Server listening
 
 http.listen(port, function() {
-   console.log('Server started on port ' + port); 
+    console.log('Server started on port ' + port); 
 });
+

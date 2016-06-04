@@ -13,4 +13,12 @@ var User = function(nick) {
     }
 }
 
+User.create = function(json){
+    var user = new User();
+    user.nick = json.nick;
+    user.id = json.id;
+    return user;
+}
+
 exports.User = User;
+
