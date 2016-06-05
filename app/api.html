@@ -50,29 +50,19 @@
             </tbody>
         </table>
         <h3>Response</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Key</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>id</td>
-                    <td>The GUID linked to the client. As this is the only way to identify someone, this must never be lost.</td>
-                </tr>
-                <tr>
-                    <td>nick</td>
-                    <td>The nickname linked to the client. If the desired nickname was unavailable, "_1" will be append to it. If thi is also unavailable, "_2" will be append and so on.</td>
-                </tr>
-            </tbody>
-        </table>
+        <p>A user object containing all the informations about the newly created user (including the GUID).</p>
+        
+        <h2>List users</h2>
+        <p>Anyone can ask list of connected users.</p>
+        <h3>Request</h3>
+        <code>GET /users/</code>
+        <h3>Response</h3>
+        <p>An array containing user objects.</p>
         
         <h2>Whois</h2>
         <p>Anyone can ask the server informations about a connected user.</p>
         <h3>Request</h3>
-        <code>GET /id/:id/users/whois/:nick</code>
+        <code>GET /users/whois/:nick</code>
         <table>
             <thead>
                 <tr>
@@ -81,10 +71,6 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>id</td>
-                    <td>The client own GUID. If the GUID is invalid, the request still returns the correct value.</td>
-                </tr>
                 <tr>
                     <td>nick</td>
                     <td>The nickname of the user one wants to have informations about</td>
@@ -92,6 +78,10 @@
             </tbody>
         </table>
         <h3>Response</h3>
+        <p>A user object representing whose nick matches the request.</p>
+        
+        <h2>User object</h2>
+        <p>A user object is composed of:</p>
         <table>
             <thead>
                 <tr>
@@ -102,11 +92,15 @@
             <tbody>
                 <tr>
                     <td>id</td>
-                    <td>If the client asks for its own informations, its GUID is sent.</td>
+                    <td>A GUID (this is never shown, except when a new user registers).</td>
                 </tr>
                 <tr>
                     <td>nick</td>
-                    <td>the nickname of the user about which one wants informations.</td>
+                    <td>The nickname of the user.</td>
+                </tr>
+                <tr>
+                    <td>channels</td>
+                    <td>The list of channels the user is currently in.</td>
                 </tr>
             </tbody>
         </table>

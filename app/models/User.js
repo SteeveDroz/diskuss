@@ -1,6 +1,7 @@
 var User = function(nick) {
     this.nick = nick;
     this.id = guid();
+    this.channels = []
     
     function guid() {
       function s4() {
@@ -17,6 +18,7 @@ User.create = function(json){
     var user = new User();
     user.nick = json.nick;
     user.id = json.id;
+    user.channels = json.channels;
     return user;
 }
 

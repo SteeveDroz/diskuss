@@ -52,18 +52,16 @@ app.post('/users/register/:nick', function(req, res) {
     user = new User(nick);
     users.push(user);
     res.send(user);
-    console.log(users);
-    console.log();
 });
 
 // Whois
 
-app.get('/id/:id/users/whois/:nick', function(req, res) {
+app.get('/users/whois/:nick', function(req, res) {
     var user = null;
     for (var i in users) {
         var oneUser = users[i];
         if (oneUser.nick == req.params.nick) {
-            user = oneUser;
+            user = User.create(oneUser);
             break;
         }
     }
@@ -71,24 +69,18 @@ app.get('/id/:id/users/whois/:nick', function(req, res) {
         res.send({ 'error': 'Unknown nick.' });
     }
     else {
-        if (user.id != req.params.id) {
-            user = User.create(user);
-            user.id = undefined;
-        }
+        user.id = undefined;
         res.send(user);
     }
 });
 
 // List users
 
-app.get('/id/:id/users/', function(req, res) {
-    var userId = req.params.id;
+app.get('/users/', function(req, res) {
     var displayedUsers = [];
     for (var i in users) {
         var user = User.create(users[i]);
-        if (user.id != userId) {
-            user.id = undefined;
-        }
+        user.id = undefined;
         displayedUsers.push(user);
     }
     res.send(displayedUsers);
