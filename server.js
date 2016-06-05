@@ -58,7 +58,7 @@ app.post('/users/register/:nick', function(req, res) {
 
 // Whois
 
-app.get('/users/id/:id/whois/:nick', function(req, res) {
+app.get('/id/:id/users/whois/:nick', function(req, res) {
     var user = null;
     for (var i in users) {
         var oneUser = users[i];
