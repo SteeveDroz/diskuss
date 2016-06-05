@@ -10,6 +10,27 @@
         
         <p>Diskuss is a chat server that can host numerous people in any number of channels. It handles group chat along with private chat.</p>
         
+        <h2>Information</h2>
+        <p>This request returns informations about the server itself to anyone, without authentication.</p>
+        <h3>Request</h3>
+        <code>GET /info</code>
+        <h3>Response</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>version</td>
+                    <td>The version of the server.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        
         <h2>Connection</h2>
         <p>In order to connect to the server, the client must request a GUID.</p>
         <h3>Request</h3>

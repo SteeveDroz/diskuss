@@ -1,3 +1,4 @@
+var version = 'v0.1-alpha';
 var port = 8081;
 
 var app = require('express')();
@@ -10,6 +11,12 @@ var users = [];
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/app/api.html');
+});
+
+// Info
+
+app.get('/info', function(req, res) {
+    res.send({ 'version':version });
 });
 
 // Register
