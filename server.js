@@ -77,7 +77,21 @@ app.get('/id/:id/users/whois/:nick', function(req, res) {
         }
         res.send(user);
     }
-    console.log(users);
+});
+
+// List users
+
+app.get('/id/:id/users/', function(req, res) {
+    var userId = req.params.id;
+    var displayedUsers = [];
+    for (var i in users) {
+        var user = User.create(users[i]);
+        if (user.id != userId) {
+            user.id = undefined;
+        }
+        displayedUsers.push(user);
+    }
+    res.send(displayedUsers);
 });
 
 // Error handling
