@@ -1,3 +1,4 @@
+var version = 'v0.1-alpha';
 var port = 8081;
 
 var app = require('express')();
@@ -10,6 +11,12 @@ var users = [];
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/app/api.html');
+});
+
+// Info
+
+app.get('/info', function(req, res) {
+    res.send({ 'version':version });
 });
 
 // Register
@@ -45,18 +52,16 @@ app.post('/users/register/:nick', function(req, res) {
     user = new User(nick);
     users.push(user);
     res.send(user);
-    console.log(users);
-    console.log();
 });
 
 // Whois
 
-app.get('/users/id/:id/whois/:nick', function(req, res) {
+app.get('/users/whois/:nick', function(req, res) {
     var user = null;
     for (var i in users) {
         var oneUser = users[i];
         if (oneUser.nick == req.params.nick) {
-            user = oneUser;
+            user = User.create(oneUser);
             break;
         }
     }
@@ -64,25 +69,36 @@ app.get('/users/id/:id/whois/:nick', function(req, res) {
         res.send({ 'error': 'Unknown nick.' });
     }
     else {
-        if (user.id != req.params.id) {
-            user.id = undefined;
-        }
+        user.id = undefined;
         res.send(user);
     }
+});
+
+// List users
+
+app.get('/users/', function(req, res) {
+    var displayedUsers = [];
+    for (var i in users) {
+        var user = User.create(users[i]);
+        user.id = undefined;
+        displayedUsers.push(user);
+    }
+    res.send(displayedUsers);
 });
 
 // Error handling
 
 app.get('*', function(req, res) {
-   res.send({ 'error': 'Unknown route.' }); 
+    res.send({ 'error': 'Unknown route.' });
 });
 
 app.post('*', function(req, res) {
-   res.send({ 'error': 'Unknown route.' }); 
+    res.send({ 'error': 'Unknown route.' }); 
 });
 
 // Server listening
 
 http.listen(port, function() {
-   console.log('Server started on port ' + port); 
+    console.log('Server started on port ' + port); 
 });
+
