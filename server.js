@@ -6,6 +6,7 @@ var http = require('http').Server(app);
 var User = require('./app/models/User').User;
 
 var users = [];
+var channels = [];
 
 // API
 
@@ -17,6 +18,18 @@ app.get('/', function(req, res) {
 
 app.get('/info', function(req, res) {
     res.send({ 'version':version });
+});
+
+// List users
+
+app.get('/users/', function(req, res) {
+    var displayedUsers = [];
+    for (var i in users) {
+        var user = User.create(users[i]);
+        user.id = undefined;
+        displayedUsers.push(user);
+    }
+    res.send(displayedUsers);
 });
 
 // Register
@@ -74,16 +87,10 @@ app.get('/users/whois/:nick', function(req, res) {
     }
 });
 
-// List users
+// List channels
 
-app.get('/users/', function(req, res) {
-    var displayedUsers = [];
-    for (var i in users) {
-        var user = User.create(users[i]);
-        user.id = undefined;
-        displayedUsers.push(user);
-    }
-    res.send(displayedUsers);
+app.get('/channels/', function(req, res){
+    res.send(channels);
 });
 
 // Error handling
@@ -101,4 +108,3 @@ app.post('*', function(req, res) {
 http.listen(port, function() {
     console.log('Server started on port ' + port); 
 });
-

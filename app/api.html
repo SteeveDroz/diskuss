@@ -31,6 +31,13 @@
         </table>
         
         
+        <h2>List users</h2>
+        <p>Anyone can ask for the list of connected users.</p>
+        <h3>Request</h3>
+        <code>GET /users/</code>
+        <h3>Response</h3>
+        <p>An array containing user objects.</p>
+        
         <h2>Connection</h2>
         <p>In order to connect to the server, the client must request a GUID.</p>
         <h3>Request</h3>
@@ -51,13 +58,6 @@
         </table>
         <h3>Response</h3>
         <p>A user object containing all the informations about the newly created user (including the GUID).</p>
-        
-        <h2>List users</h2>
-        <p>Anyone can ask list of connected users.</p>
-        <h3>Request</h3>
-        <code>GET /users/</code>
-        <h3>Response</h3>
-        <p>An array containing user objects.</p>
         
         <h2>Whois</h2>
         <p>Anyone can ask the server informations about a connected user.</p>
@@ -80,6 +80,13 @@
         <h3>Response</h3>
         <p>A user object representing whose nick matches the request.</p>
         
+        <h2>List channels</h2>
+        <p>Anyone can ask for the list of existing channels</p>
+        <h3>Request</h3>
+        <code>GET /channels/</code>
+        <h3>Response</h3>
+        <p>A list of channel objects.</p>
+        
         <h2>User object</h2>
         <p>A user object is composed of:</p>
         <table>
@@ -101,6 +108,31 @@
                 <tr>
                     <td>channels</td>
                     <td>The list of channels the user is currently in.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>Channel object</h2>
+        <p>A channel object is composed of:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>name</td>
+                    <td>The name of the channel is also its identifier.</td>
+                </tr>
+                <tr>
+                    <td>description</td>
+                    <td>A description of the channel.</td>
+                </tr>
+                <tr>
+                    <td>keep</td>
+                    <td>If true, the channel will exist even if it contains no user.</td>
                 </tr>
             </tbody>
         </table>
