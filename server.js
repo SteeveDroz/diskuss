@@ -8,6 +8,15 @@ var User = require('./app/models/User').User;
 var users = [];
 var channels = [];
 
+function findUser(id) {
+  for (var i in users) {
+    var user = users[i];
+    if (user.id == id) {
+      return user;
+    }
+  }
+}
+
 // API
 
 app.get('/', function(req, res) {
@@ -91,6 +100,12 @@ app.get('/users/whois/:nick', function(req, res) {
 
 app.get('/channels/', function(req, res){
     res.send(channels);
+});
+
+// Join channel
+
+app.get('/channels/:channel/join/id/:id/', function(req, res) {
+    findUser(req.params.id).channels[req.params.channel.name] = push(req.params.channel);
 });
 
 // Error handling
