@@ -2,9 +2,13 @@ var version = 'v0.1-alpha';
 var port = 8081;
 
 var app = require('express')();
+var bodyParser = require('body-parser');
 var http = require('http').Server(app);
 var User = require('./app/models/User').User;
 var Channel = require('./app/models/Channel').Channel;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var users = [];
 var channels = [];

@@ -1,21 +1,22 @@
 {
-    "name": "diskuss",
-    "version": "0.1.0-alpha",
-    "description": "A chat server that offers an API but no client",
-    "author": "Steeve Droz <steeve.droz@rpn.ch>",
-    "main": "server.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/SteeveDroz/diskuss"
-    },
-    "bugs": "https://github.com/SteeveDroz/diskuss/issues",
-    "keywords": [
-        "server",
-        "chat",
-        "api"
-    ],
-    "dependencies": {
-        "express": "^4.0"
-    },
-    "license": "MIT"
+  "name": "diskuss",
+  "version": "0.1.0-alpha",
+  "description": "A chat server that offers an API but no client",
+  "author": "Steeve Droz <steeve.droz@rpn.ch>",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SteeveDroz/diskuss"
+  },
+  "bugs": "https://github.com/SteeveDroz/diskuss/issues",
+  "keywords": [
+    "server",
+    "chat",
+    "api"
+  ],
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.0"
+  },
+  "license": "MIT"
 }
