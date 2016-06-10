@@ -53,12 +53,14 @@ function findUsersInChannel(name) {
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/app/api.html');
+    console.log('# delivering API');
 });
 
 // Info
 
 app.get('/info', function(req, res) {
     res.send({ 'version':version });
+    console.log('* Info requested');
 });
 
 // List users
@@ -71,6 +73,7 @@ app.get('/users/', function(req, res) {
         displayedUsers.push(user);
     }
     res.send(displayedUsers);
+    console.log('* User list requested');
 });
 
 // Register
@@ -106,6 +109,7 @@ app.post('/users/register/:nick', function(req, res) {
     user = new User(nick);
     users.push(user);
     res.send(user);
+    console.log('* ' + user.nick + ' is connected');
 });
 
 // Whois
@@ -126,12 +130,14 @@ app.get('/users/whois/:nick', function(req, res) {
         user.id = undefined;
         res.send(user);
     }
+    console.log('* Whois on ' + user.nick);
 });
 
 // List channels
 
 app.get('/channels/', function(req, res){
     res.send(channels);
+    console.log('* Channel list requested');
 });
 
 // Join channel
@@ -141,6 +147,7 @@ app.put('/channels/:channel/join/id/:id/', function(req, res) {
     var channel = findChannel(req.params.channel);
     user.channels.push(channel);
     res.send(findUsersInChannel(channel.name));
+    console.log('* ' + user.nick + ' joined ' + channel.name);
 });
 
 // Leave channel
@@ -158,6 +165,7 @@ app.delete('/channels/:channel/leave/id/:id', function(req, res) {
                 channels.splice(index, 1);
             }
         }
+        console.log('* ' + user.nick + ' left ' + channel.name);
     }
     else {
         res.send({ 'error': 'Not in channel, can\'t leave.' });
@@ -182,24 +190,29 @@ app.put('/channels/:channel/id/:id/say/', function(req, res) {
         userInChannel.buffer.push({ 'type': 'message', 'user': user.nick, 'message': message });
     }
     res.send();
+    console.log('<' + user.nick + '> ' + message);
 });
 
 // Error handling
 
 app.get('*', function(req, res) {
     res.send({ 'error': 'Unknown route or method.' });
+    console.log('# Unknown route: GET ' + req.baseUrl);
 });
 
 app.post('*', function(req, res) {
     res.send({ 'error': 'Unknown route or method.' }); 
+    console.log('# Unknown route: POST ' + req.baseUrl);
 });
 
 app.put('*', function(req, res) {
     res.send({ 'error': 'Unknown route or method.' }); 
+    console.log('# Unknown route: PUT ' + req.baseUrl);
 });
 
 app.delete('*', function(req, res) {
     res.send({ 'error': 'Unknown route or method.' }); 
+    console.log('# Unknown route: DELETE ' + req.baseUrl);
 });
 
 // Server listening
