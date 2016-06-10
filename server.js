@@ -148,6 +148,12 @@ app.delete('/channels/:channel/leave/id/:id', function(req, res) {
     if (index > -1)
     {
         user.channels.splice(index, 1);
+        if (!channel.keep && findUsersInChannel(channel).length == 0) {
+            var index = channels.indexOf(channel);
+            if (index > -1) {
+                channels.splice(index, 1);
+            }
+        }
     }
     else {
         res.send({ 'error': 'Not in channel, can\'t leave.' });
