@@ -139,6 +139,20 @@ app.put('/channels/:channel/join/id/:id/', function(req, res) {
     res.send(findUsersInChannel(channel.name));
 });
 
+// Leave channel
+
+app.delete('/channels/:channel/leave/id/:id', function(req, res) {
+    var user = findUser(req.params.id);
+    var channel = findChannel(req.params.channel);
+    var index = user.channels.indexOf(channel);
+    if (index > -1)
+    {
+        user.channels.splice(index, 1);
+    }
+    else {
+        res.send({ 'error': 'Not in channel, can\'t leave.' });
+    }
+    res.send(user);
 });
 
 // Error handling

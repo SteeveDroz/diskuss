@@ -112,6 +112,31 @@
         <h3>Response</h3>
         <p>The list of user objects representing the users that are currently in the channel.</p>
         
+        <h2>Leave channel</h2>
+        <p>A user can leave a channel with that request</p>
+        <h3>Request</h3>
+        <code>DELETE /channels/:channel/leave/id/:id/</code>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>channel</td>
+                    <td>The name of the channel.</td>
+                </tr>
+                <tr>
+                    <td>id</td>
+                    <td>The user GUID.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Response</h3>
+        <p>The user object.</p>
+        
         <h2>User object</h2>
         <p>A user object is composed of:</p>
         <table>
