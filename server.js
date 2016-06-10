@@ -10,10 +10,14 @@ var users = [];
 var channels = [];
 
 function findUser(id) {
-  for (var i in users) {
-    var user = users[i];
-    if (user.id == id) {
-      return user;
+    for (var i in users) {
+        var user = users[i];
+        if (user.id == id) {
+            return user;
+        }
+    }
+}
+
 function findChannel(name) {
     for (var i in channels) {
         var channel = channels[i];
@@ -140,11 +144,19 @@ app.put('/channels/:channel/join/id/:id/', function(req, res) {
 // Error handling
 
 app.get('*', function(req, res) {
-    res.send({ 'error': 'Unknown route.' });
+    res.send({ 'error': 'Unknown route or method.' });
 });
 
 app.post('*', function(req, res) {
-    res.send({ 'error': 'Unknown route.' }); 
+    res.send({ 'error': 'Unknown route or method.' }); 
+});
+
+app.put('*', function(req, res) {
+    res.send({ 'error': 'Unknown route or method.' }); 
+});
+
+app.delete('*', function(req, res) {
+    res.send({ 'error': 'Unknown route or method.' }); 
 });
 
 // Server listening
