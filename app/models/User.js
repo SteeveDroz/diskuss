@@ -2,6 +2,7 @@ var User = function(nick) {
     this.nick = nick;
     this.id = guid();
     this.channels = [];
+    this.buffer = [];
     
     function guid() {
       function s4() {
@@ -9,6 +10,16 @@ var User = function(nick) {
       }
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
+}
+
+User.prototype.isInChannel = function(name) {
+    for (var i in this.channels) {
+        channel = this.channels[i];
+        if (channel.name == name) {
+            return true;
+        }
+    }
+    return false;
 }
 
 User.create = function(json){

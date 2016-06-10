@@ -165,6 +165,25 @@ app.delete('/channels/:channel/leave/id/:id', function(req, res) {
     res.send(user);
 });
 
+// Talk in channel
+
+app.put('/channels/:channel/id/:id/say/', function(req, res) {
+    var user = findUser(req.params.id);
+    var channel = findChannel(req.params.channel);
+    var message = req.body.message;
+    
+    if (!user.isInChannel(channel.name)) {
+        user.channels.put(channel);
+    }
+    
+    var usersInChannel = findUsersInChannel(channel.name);
+    for (var i in usersInChannel) {
+        var userInChannel = usersInChannel[i];
+        userInChannel.buffer.push({ 'type': 'message', 'user': user.nick, 'message': message });
+    }
+    res.send();
+});
+
 // Error handling
 
 app.get('*', function(req, res) {
