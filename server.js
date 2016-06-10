@@ -58,7 +58,7 @@ app.get('/', function(req, res) {
 
 // Info
 
-app.get('/info', function(req, res) {
+app.get('/info/', function(req, res) {
     res.send({ 'version':version });
     console.log('* Info requested');
 });
@@ -78,7 +78,7 @@ app.get('/users/', function(req, res) {
 
 // Register
 
-app.post('/users/register/:nick', function(req, res) {
+app.post('/users/register/:nick/', function(req, res) {
     var availableNick = req.params.nick;
     var nick = null;
     var index = 0;
@@ -114,7 +114,7 @@ app.post('/users/register/:nick', function(req, res) {
 
 // Whois
 
-app.get('/users/whois/:nick', function(req, res) {
+app.get('/users/whois/:nick/', function(req, res) {
     var user = null;
     for (var i in users) {
         var oneUser = users[i];
@@ -152,7 +152,7 @@ app.put('/channels/:channel/join/id/:id/', function(req, res) {
 
 // Leave channel
 
-app.delete('/channels/:channel/leave/id/:id', function(req, res) {
+app.delete('/channels/:channel/leave/id/:id/', function(req, res) {
     var user = findUser(req.params.id);
     var channel = findChannel(req.params.channel);
     var index = user.channels.indexOf(channel);
