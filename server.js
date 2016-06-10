@@ -4,6 +4,7 @@ var port = 8081;
 var app = require('express')();
 var http = require('http').Server(app);
 var User = require('./app/models/User').User;
+var Channel = require('./app/models/Channel').Channel;
 
 var users = [];
 var channels = [];
@@ -13,8 +14,31 @@ function findUser(id) {
     var user = users[i];
     if (user.id == id) {
       return user;
+function findChannel(name) {
+    for (var i in channels) {
+        var channel = channels[i];
+        if (channel.name == name) {
+            return channel;
+        }
     }
-  }
+    channel = new Channel(name);
+    channels.push(channel);
+    return channel;
+}
+
+function findUsersInChannel(name) {
+    var usersInChannel = [];
+    for (var i in users) {
+        var user = users[i];
+        for (var j in user.channels) {
+            var channel = user.channels[j];
+            if (channel.name == name) {
+                usersInChannel.push(user);
+                break;
+            }
+        }
+    }
+    return usersInChannel;
 }
 
 // API
@@ -104,8 +128,13 @@ app.get('/channels/', function(req, res){
 
 // Join channel
 
-app.get('/channels/:channel/join/id/:id/', function(req, res) {
-    findUser(req.params.id).channels[req.params.channel.name] = push(req.params.channel);
+app.put('/channels/:channel/join/id/:id/', function(req, res) {
+    var user = findUser(req.params.id);
+    var channel = findChannel(req.params.channel);
+    user.channels.push(channel);
+    res.send(findUsersInChannel(channel.name));
+});
+
 });
 
 // Error handling
