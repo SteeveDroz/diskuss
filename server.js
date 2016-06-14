@@ -191,9 +191,9 @@ app.put('/id/:id/channels/:channel/say/', function(req, res) {
     var usersInChannel = findUsersInChannel(channel.name);
     for (var i in usersInChannel) {
         var userInChannel = usersInChannel[i];
-        userInChannel.buffer.push({ 'type': 'message', 'user': user.nick, 'message': message });
+        userInChannel.buffer.push({ 'type': 'message', 'user': user.nick, 'channel': channel.name, 'message': message });
     }
-    res.send();
+    res.send(user);
     console.log('<' + user.nick + '> ' + message);
 });
 
