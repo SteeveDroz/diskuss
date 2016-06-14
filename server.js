@@ -116,6 +116,21 @@ app.post('/users/register/:nick/', function(req, res) {
     console.log('* ' + user.nick + ' is connected');
 });
 
+// Disconnect
+
+app.delete('/id/:id/disconnect/', function(req, res) {
+	var user = findUser(req.params.id);
+	for (var i in users) {
+		var connectedUser = users[i];
+		if (connectedUser.id == user.id) {
+			users.splice(i, 1);
+			break;
+		}
+	}
+	res.send({ 'version': version });
+	console.log('* ' + user.nick + ' is disconnected');
+});
+
 // Whois
 
 app.get('/users/whois/:nick/', function(req, res) {
