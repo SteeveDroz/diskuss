@@ -2,7 +2,7 @@ var User = function(nick) {
     this.nick = nick;
     this.id = guid();
     this.channels = [];
-    this.buffer = [];
+    this.notices = [];
     
     function guid() {
       function s4() {
@@ -27,6 +27,7 @@ User.create = function(json){
     user.nick = json.nick;
     user.id = json.id;
     user.channels = json.channels;
+	user.notices = json.notices;
     return user;
 }
 

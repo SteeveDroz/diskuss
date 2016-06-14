@@ -191,10 +191,17 @@ app.put('/id/:id/channels/:channel/say/', function(req, res) {
     var usersInChannel = findUsersInChannel(channel.name);
     for (var i in usersInChannel) {
         var userInChannel = usersInChannel[i];
-        userInChannel.buffer.push({ 'type': 'message', 'user': user.nick, 'channel': channel.name, 'message': message });
+        userInChannel.notices.push({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
     }
     res.send(user);
     console.log('<' + user.nick + '> ' + message);
+});
+
+// Get notices
+
+app.get('/id/:id/notices', function(req, res) {
+	var user = findUser(req.params.id);
+	res.send(user.notices);
 });
 
 // Error handling
