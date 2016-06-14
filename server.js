@@ -1,9 +1,11 @@
+"use strict";
+
 var version = 'v0.1-alpha';
 var port = 8081;
 
 var app = require('express')();
 var http = require('http').Server(app);
-var User = require('./app/models/User').User;
+var User = require('./app/models/User');
 var Channel = require('./app/models/Channel').Channel;
 
 var users = [];
@@ -98,7 +100,7 @@ app.post('/users/register/:nick', function(req, res) {
             index++;
         }
     } while (nick == null);
-    
+
     user = new User(nick);
     users.push(user);
     res.send(user);
@@ -168,19 +170,19 @@ app.get('*', function(req, res) {
 });
 
 app.post('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' }); 
+    res.send({ 'error': 'Unknown route or method.' });
 });
 
 app.put('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' }); 
+    res.send({ 'error': 'Unknown route or method.' });
 });
 
 app.delete('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' }); 
+    res.send({ 'error': 'Unknown route or method.' });
 });
 
 // Server listening
 
 http.listen(port, function() {
-    console.log('Server started on port ' + port); 
+    console.log('Server started on port ' + port);
 });
