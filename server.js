@@ -61,6 +61,10 @@ app.get('/', function(req, res) {
 app.get('/info/', function(req, res) {
     res.send({ 'version':version });
     console.log('* Info requested');
+	console.log('# Users:');
+	console.log(users);
+	console.log('# Channels:');
+	console.log(channels);
 });
 
 // List users
