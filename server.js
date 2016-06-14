@@ -202,6 +202,8 @@ app.put('/id/:id/channels/:channel/say/', function(req, res) {
 app.get('/id/:id/notices', function(req, res) {
 	var user = findUser(req.params.id);
 	res.send(user.notices);
+	user.notices = [];
+	console.log("* Notices fetched.");
 });
 
 // Error handling
