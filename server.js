@@ -52,10 +52,20 @@ function findUsersInChannel(name) {
 function notice(json) {
 	switch (json.type) {
 		case 'channelMessage':
-			var usersInChannel = findUsersInChannel(channel.name);
+			var usersInChannel = findUsersInChannel(json.channel);
 			for (var i in usersInChannel) {
 				var userInChannel = usersInChannel[i];
 				userInChannel.notices.push(json);
+			}
+			break;
+			
+		case 'channelJoin':
+			var usersInChannel = findUsersInChannel(json.channel);
+			for (var i in usersInChannel) {
+				var userInChannel = usersInChannel[i];
+				if (userInChannel.nick != json.user) {
+					userInChannel.notices.push(json);
+				}
 			}
 			break;
 		
@@ -180,6 +190,7 @@ app.put('/id/:id/channels/:channel/join/', function(req, res) {
     var channel = findChannel(req.params.channel);
     user.channels.push(channel);
     res.send(findUsersInChannel(channel.name));
+	notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
     console.log('* ' + user.nick + ' joined ' + channel.name);
 });
 
