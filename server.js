@@ -49,6 +49,20 @@ function findUsersInChannel(name) {
     return usersInChannel;
 }
 
+function notice(json) {
+	switch (json.type) {
+		case 'channelMessage':
+			var usersInChannel = findUsersInChannel(channel.name);
+			for (var i in usersInChannel) {
+				var userInChannel = usersInChannel[i];
+				userInChannel.notices.push(json);
+			}
+			break;
+		
+		default:
+	}
+}
+
 // API
 
 app.get('/', function(req, res) {
@@ -203,11 +217,7 @@ app.put('/id/:id/channels/:channel/say/', function(req, res) {
         user.channels.put(channel);
     }
     
-    var usersInChannel = findUsersInChannel(channel.name);
-    for (var i in usersInChannel) {
-        var userInChannel = usersInChannel[i];
-        userInChannel.notices.push({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
-    }
+	notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
     res.send(user);
     console.log('<' + user.nick + '> ' + message);
 });
