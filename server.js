@@ -235,22 +235,22 @@ app.get('/id/:id/notices', function(req, res) {
 
 app.get('*', function(req, res) {
     res.send({ 'error': 'Unknown route or method.' });
-    console.log('# Unknown route: GET ' + req.baseUrl);
+    console.log('# Unknown route: GET ' + req.originalUrl);
 });
 
 app.post('*', function(req, res) {
     res.send({ 'error': 'Unknown route or method.' }); 
-    console.log('# Unknown route: POST ' + req.baseUrl);
+    console.log('# Unknown route: POST ' + req.originalUrl);
 });
 
 app.put('*', function(req, res) {
     res.send({ 'error': 'Unknown route or method.' }); 
-    console.log('# Unknown route: PUT ' + req.baseUrl);
+    console.log('# Unknown route: PUT ' + req.originalUrl);
 });
 
 app.delete('*', function(req, res) {
     res.send({ 'error': 'Unknown route or method.' }); 
-    console.log('# Unknown route: DELETE ' + req.baseUrl);
+    console.log('# Unknown route: DELETE ' + req.originalUrl);
 });
 
 // Server listening
