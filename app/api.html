@@ -137,7 +137,7 @@
             <h2>Join channel</h2>
             <p>A user can join a channel with that request</p>
             <h3>Request</h3>
-            <code>PUT /channels/:channel/join/id/:id/</code>
+            <code>PUT /id/:id/channels/:channel/join/</code>
             <table>
                 <thead>
                     <tr>
@@ -147,12 +147,12 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>channel</td>
-                        <td>The name of the channel.</td>
-                    </tr>
-                    <tr>
                         <td>id</td>
                         <td>The user GUID.</td>
+                    </tr>
+                    <tr>
+                        <td>channel</td>
+                        <td>The name of the channel.</td>
                     </tr>
                 </tbody>
             </table>
@@ -164,7 +164,7 @@
             <h2>Leave channel</h2>
             <p>A user can leave a channel with that request</p>
             <h3>Request</h3>
-            <code>DELETE /channels/:channel/leave/id/:id/</code>
+            <code>DELETE /id/:id/channels/:channel/leave/</code>
             <table>
                 <thead>
                     <tr>
@@ -174,12 +174,43 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td>id</td>
+                        <td>The user GUID.</td>
+                    </tr>
+                    <tr>
+                        <td>channel</td>
+                        <td>The name of the channel.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Response</h3>
+            <p>The user object.</p>
+        </article>
+
+        <article>
+            <h2>Talk in channel</h2>
+            <p>A user can send a message to all the people located in a given channel.</p>
+            <h3>Request</h3>
+            <code>PUT /id/:id/channels/:channel/say/ PARAMETERS: { message: ":message" }</code>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>id</td>
+                        <td>The user GUID.</td>
+                    </tr>
+                    <tr>
                         <td>channel</td>
                         <td>The name of the channel.</td>
                     </tr>
                     <tr>
-                        <td>id</td>
-                        <td>The user GUID.</td>
+                        <td>message</td>
+                        <td>The message sent to the channel.</td>
                     </tr>
                 </tbody>
             </table>

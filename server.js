@@ -146,7 +146,7 @@ app.get('/channels/', function(req, res){
 
 // Join channel
 
-app.put('/channels/:channel/join/id/:id/', function(req, res) {
+app.put('/id/:id/channels/:channel/join/', function(req, res) {
     var user = findUser(req.params.id);
     var channel = findChannel(req.params.channel);
     user.channels.push(channel);
@@ -156,7 +156,7 @@ app.put('/channels/:channel/join/id/:id/', function(req, res) {
 
 // Leave channel
 
-app.delete('/channels/:channel/leave/id/:id/', function(req, res) {
+app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
     var user = findUser(req.params.id);
     var channel = findChannel(req.params.channel);
     var index = user.channels.indexOf(channel);
@@ -179,7 +179,7 @@ app.delete('/channels/:channel/leave/id/:id/', function(req, res) {
 
 // Talk in channel
 
-app.put('/channels/:channel/id/:id/say/', function(req, res) {
+app.put('/id/:id/channels/:channel/say/', function(req, res) {
     var user = findUser(req.params.id);
     var channel = findChannel(req.params.channel);
     var message = req.body.message;
