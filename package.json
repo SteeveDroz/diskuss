@@ -18,5 +18,8 @@
     "body-parser": "^1.15.1",
     "express": "^4.0"
   },
+  "devDependencies": {
+    "jasmine": "^2.4.1"
+  },
   "license": "MIT"
 }

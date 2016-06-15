@@ -1,35 +1,33 @@
-var User = function(nick) {
-    this.nick = nick;
-    this.id = guid();
-    this.channels = [];
-    this.notices = [];
-    
-    function guid() {
+class User {
+    constructor(nick) {
+        this._nick = nick || "Anonymous";
+        this._id = User.guid();
+        this.channels = []
+    }
+
+    get nick() {
+        return this._nick;
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    static guid() {
       function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
       }
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
-}
 
-User.prototype.isInChannel = function(name) {
-    for (var i in this.channels) {
-        channel = this.channels[i];
-        if (channel.name == name) {
-            return true;
-        }
+    static copy(other) {
+        let user = new User(other.nick);
+        user._id = other.id;
+        user.channels = other.channels.slice();
+        return user;
     }
-    return false;
 }
 
-User.create = function(json){
-    var user = new User();
-    user.nick = json.nick;
-    user.id = json.id;
-    user.channels = json.channels;
-	user.notices = json.notices;
-    return user;
-}
-
-exports.User = User;
-
+module.exports = User;
