@@ -3,10 +3,13 @@
 var version = 'v0.1-alpha';
 var port = 8081;
 
-var app = require('express')();
-var http = require('http').Server(app);
+var express = require('express');
+var favicon = require('serve-favicon');
 var User = require('./app/models/User');
 var Channel = require('./app/models/Channel').Channel;
+
+var app = express();
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
 var users = [];
 var channels = [];
@@ -47,10 +50,11 @@ function findUsersInChannel(name) {
     return usersInChannel;
 }
 
+
 // API
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/app/api.html');
+    res.sendFile(__dirname + '/public/api.html');
 });
 
 // Info
@@ -158,31 +162,23 @@ app.delete('/channels/:channel/leave/id/:id', function(req, res) {
         }
     }
     else {
-        res.send({ 'error': 'Not in channel, can\'t leave.' });
+        res.send(400).send({ error: "Not in channel, can't leave." });
     }
     res.send(user);
 });
 
 // Error handling
 
-app.get('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' });
-});
+function error(req, res) {
+     res.status(404).send({error: "Unknown route or method."});
+}
 
-app.post('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' });
-});
-
-app.put('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' });
-});
-
-app.delete('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' });
-});
+app.get('*', error);
+app.post('*', error);
+app.put('*', error);
+app.delete('*', error);
 
 // Server listening
 
-http.listen(port, function() {
-    console.log('Server started on port ' + port);
-});
+console.info('Server started on port ' + port);
+app.listen(port)
