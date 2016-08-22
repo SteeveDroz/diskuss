@@ -15,12 +15,12 @@ var users = [];
 var channels = [];
 
 function findUser(id) {
-    for (let i in users) {
-        const user = users[i];
-        if (user.id == id) {
-            return user;
-        }
-    }
+	const findUserById = function(user) {
+		if (user.id === id) {
+			return user;
+		}
+	}
+	return users.find(findUserById);
 }
 
 function findChannel(name) {
@@ -36,18 +36,19 @@ function findChannel(name) {
 }
 
 function findUsersInChannel(name) {
-    const usersInChannel = [];
-    for (let i in users) {
-        const user = users[i];
-        for (let j in user.channels) {
-            const channel = user.channels[j];
-            if (channel.name == name) {
-                usersInChannel.push(user);
-                break;
-            }
-        }
-    }
-    return usersInChannel;
+	const findChannelByName = function(channel) {
+		if (channel.name === name) {
+			return channel;
+		}
+	}
+	
+	const findUsersInChannelByName = function(user) {
+		
+		if (user.channels.find(findChannelByName)) {
+			return user;
+		}
+	}
+	return users.filter(findUsersInChannelByName);
 }
 
 function notice(json) {
