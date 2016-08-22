@@ -24,7 +24,15 @@
                 padding:20px;
                 margin-bottom: 2em;
             }
-
+            
+            section h1 {
+                font-size:24pt;
+            }
+            
+            section h2 {
+                font-size:18pt;
+            }
+            
             code {
                 background:#333;
                 border: 2px solid #000;
@@ -46,10 +54,11 @@
     </head>
     <body>
         <article>
-            <h1>Diskuss API v0.1-alpha</h1>
-            <p>This page shows the comprehensive list of request that are included in the Diskuss API.</p>
-
-            <p>Diskuss is a chat server that can host numerous people in any number of channels. It handles group chat along with private chat.</p>
+            <section>
+                <h1>Diskuss API v0.1-alpha</h1>
+                <p>This page shows the comprehensive list of request that are included in the Diskuss API.</p>
+                <p>Diskuss is a chat server that can host numerous people in any number of channels. It handles group chat along with private chat.</p>
+            </section>
 
             <section>
                 <h2>Information</h2>
@@ -97,7 +106,7 @@
                     <tbody>
                         <tr>
                             <td>nick</td>
-                            <td>The nickname linked to the client. If the desired nickname was unavailable, "_1" will be append to it. If this is also unavailable, "_2" will be append and so on.</td>
+                            <td>The nickname linked to the client. If the desired nickname was unavailable, "_1" will be append to it. If this is also unavailable, "_2" will be append instead and so on.</td>
                         </tr>
                     </tbody>
                 </table>
