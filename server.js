@@ -8,8 +8,11 @@ const favicon = require('serve-favicon');
 const User = require('./app/models/User');
 const Channel = require('./app/models/Channel');
 
+const bodyParser = require('body-parser');
 const app = express();
 app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
 
 var users = [];
 var channels = [];
@@ -225,7 +228,6 @@ app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
 app.put('/id/:id/channels/:channel/say/', function(req, res) {
     const user = findUser(req.params.id);
     const channel = findChannel(req.params.channel);
-	console.log(req);
     const message = req.body.message;
     
     if (!user.isInChannel(channel.name)) {
