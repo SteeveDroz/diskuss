@@ -1,23 +1,23 @@
 "use strict";
 
-var version = 'v0.1-alpha';
-var port = 8081;
+const version = 'v0.1-alpha';
+const port = 8081;
 
-var app = require('express')();
-var bodyParser = require('body-parser');
-var http = require('http').Server(app);
-var User = require('./app/models/User').User;
-var Channel = require('./app/models/Channel').Channel;
+const app = require('express')();
+const bodyParser = require('body-parser');
+const http = require('http').Server(app);
+const User = require('./app/models/User.js');
+const Channel = require('./app/models/Channel.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var users = [];
-var channels = [];
+const users = [];
+const channels = [];
 
 function findUser(id) {
-    for (var i in users) {
-        var user = users[i];
+    for (let i in users) {
+        const user = User.copy(users[i]);
         if (user.id == id) {
             return user;
         }
@@ -25,23 +25,23 @@ function findUser(id) {
 }
 
 function findChannel(name) {
-    for (var i in channels) {
-        var channel = channels[i];
+    for (let i in channels) {
+        const channel = Channel.copy(channels[i]);
         if (channel.name == name) {
             return channel;
         }
     }
-    channel = new Channel(name);
+    const channel = new Channel(name);
     channels.push(channel);
     return channel;
 }
 
 function findUsersInChannel(name) {
-    var usersInChannel = [];
-    for (var i in users) {
-        var user = users[i];
-        for (var j in user.channels) {
-            var channel = user.channels[j];
+    const usersInChannel = [];
+    for (let i in users) {
+        const user = users[i];
+        for (let j in user.channels) {
+            const channel = user.channels[j];
             if (channel.name == name) {
                 usersInChannel.push(user);
                 break;
@@ -52,19 +52,20 @@ function findUsersInChannel(name) {
 }
 
 function notice(json) {
+	let usersInChannel;
 	switch (json.type) {
 		case 'channelMessage':
-			var usersInChannel = findUsersInChannel(json.channel);
-			for (var i in usersInChannel) {
-				var userInChannel = usersInChannel[i];
+			usersInChannel = findUsersInChannel(json.channel);
+			for (let i in usersInChannel) {
+				const userInChannel = usersInChannel[i];
 				userInChannel.notices.push(json);
 			}
 			break;
 			
 		case 'channelJoin':
-			var usersInChannel = findUsersInChannel(json.channel);
-			for (var i in usersInChannel) {
-				var userInChannel = usersInChannel[i];
+			usersInChannel = findUsersInChannel(json.channel);
+			for (let i in usersInChannel) {
+				const userInChannel = usersInChannel[i];
 				if (userInChannel.nick != json.user) {
 					userInChannel.notices.push(json);
 				}
@@ -96,9 +97,9 @@ app.get('/info/', function(req, res) {
 // List users
 
 app.get('/users/', function(req, res) {
-    var displayedUsers = [];
-    for (var i in users) {
-        var user = User.create(users[i]);
+    const displayedUsers = [];
+    for (let i in users) {
+        const user = User.create(users[i]);
         user.id = undefined;
         displayedUsers.push(user);
     }
@@ -109,13 +110,13 @@ app.get('/users/', function(req, res) {
 // Register
 
 app.post('/users/register/:nick/', function(req, res) {
-    var availableNick = req.params.nick;
-    var nick = null;
-    var index = 0;
+    const availableNick = req.params.nick;
+    let nick = null;
+    let index = 0;
     do {
-        var available = true;
-        for (var i in users) {
-            var user = users[i];
+        let available = true;
+        for (let i in users) {
+            const user = users[i];
             if (index == 0 && user.nick == availableNick){
                 available = false;
                 break;
@@ -136,7 +137,7 @@ app.post('/users/register/:nick/', function(req, res) {
         }
     } while (nick == null);
     
-    user = new User(nick);
+    const user = new User(nick);
     users.push(user);
     res.send(user);
     console.log('* ' + user.nick + ' is connected');
@@ -145,9 +146,9 @@ app.post('/users/register/:nick/', function(req, res) {
 // Disconnect
 
 app.delete('/id/:id/disconnect/', function(req, res) {
-	var user = findUser(req.params.id);
-	for (var i in users) {
-		var connectedUser = users[i];
+	const user = findUser(req.params.id);
+	for (let i in users) {
+		const connectedUser = users[i];
 		if (connectedUser.id == user.id) {
 			users.splice(i, 1);
 			break;
@@ -160,9 +161,9 @@ app.delete('/id/:id/disconnect/', function(req, res) {
 // Whois
 
 app.get('/users/whois/:nick/', function(req, res) {
-    var user = null;
-    for (var i in users) {
-        var oneUser = users[i];
+    let user = null;
+    for (let i in users) {
+        const oneUser = users[i];
         if (oneUser.nick == req.params.nick) {
             user = User.create(oneUser);
             break;
@@ -188,8 +189,8 @@ app.get('/channels/', function(req, res){
 // Join channel
 
 app.put('/id/:id/channels/:channel/join/', function(req, res) {
-    var user = findUser(req.params.id);
-    var channel = findChannel(req.params.channel);
+    const user = findUser(req.params.id);
+    const channel = findChannel(req.params.channel);
     user.channels.push(channel);
     res.send(findUsersInChannel(channel.name));
 	notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
@@ -199,14 +200,14 @@ app.put('/id/:id/channels/:channel/join/', function(req, res) {
 // Leave channel
 
 app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
-    var user = findUser(req.params.id);
-    var channel = findChannel(req.params.channel);
-    var index = user.channels.indexOf(channel);
+    const user = findUser(req.params.id);
+    const channel = findChannel(req.params.channel);
+    const index = user.channels.indexOf(channel);
     if (index > -1)
     {
         user.channels.splice(index, 1);
         if (!channel.keep && findUsersInChannel(channel.name).length == 0) {
-            var index = channels.indexOf(channel);
+            //var index = channels.indexOf(channel);
             if (index > -1) {
                 channels.splice(index, 1);
             }
@@ -222,12 +223,12 @@ app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
 // Talk in channel
 
 app.put('/id/:id/channels/:channel/say/', function(req, res) {
-    var user = findUser(req.params.id);
-    var channel = findChannel(req.params.channel);
-    var message = req.body.message;
+    const user = findUser(req.params.id);
+    const channel = findChannel(req.params.channel);
+    const message = req.body.message;
     
     if (!user.isInChannel(channel.name)) {
-        user.channels.put(channel);
+        user.channels.push(channel);
     }
     
 	notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
@@ -238,7 +239,7 @@ app.put('/id/:id/channels/:channel/say/', function(req, res) {
 // Get notices
 
 app.get('/id/:id/notices', function(req, res) {
-	var user = findUser(req.params.id);
+	const user = findUser(req.params.id);
 	res.send(user.notices);
 	user.notices = [];
 	console.log("* Notices fetched.");

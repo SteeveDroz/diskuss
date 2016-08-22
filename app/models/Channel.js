@@ -1,14 +1,17 @@
 "use strict";
-var Channel = function(name) {
-    this.name = name;
-    this.description = name;
-    this.keep = false;
+class Channel {
+	constructor(name) {
+		this.name = name;
+		this.description = name;
+		this.keep = false;
+	}
+	
+	static copy(other) {
+		let channel = new Channel(other.nick);
+		channel.description = other.description;
+		channel.keep = other.keep;
+		return channel;
+	}
 }
 
-Channel.create = function(json) {
-  this.name = json.name;
-  this.description = json.description;
-  this.keep = json.keep;
-}
-
-exports.Channel = Channel;
+module.exports = Channel;
