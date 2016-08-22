@@ -164,7 +164,7 @@ app.get('/users/whois/:nick/', function(req, res) {
     for (let i in users) {
         const oneUser = users[i];
         if (oneUser.nick == req.params.nick) {
-            user = User.create(oneUser);
+            user = User.copy(oneUser);
             break;
         }
     }
@@ -175,7 +175,7 @@ app.get('/users/whois/:nick/', function(req, res) {
         user.id = undefined;
         res.send(user);
     }
-    console.log('* Whois on ' + user.nick);
+    console.log('* Whois on ' + req.params.nick);
 });
 
 // List channels
