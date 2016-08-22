@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8">
+        <title>Diskuss API v0.1-alpha</title>
+        <style>
+            * {
+                box-sizing:border-box;
+            }
+
+            body {
+                background:#aaf;
+            }
+
+            article {
+                max-width: 60em;
+                margin: 0 auto;
+            }
+
+            section {
+                background:#fff;
+                border-radius:10px;
+                box-shadow:3px 3px 3px rgba(0, 0, 0, 0.5) inset;
+                padding:20px;
+                margin-bottom: 2em;
+            }
+
+            code {
+                background:#333;
+                border: 2px solid #000;
+                color:#fff;
+                display:inline-block;
+                padding:10px;
+            }
+
+            table {
+                background:#eee;
+                margin-top:10px;
+            }
+
+            td, th {
+                background:#fff;
+                padding:5px;
+            }
+        </style>
+    </head>
+    <body>
+        <article>
+            <h1>Diskuss API v0.1-alpha</h1>
+            <p>This page shows the comprehensive list of request that are included in the Diskuss API.</p>
+
+            <p>Diskuss is a chat server that can host numerous people in any number of channels. It handles group chat along with private chat.</p>
+
+            <section>
+                <h2>Information</h2>
+                <p>This request returns informations about the server itself to anyone, without authentication.</p>
+                <h3>Request</h3>
+                <code>GET /info/</code>
+                <h3>Response</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>version</td>
+                            <td>The version of the server.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>List users</h2>
+                <p>Anyone can ask for the list of connected users.</p>
+                <h3>Request</h3>
+                <code>GET /users/</code>
+                <h3>Response</h3>
+                <p>An array containing user objects.</p>
+            </section>
+
+            <section>
+                <h2>Connection</h2>
+                <p>In order to connect to the server, the client must request a GUID.</p>
+                <h3>Request</h3>
+                <code>POST /users/register/:nick</code>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>nick</td>
+                            <td>The nickname linked to the client. If the desired nickname was unavailable, "_1" will be append to it. If this is also unavailable, "_2" will be append and so on.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Response</h3>
+                <p>A user object containing all the informations about the newly created user (including the GUID).</p>
+            </section>
+
+            <section>
+                <h2>Whois</h2>
+                <p>Anyone can ask the server informations about a connected user.</p>
+                <h3>Request</h3>
+                <code>GET /users/whois/:nick</code>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>nick</td>
+                            <td>The nickname of the user one wants to have informations about</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Response</h3>
+                <p>A user object representing whose nick matches the request.</p>
+            </section>
+
+            <section>
+                <h2>List channels</h2>
+                <p>Anyone can ask for the list of existing channels</p>
+                <h3>Request</h3>
+                <code>GET /channels/</code>
+                <h3>Response</h3>
+                <p>A list of channel objects.</p>
+            </section>
+
+            <section>
+                <h2>Join channel</h2>
+                <p>A user can join a channel with that request</p>
+                <h3>Request</h3>
+                <code>PUT /id/:id/channels/:channel/join/</code>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>channel</td>
+                            <td>The name of the channel.</td>
+                        </tr>
+                        <tr>
+                            <td>id</td>
+                            <td>The user GUID.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Response</h3>
+                <p>The list of user objects representing the users that are currently in the channel.</p>
+            </section>
+
+            <section>
+                <h2>Leave channel</h2>
+                <p>A user can leave a channel with that request</p>
+                <h3>Request</h3>
+                <code>DELETE /id/:id/channels/:channel/leave/</code>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>channel</td>
+                            <td>The name of the channel.</td>
+                        </tr>
+                        <tr>
+                            <td>id</td>
+                            <td>The user GUID.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Response</h3>
+                <p>The user object.</p>
+            </section>
+
+            <section>
+                <h2>User object</h2>
+                <p>A user object is composed of:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>A GUID (this is never shown, except when a new user registers).</td>
+                        </tr>
+                        <tr>
+                            <td>nick</td>
+                            <td>The nickname of the user.</td>
+                        </tr>
+                        <tr>
+                            <td>channels</td>
+                            <td>The list of channels the user is currently in.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>Channel object</h2>
+                <p>A channel object is composed of:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>name</td>
+                            <td>The name of the channel is also its identifier.</td>
+                        </tr>
+                        <tr>
+                            <td>description</td>
+                            <td>A description of the channel.</td>
+                        </tr>
+                        <tr>
+                            <td>keep</td>
+                            <td>If true, the channel will exist even if it contains no user.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2>Error handling</h2>
+                <p>Whatever the URI may be, if the resource or action asked is unavailable for some reason or the action is illegal, a JSON containing a single entry which key is called <code>error</code> will be sent. The value of that entry is the error message.</p>
+            </section>
+        </article>
+    </body>
+</html>

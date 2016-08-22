@@ -3,17 +3,16 @@
 const version = 'v0.1-alpha';
 const port = 8081;
 
-const app = require('express')();
-const bodyParser = require('body-parser');
-const http = require('http').Server(app);
-const User = require('./app/models/User.js');
-const Channel = require('./app/models/Channel.js');
+const express = require('express');
+const favicon = require('serve-favicon');
+const User = require('./app/models/User');
+const Channel = require('./app/models/Channel');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const app = express();
+app.use(favicon(__dirname + '/public/favicon.ico'));
 
-const users = [];
-const channels = [];
+var users = [];
+var channels = [];
 
 function findUser(id) {
     for (let i in users) {
@@ -79,7 +78,7 @@ function notice(json) {
 // API
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/app/api.html');
+    res.sendFile(__dirname + '/public/api.html');
     console.log('# delivering API');
 });
 
@@ -215,7 +214,7 @@ app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
         console.log('* ' + user.nick + ' left ' + channel.name);
     }
     else {
-        res.send({ 'error': 'Not in channel, can\'t leave.' });
+        res.send(400).send({ error: "Not in channel, can't leave." });
     }
     res.send(user);
 });
@@ -225,6 +224,7 @@ app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
 app.put('/id/:id/channels/:channel/say/', function(req, res) {
     const user = findUser(req.params.id);
     const channel = findChannel(req.params.channel);
+	console.log(req);
     const message = req.body.message;
     
     if (!user.isInChannel(channel.name)) {
@@ -247,28 +247,16 @@ app.get('/id/:id/notices', function(req, res) {
 
 // Error handling
 
-app.get('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' });
-    console.log('# Unknown route: GET ' + req.originalUrl);
-});
+function error(req, res) {
+     res.status(404).send({error: "Unknown route or method."});
+}
 
-app.post('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' }); 
-    console.log('# Unknown route: POST ' + req.originalUrl);
-});
-
-app.put('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' }); 
-    console.log('# Unknown route: PUT ' + req.originalUrl);
-});
-
-app.delete('*', function(req, res) {
-    res.send({ 'error': 'Unknown route or method.' }); 
-    console.log('# Unknown route: DELETE ' + req.originalUrl);
-});
+app.get('*', error);
+app.post('*', error);
+app.put('*', error);
+app.delete('*', error);
 
 // Server listening
 
-http.listen(port, function() {
-    console.log('Server started on port ' + port); 
-});
+console.info('Server started on port ' + port);
+app.listen(port)

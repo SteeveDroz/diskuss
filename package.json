@@ -15,8 +15,8 @@
     "api"
   ],
   "dependencies": {
-    "body-parser": "^1.15.1",
-    "express": "^4.0"
+    "express": "^4.0",
+    "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
     "jasmine": "^2.4.1"
