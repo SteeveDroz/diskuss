@@ -17,7 +17,7 @@ const channels = [];
 
 function findUser(id) {
     for (let i in users) {
-        const user = User.copy(users[i]);
+        const user = users[i];
         if (user.id == id) {
             return user;
         }
@@ -26,7 +26,7 @@ function findUser(id) {
 
 function findChannel(name) {
     for (let i in channels) {
-        const channel = Channel.copy(channels[i]);
+        const channel = channels[i];
         if (channel.name == name) {
             return channel;
         }
@@ -99,7 +99,7 @@ app.get('/info/', function(req, res) {
 app.get('/users/', function(req, res) {
     const displayedUsers = [];
     for (let i in users) {
-        const user = User.create(users[i]);
+        const user = new User(users[i]);
         user.id = undefined;
         displayedUsers.push(user);
     }
