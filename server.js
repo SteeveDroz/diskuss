@@ -1,3 +1,5 @@
+"use strict";
+
 var version = 'v0.1-alpha';
 var port = 8081;
 

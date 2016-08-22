@@ -1,3 +1,4 @@
+"use strict";
 var Channel = function(name) {
     this.name = name;
     this.description = name;
