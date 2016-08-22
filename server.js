@@ -75,6 +75,13 @@ function notice(json) {
 			}
 			break;
 		
+        case 'channelLeave':
+            usersInChannel = findUsersInChannel(json.channel);
+            for (let i in usersInChannel) {
+                const userInChannel = usersInChannel[i];
+                userInChannel.notices.push(json);
+            }
+        
 		default:
 	}
 }
@@ -210,11 +217,12 @@ app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
     {
         user.channels.splice(index, 1);
         if (!channel.keep && findUsersInChannel(channel.name).length == 0) {
-            //var index = channels.indexOf(channel);
-            if (index > -1) {
+            const channelIndex = channels.indexOf(channel);
+            if (channelIndex > -1) {
                 channels.splice(index, 1);
             }
         }
+        notice({ 'type': 'channelLeave', 'user': user.nick, 'channel': channel.name });
         console.log('* ' + user.nick + ' left ' + channel.name);
     }
     else {
