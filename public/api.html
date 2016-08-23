@@ -55,7 +55,7 @@
     <body>
         <article>
             <section>
-                <h1>Diskuss API v0.1-alpha</h1>
+                <h1>Diskuss API v0.2-alpha</h1>
                 <p>This page shows the comprehensive list of request that are included in the Diskuss API.</p>
                 <p>Diskuss is a chat server that can host numerous people in any number of channels. It handles group chat along with private chat.</p>
             </section>
@@ -113,6 +113,29 @@
                 <h3>Response</h3>
                 <p>A user object containing all the informations about the newly created user (including the GUID).</p>
             </section>
+            
+            <section>
+                <h2>Disconnection</h2>
+                <p>To disconnect from the server means having its GUID revoked.</p>
+                <h3>Request</h3>
+                <code>DELETE /user/:id/disconnect/</code>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>The user GUID.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Response</h3>
+                <p>The version of the server.</p>
+            </section>
 
             <section>
                 <h2>Whois</h2>
@@ -160,17 +183,48 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>channel</td>
-                            <td>The name of the channel.</td>
-                        </tr>
-                        <tr>
                             <td>id</td>
                             <td>The user GUID.</td>
+                        </tr>
+                        <tr>
+                            <td>channel</td>
+                            <td>The name of the channel.</td>
                         </tr>
                     </tbody>
                 </table>
                 <h3>Response</h3>
                 <p>The list of user objects representing the users that are currently in the channel.</p>
+            </section>
+            
+            <section>
+                <h2>Talk in channel</h2>
+                <p>When a user is in a channel, he or she can say something that will be viewable by every other user in the same channel.</p>
+                <h3>Request</h3>
+                <code>PUT /user/:id/channels/:channel/say/?message=:message</code>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>The user GUID.</td>
+                        </tr>
+                        <tr>
+                            <td>channel</td>
+                            <td>The name of the channel.</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>The message to transmit to other users.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Response</h3>
+                <p>The user object that sent the message.</p>
             </section>
 
             <section>
@@ -198,6 +252,75 @@
                 </table>
                 <h3>Response</h3>
                 <p>The user object.</p>
+            </section>
+            
+            <section>
+                <h2>Fetch notices</h2>
+                <p>Notices are stored in the user object, on the server. If a client wants to retrieve thoses notices, it must send a request to ask for them.</p>
+                <h3>Request</h3>
+                <code>GET /user/:id/notices</code>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>The user GUID.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Response</h3>
+                <p>A JSON list that contains all the notices addressed to the user.</p>
+                <p>Possible notices have different structure with a common attribute <code>type</code>. Here are the structures of the notices:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th colspan="3">Other attributes</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th rowspan="2">channelJoin</th>
+                            <th>user</th>
+                            <th>channel</th>
+                            <th rowspan="2"></th>
+                            <td rowspan="2"><code>{ type: 'channelJoin', user: 'user_1', channel: 'help' }</code></td>
+                        </tr>
+                        <tr>
+                            <td>The nick of the user that joins the channel.</td>
+                            <td>The channel concerned.</td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">channelMessage</th>
+                            <th>user</th>
+                            <th>channel</th>
+                            <th>message</th>
+                            <td rowspan="2"><code>{ type: 'channelMessage', user: 'user_1', channel: 'help', message:'Hello, world!' }</code></td>
+                        </tr>
+                        <tr>
+                            <td>The nick of the speaker.</td>
+                            <td>The channel concerned.</td>
+                            <td>The message to display.</td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">channelLeave</th>
+                            <th>user</th>
+                            <th>channel</th>
+                            <th rowspan="2"></th>
+                            <td rowspan="2"><code>{ type: 'channelLeave', user: 'user_1', channel: 'help' }</code></td>
+                        </tr>
+                        <tr>
+                            <td>The nick of the leaving user.</td>
+                            <td>The channel concerned.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
 
             <section>

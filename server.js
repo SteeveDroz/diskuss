@@ -57,14 +57,6 @@ function findUsersInChannel(name) {
 function notice(json) {
 	let usersInChannel;
 	switch (json.type) {
-		case 'channelMessage':
-			usersInChannel = findUsersInChannel(json.channel);
-			for (let i in usersInChannel) {
-				const userInChannel = usersInChannel[i];
-				userInChannel.notices.push(json);
-			}
-			break;
-			
 		case 'channelJoin':
 			usersInChannel = findUsersInChannel(json.channel);
 			for (let i in usersInChannel) {
@@ -75,6 +67,14 @@ function notice(json) {
 			}
 			break;
 		
+		case 'channelMessage':
+			usersInChannel = findUsersInChannel(json.channel);
+			for (let i in usersInChannel) {
+				const userInChannel = usersInChannel[i];
+				userInChannel.notices.push(json);
+			}
+			break;
+			
         case 'channelLeave':
             usersInChannel = findUsersInChannel(json.channel);
             for (let i in usersInChannel) {
@@ -207,6 +207,22 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
     console.log('* ' + user.nick + ' joined ' + channel.name);
 });
 
+// Talk in channel
+
+app.put('/user/:id/channels/:channel/say/', function(req, res) {
+    const user = findUser(req.params.id);
+    const channel = findChannel(req.params.channel);
+    const message = req.body.message;
+    
+    if (!user.isInChannel(channel.name)) {
+        user.channels.push(channel);
+    }
+    
+	notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
+    res.send(user);
+    console.log('<' + user.nick + '> ' + message);
+});
+
 // Leave channel
 
 app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
@@ -231,23 +247,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     res.send(user);
 });
 
-// Talk in channel
-
-app.put('/user/:id/channels/:channel/say/', function(req, res) {
-    const user = findUser(req.params.id);
-    const channel = findChannel(req.params.channel);
-    const message = req.body.message;
-    
-    if (!user.isInChannel(channel.name)) {
-        user.channels.push(channel);
-    }
-    
-	notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
-    res.send(user);
-    console.log('<' + user.nick + '> ' + message);
-});
-
-// Get notices
+// Fetch notices
 
 app.get('/user/:id/notices', function(req, res) {
 	const user = findUser(req.params.id);
