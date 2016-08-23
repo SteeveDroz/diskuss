@@ -214,7 +214,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
 
 app.put('/user/:id/channels/:channel/say/', function(req, res) {
     const user = findUser(req.params.id);
-    const channel;
+    let channel = null;
     try {
         channel = findChannel(req.params.channel);
     }
@@ -237,7 +237,7 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
 
 app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     const user = findUser(req.params.id);
-    const channel;
+    let channel = null;
     try {
         channel = findChannel(req.params.channel);
     }

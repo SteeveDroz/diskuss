@@ -1,3 +1,4 @@
+"use strict";
 class User {
     constructor(nick) {
         this.nick = nick || "Anonymous";
