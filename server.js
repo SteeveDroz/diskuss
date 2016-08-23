@@ -183,7 +183,7 @@ app.get('/users/whois/:nick/', function(req, res) {
         }
     }
     if (user == null) {
-        res.send({ 'error': 'Unknown nick.' });
+        res.send(400).send({ 'error': 'Unknown nick.' });
     }
     else {
         user.id = undefined;
