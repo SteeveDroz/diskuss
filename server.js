@@ -155,7 +155,7 @@ app.post('/users/register/:nick/', function(req, res) {
 
 // Disconnect
 
-app.delete('/id/:id/disconnect/', function(req, res) {
+app.delete('/user/:id/disconnect/', function(req, res) {
 	const user = findUser(req.params.id);
 	for (let i in users) {
 		const connectedUser = users[i];
@@ -198,7 +198,7 @@ app.get('/channels/', function(req, res){
 
 // Join channel
 
-app.put('/id/:id/channels/:channel/join/', function(req, res) {
+app.put('/user/:id/channels/:channel/join/', function(req, res) {
     const user = findUser(req.params.id);
     const channel = findChannel(req.params.channel);
     user.channels.push(channel);
@@ -209,7 +209,7 @@ app.put('/id/:id/channels/:channel/join/', function(req, res) {
 
 // Leave channel
 
-app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
+app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     const user = findUser(req.params.id);
     const channel = findChannel(req.params.channel);
     const index = user.channels.indexOf(channel);
@@ -233,7 +233,7 @@ app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
 
 // Talk in channel
 
-app.put('/id/:id/channels/:channel/say/', function(req, res) {
+app.put('/user/:id/channels/:channel/say/', function(req, res) {
     const user = findUser(req.params.id);
     const channel = findChannel(req.params.channel);
     const message = req.body.message;
@@ -249,7 +249,7 @@ app.put('/id/:id/channels/:channel/say/', function(req, res) {
 
 // Get notices
 
-app.get('/id/:id/notices', function(req, res) {
+app.get('/user/:id/notices', function(req, res) {
 	const user = findUser(req.params.id);
 	res.send(user.notices);
 	user.notices = [];
