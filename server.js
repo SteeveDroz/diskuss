@@ -4,12 +4,13 @@ const version = 'v0.2-alpha';
 const port = 8081;
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const User = require('./app/models/User');
 const Channel = require('./app/models/Channel');
 
-const bodyParser = require('body-parser');
 const app = express();
+app.use(bodyParser.json());
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
@@ -18,12 +19,12 @@ var users = [];
 var channels = [];
 
 function findUser(id) {
-	const findUserById = function(user) {
-		if (user.id === id) {
-			return user;
-		}
-	}
-	return users.find(findUserById);
+    const findUserById = function(user) {
+        if (user.id === id) {
+            return user;
+        }
+    }
+    return users.find(findUserById);
 }
 
 function findChannel(name) {
@@ -39,44 +40,44 @@ function findChannel(name) {
 }
 
 function findUsersInChannel(name) {
-	const findChannelByName = function(channel) {
-		if (channel.name === name) {
-			return channel;
-		}
-	}
-	
-	const findUsersInChannelByName = function(user) {
-		
-		if (user.channels.find(findChannelByName)) {
-			return user;
-		}
-	}
-	return users.filter(findUsersInChannelByName);
+    const findChannelByName = function(channel) {
+        if (channel.name === name) {
+            return channel;
+        }
+    }
+
+    const findUsersInChannelByName = function(user) {
+
+        if (user.channels.find(findChannelByName)) {
+            return user;
+        }
+    }
+    return users.filter(findUsersInChannelByName);
 }
 
 function notice(json) {
-	let usersInChannel;
-	switch (json.type) {
-		case 'channelMessage':
-			usersInChannel = findUsersInChannel(json.channel);
-			for (let i in usersInChannel) {
-				const userInChannel = usersInChannel[i];
-				userInChannel.notices.push(json);
-			}
-			break;
-			
-		case 'channelJoin':
-			usersInChannel = findUsersInChannel(json.channel);
-			for (let i in usersInChannel) {
-				const userInChannel = usersInChannel[i];
-				if (userInChannel.nick != json.user) {
-					userInChannel.notices.push(json);
-				}
-			}
-			break;
-		
-		default:
-	}
+    let usersInChannel;
+    switch (json.type) {
+        case 'channelMessage':
+            usersInChannel = findUsersInChannel(json.channel);
+            for (let i in usersInChannel) {
+                const userInChannel = usersInChannel[i];
+                userInChannel.notices.push(json);
+            }
+            break;
+
+        case 'channelJoin':
+            usersInChannel = findUsersInChannel(json.channel);
+            for (let i in usersInChannel) {
+                const userInChannel = usersInChannel[i];
+                if (userInChannel.nick != json.user) {
+                    userInChannel.notices.push(json);
+                }
+            }
+            break;
+
+        default:
+    }
 }
 
 // API
@@ -91,10 +92,10 @@ app.get('/', function(req, res) {
 app.get('/info/', function(req, res) {
     res.send({ 'version':version });
     console.log('* Info requested');
-	console.log('# Users:');
-	console.log(users);
-	console.log('# Channels:');
-	console.log(channels);
+    console.log('# Users:');
+    console.log(users);
+    console.log('# Channels:');
+    console.log(channels);
 });
 
 // List users
@@ -139,7 +140,7 @@ app.post('/users/register/:nick/', function(req, res) {
             index++;
         }
     } while (nick == null);
-    
+
     const user = new User(nick);
     users.push(user);
     res.send(user);
@@ -149,16 +150,16 @@ app.post('/users/register/:nick/', function(req, res) {
 // Disconnect
 
 app.delete('/id/:id/disconnect/', function(req, res) {
-	const user = findUser(req.params.id);
-	for (let i in users) {
-		const connectedUser = users[i];
-		if (connectedUser.id == user.id) {
-			users.splice(i, 1);
-			break;
-		}
-	}
-	res.send({ 'version': version });
-	console.log('* ' + user.nick + ' is disconnected');
+    const user = findUser(req.params.id);
+    for (let i in users) {
+        const connectedUser = users[i];
+        if (connectedUser.id == user.id) {
+            users.splice(i, 1);
+            break;
+        }
+    }
+    res.send({ 'version': version });
+    console.log('* ' + user.nick + ' is disconnected');
 });
 
 // Whois
@@ -196,7 +197,7 @@ app.put('/id/:id/channels/:channel/join/', function(req, res) {
     const channel = findChannel(req.params.channel);
     user.channels.push(channel);
     res.send(findUsersInChannel(channel.name));
-	notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
+    notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
     console.log('* ' + user.nick + ' joined ' + channel.name);
 });
 
@@ -223,18 +224,16 @@ app.delete('/id/:id/channels/:channel/leave/', function(req, res) {
     res.send(user);
 });
 
-// Talk in channel
-
 app.put('/id/:id/channels/:channel/say/', function(req, res) {
     const user = findUser(req.params.id);
     const channel = findChannel(req.params.channel);
     const message = req.body.message;
-    
+
     if (!user.isInChannel(channel.name)) {
         user.channels.push(channel);
     }
-    
-	notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
+
+    notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
     res.send(user);
     console.log('<' + user.nick + '> ' + message);
 });
@@ -242,10 +241,10 @@ app.put('/id/:id/channels/:channel/say/', function(req, res) {
 // Get notices
 
 app.get('/id/:id/notices', function(req, res) {
-	const user = findUser(req.params.id);
-	res.send(user.notices);
-	user.notices = [];
-	console.log("* Notices fetched.");
+    const user = findUser(req.params.id);
+    res.send(user.notices);
+    user.notices = [];
+    console.log("* Notices fetched.");
 });
 
 // Error handling
@@ -261,5 +260,9 @@ app.delete('*', error);
 
 // Server listening
 
-console.info('Server started on port ' + port);
-app.listen(port)
+if (__filename == process.argv[1]) {
+    console.info('Server started on port ' + port);
+    app.listen(port);
+} else {
+    module.exports = app;
+}
