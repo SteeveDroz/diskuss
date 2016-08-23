@@ -14,8 +14,8 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
-var users = [];
-var channels = [];
+let users = [];
+let channels = [];
 
 function findUser(id) {
     const findUserById = function(user) {
