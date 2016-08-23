@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "node --use-strict server.js",
-    "test": "node node_modules/jasmine/bin/jasmine.js"
+    "test": "node --use-strict node_modules/jasmine/bin/jasmine.js"
   },
   "license": "MIT"
 }
