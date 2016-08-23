@@ -17,41 +17,44 @@ app.use(bodyParser.json());
 let users = [];
 let channels = [];
 
-function findUser(id) {
-    const findUserById = function(user) {
+function _findUserById(id) {
+    return function(user) {
         if (user.id === id) {
             return user;
         }
     }
-    return users.find(findUserById);
 }
 
-function findChannel(name) {
-    for (let i in channels) {
-        const channel = channels[i];
-        if (channel.name == name) {
-            return channel;
-        }
-    }
-    const channel = new Channel(name);
-    channels.push(channel);
-    return channel;
-}
-
-function findUsersInChannel(name) {
-    const findChannelByName = function(channel) {
+function _findChannelByName(name) {
+    return function(channel) {
         if (channel.name === name) {
             return channel;
         }
     }
-    
-    const findUsersInChannelByName = function(user) {
-        
-        if (user.channels.find(findChannelByName)) {
+}
+
+function _findUsersByChannel(name) {
+    return function(user) {
+        if (user.channels.find(_findChannelByName(name))) {
             return user;
         }
     }
-    return users.filter(findUsersInChannelByName);
+}
+
+function findUser(id) {
+    return users.find(_findUserById(id));
+}
+
+function findChannel(name) {
+    const channel = channels.find(_findChannelByName(name));
+    if (channel == undefined) {
+        throw new ChannelNotFoundException('Channel "' + name + '" does not exist.');
+    }
+    return channel;
+}
+
+function findUsersInChannel(name) {
+    return users.filter(_findUsersByChannel(name));
 }
 
 function notice(json) {
@@ -211,7 +214,14 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
 
 app.put('/user/:id/channels/:channel/say/', function(req, res) {
     const user = findUser(req.params.id);
-    const channel = findChannel(req.params.channel);
+    const channel;
+    try {
+        channel = findChannel(req.params.channel);
+    }
+    catch (exception) {
+        channel = new Channel(req.params.channel);
+        channels.push(channel);
+    }
     const message = req.body.message;
     
     if (!user.isInChannel(channel.name)) {
@@ -227,7 +237,14 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
 
 app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     const user = findUser(req.params.id);
-    const channel = findChannel(req.params.channel);
+    const channel;
+    try {
+        channel = findChannel(req.params.channel);
+    }
+    catch (exception) {
+        channel = new Channel(req.params.channel);
+        channels.push(channel);
+    }
     const index = user.channels.indexOf(channel);
     if (index > -1)
     {
