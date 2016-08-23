@@ -19,7 +19,12 @@
     "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
-    "jasmine": "^2.4.1"
+    "jasmine": "^2.4.1",
+    "supertest": "^2.0.0"
+  },
+  "scripts": {
+    "start": "node --use-strict server.js",
+    "test": "node node_modules/jasmine/bin/jasmine.js"
   },
   "license": "MIT"
 }

@@ -1,10 +1,9 @@
-"use strict";
 class User {
     constructor(nick) {
         this.nick = nick || "Anonymous";
         this.id = User.guid();
         this.channels = [];
-		this.notices = [];
+        this.notices = [];
     }
 
     static guid() {
@@ -17,15 +16,15 @@ class User {
     }
 
     static copy(other) {
-        let user = new User(other.nick);
+        const user = new User(other.nick);
         user.id = other.id;
         user.channels = other.channels.slice();
         return user;
     }
-	
-	isInChannel(channel) {
-		return this.channels.indexOf(channel) >= 0;
-	}
+
+    isInChannel(channel) {
+        return this.channels.indexOf(channel) >= 0;
+    }
 }
 
 module.exports = User;
