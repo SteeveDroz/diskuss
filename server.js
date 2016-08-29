@@ -12,81 +12,6 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
-let users = [];
-let channels = [];
-
-function _findUserById(id) {
-    return function(user) {
-        if (user.id === id) {
-            return user;
-        }
-    }
-}
-
-function _findChannelByName(name) {
-    return function(channel) {
-        if (channel.name === name) {
-            return channel;
-        }
-    }
-}
-
-function _findUsersByChannel(name) {
-    return function(user) {
-        if (user.channels.find(_findChannelByName(name))) {
-            return user;
-        }
-    }
-}
-
-function findUser(id) {
-    return users.find(_findUserById(id));
-}
-
-function findChannel(name) {
-    const channel = channels.find(_findChannelByName(name));
-    if (channel == undefined) {
-        throw new ChannelNotFoundException('Channel "' + name + '" does not exist.');
-    }
-    return channel;
-}
-
-function findUsersInChannel(name) {
-    return users.filter(_findUsersByChannel(name));
-}
-
-function notice(json) {
-    let usersInChannel;
-    switch (json.type) {
-        case 'channelJoin':
-            usersInChannel = findUsersInChannel(json.channel);
-            for (let i in usersInChannel) {
-                const userInChannel = usersInChannel[i];
-                if (userInChannel.nick != json.user) {
-                    userInChannel.notices.push(json);
-                }
-            }
-            break;
-        
-        case 'channelMessage':
-            usersInChannel = findUsersInChannel(json.channel);
-            for (let i in usersInChannel) {
-                const userInChannel = usersInChannel[i];
-                userInChannel.notices.push(json);
-            }
-            break;
-            
-        case 'channelLeave':
-            usersInChannel = findUsersInChannel(json.channel);
-            for (let i in usersInChannel) {
-                const userInChannel = usersInChannel[i];
-                userInChannel.notices.push(json);
-            }
-        
-        default:
-    }
-}
-
 // API
 
 app.get('/', function(req, res) {
@@ -100,56 +25,23 @@ app.get('/info/', function(req, res) {
     res.send({ 'version':version });
     console.log('* Info requested');
     console.log('# Users:');
-    console.log(users);
+    console.log(User.list);
     console.log('# Channels:');
-    console.log(channels);
+    console.log(Channel.list);
 });
 
 // List users
 
 app.get('/users/', function(req, res) {
-    const displayedUsers = [];
-    for (let i in users) {
-        const user = new User(users[i]);
-        user.id = undefined;
-        displayedUsers.push(user);
-    }
-    res.send(displayedUsers);
+    res.send(User.list.map(user => getPublicUser()));
     console.log('* User list requested');
 });
 
 // Register
 
 app.post('/users/register/:nick/', function(req, res) {
-    const availableNick = req.params.nick;
-    let nick = null;
-    let index = 0;
-    do {
-        let available = true;
-        for (let i in users) {
-            const user = users[i];
-            if (index == 0 && user.nick == availableNick){
-                available = false;
-                break;
-            }
-            if (user.nick == availableNick + '_' + index) {
-                available = false;
-                break;
-            }
-        }
-        if (available) {
-            nick = availableNick;
-            if (index > 0) {
-                nick += '_' + index;
-            }
-        }
-        else {
-            index++;
-        }
-    } while (nick == null);
-    
-    const user = new User(nick);
-    users.push(user);
+    const user = new User(User.getAvailableNick(req.params.nick));
+    User.list[user.id] = user;
     res.send(user);
     console.log('* ' + user.nick + ' is connected');
 });
@@ -157,14 +49,8 @@ app.post('/users/register/:nick/', function(req, res) {
 // Disconnect
 
 app.delete('/user/:id/disconnect/', function(req, res) {
-    const user = findUser(req.params.id);
-    for (let i in users) {
-        const connectedUser = users[i];
-        if (connectedUser.id == user.id) {
-            users.splice(i, 1);
-            break;
-        }
-    }
+    const user = User.list[req.params.id];
+    delete User.list[user.id];
     res.send({ 'version': version });
     console.log('* ' + user.nick + ' is disconnected');
 });
@@ -172,20 +58,12 @@ app.delete('/user/:id/disconnect/', function(req, res) {
 // Whois
 
 app.get('/users/whois/:nick/', function(req, res) {
-    let user = null;
-    for (let i in users) {
-        const oneUser = users[i];
-        if (oneUser.nick == req.params.nick) {
-            user = User.copy(oneUser);
-            break;
-        }
-    }
+    const user = User.list.find(user => user.nick == req.params.nick);
     if (user == null) {
         res.send(400).send({ 'error': 'Unknown nick.' });
     }
     else {
-        user.id = undefined;
-        res.send(user);
+        res.send(user.getPublicUser());
     }
     console.log('* Whois on ' + req.params.nick);
 });
@@ -193,68 +71,60 @@ app.get('/users/whois/:nick/', function(req, res) {
 // List channels
 
 app.get('/channels/', function(req, res){
-    res.send(channels);
+    res.send(Channel.list.map(channel => channel.name));
     console.log('* Channel list requested');
 });
 
 // Join channel
 
 app.put('/user/:id/channels/:channel/join/', function(req, res) {
-    const user = findUser(req.params.id);
-    const channel = findChannel(req.params.channel);
-    user.channels.push(channel);
-    res.send(findUsersInChannel(channel.name));
-    notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
+    const user = User.list[req.params.id];
+    let channel = Channel.list[req.params.channel];
+    if (channel === undefined) {
+        channel = new Channel(req.params.channel);
+        Channel.list[channel.name] = channel;
+    }
+    user.channels[channel.name] = channel;
+    res.send(channel.getUsers());
+    User.notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
     console.log('* ' + user.nick + ' joined ' + channel.name);
 });
 
 // Talk in channel
 
 app.put('/user/:id/channels/:channel/say/', function(req, res) {
-    const user = findUser(req.params.id);
-    let channel = null;
-    try {
-        channel = findChannel(req.params.channel);
-    }
-    catch (exception) {
+    const user = User.list[req.params.id];
+    let channel = Channel.list[req.params.channel];
+    if (channel == undefined) {
         channel = new Channel(req.params.channel);
-        channels.push(channel);
+        Channel.list[channel.name] = channel;
+    }
+    
+    if (user.channels[channel.name] == undefined) {
+        user.channels[channel.name] = channel;
     }
     const message = req.body.message;
     
-    if (!user.isInChannel(channel.name)) {
-        user.channels.push(channel);
-    }
-    
-    notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
+    User.notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
     res.send(user);
-    console.log('<' + user.nick + '> ' + message);
+    console.log('<' + user.nick + '#' + channel.name + '> ' + message);
 });
 
 // Leave channel
 
 app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
-    const user = findUser(req.params.id);
-    let channel = null;
-    try {
-        channel = findChannel(req.params.channel);
-    }
-    catch (exception) {
-        channel = new Channel(req.params.channel);
-        channels.push(channel);
-    }
-    const index = user.channels.indexOf(channel);
-    if (index > -1)
+    const user = User.list[req.params.id];
+    const channel = Channel.list[req.params.channel];
+    if (user.channels[channel.name] != undefined)
     {
-        user.channels.splice(index, 1);
-        if (!channel.keep && findUsersInChannel(channel.name).length == 0) {
-            const channelIndex = channels.indexOf(channel);
-            if (channelIndex > -1) {
-                channels.splice(index, 1);
+        delete user.channels[channel.name];
+        if (channel != undefined) {
+            if (!channel.keep && channel.getUsers().length == 0) {
+                delete Channel.list[channel.name];
             }
+            User.notice({ 'type': 'channelLeave', 'user': user.nick, 'channel': channel.name });
+            console.log('* ' + user.nick + ' left ' + channel.name);
         }
-        notice({ 'type': 'channelLeave', 'user': user.nick, 'channel': channel.name });
-        console.log('* ' + user.nick + ' left ' + channel.name);
     }
     else {
         res.send(400).send({ error: "Not in channel, can't leave." });
@@ -265,7 +135,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
 // Fetch notices
 
 app.get('/user/:id/notices', function(req, res) {
-    const user = findUser(req.params.id);
+    const user = User.list[req.params.id];
     res.send(user.notices);
     user.notices = [];
     console.log("* Notices fetched.");
