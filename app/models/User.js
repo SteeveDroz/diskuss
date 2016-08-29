@@ -18,26 +18,17 @@ class User {
       }
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
-    
-    static notice(json) {
-        switch (json.type) {
-            case 'channelJoin':
-            case 'channelMessage':
-            case 'channelLeave':
-                Channel.list[json.channel].getUsers(false).map(user => user.notices.push(json));
-                break;
-            
-            default:
-        }
-    }
 
     static copy(other) {
         const user = new User(other.nick);
         user.id = other.id;
-        user.channels = other.channels.slice();
+        user.channels = {}
+        for(let name in other.channels) {
+            user.channels[name] = other.channels[name]
+        }
         return user;
     }
-    
+
     static getAvailableNick(nick) {
         if (User.list[nick] == undefined) {
             return nick;
@@ -52,11 +43,11 @@ class User {
         } while (true);
         return nick + '_' + suffix;
     }
-    
+
     isInChannel(channel) {
         return this.channels.indexOf(channel) >= 0;
     }
-    
+
     getPublicUser() {
         const publicUser = User.copy(this);
         publicUser.id = undefined;
