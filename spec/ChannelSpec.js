@@ -14,9 +14,8 @@ describe('App', function() {
             agent.put('/user/' + id + '/channels/toto/join/').end(function(err, res) {
                 expect(err).toBeNull();
 
-                expect(res.body.length).toEqual(1);
-                const channels = res.body[0].channels;
-                expect(channels[0].name).toEqual('toto');
+                const channels = res.body.channels;
+                expect(Object.keys(channels)).toContain('toto');
 
                 agent.put('/user/' + id + '/channels/toto/say/')
                     .send({'message': 'hello world!'})
@@ -24,8 +23,9 @@ describe('App', function() {
                         expect(err).toBeNull();
 
                         const notices = res.body.notices;
-                        expect(notices.length).toEqual(1);
-                        expect(notices[0].message).toEqual('hello world!')
+                        expect(notices.length).toEqual(2);
+                        expect(notices[0].message).toBeUndefined();
+                        expect(notices[1].message).toEqual('hello world!');
                         done();
                     })
             })

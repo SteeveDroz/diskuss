@@ -5,12 +5,15 @@ const express = require('express');
 const favicon = require('serve-favicon');
 const User = require('./app/models/User');
 const Channel = require('./app/models/Channel');
+const Store = require('./app/Store');
 
 const bodyParser = require('body-parser');
 const app = express();
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
+
+var store = new Store();
 
 // API
 
@@ -25,9 +28,9 @@ app.get('/info/', function(req, res) {
     res.send({ 'version':version });
     console.log('* Info requested');
     console.log('# Users:');
-    console.log(User.list);
+    console.log(store.users);
     console.log('# Channels:');
-    console.log(Channel.list);
+    console.log(store.channels);
 });
 
 // List users
@@ -41,7 +44,7 @@ app.get('/users/', function(req, res) {
 
 app.post('/users/register/:nick/', function(req, res) {
     const user = new User(User.getAvailableNick(req.params.nick));
-    User.list[user.id] = user;
+    store.addUser(user);
     res.send(user);
     console.log('* ' + user.nick + ' is connected');
 });
@@ -78,34 +81,34 @@ app.get('/channels/', function(req, res){
 // Join channel
 
 app.put('/user/:id/channels/:channel/join/', function(req, res) {
-    const user = User.list[req.params.id];
-    let channel = Channel.list[req.params.channel];
+    const user = store.getUser(req.params.id);
+    let channel = store.getChannel(req.params.channel);
     if (channel === undefined) {
         channel = new Channel(req.params.channel);
-        Channel.list[channel.name] = channel;
+        store.addChannel(channel);
     }
     user.channels[channel.name] = channel;
-    res.send(channel.getUsers());
-    User.notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
+    notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
+    res.send(user);
     console.log('* ' + user.nick + ' joined ' + channel.name);
 });
 
 // Talk in channel
 
 app.put('/user/:id/channels/:channel/say/', function(req, res) {
-    const user = User.list[req.params.id];
-    let channel = Channel.list[req.params.channel];
-    if (channel == undefined) {
+    const user = store.getUser(req.params.id);
+    let channel = store.getChannel(req.params.channel);
+    if (channel === undefined) {
         channel = new Channel(req.params.channel);
         Channel.list[channel.name] = channel;
     }
-    
+
     if (user.channels[channel.name] == undefined) {
         user.channels[channel.name] = channel;
     }
     const message = req.body.message;
-    
-    User.notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
+
+    notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
     res.send(user);
     console.log('<' + user.nick + '#' + channel.name + '> ' + message);
 });
@@ -141,6 +144,22 @@ app.get('/user/:id/notices', function(req, res) {
     console.log("* Notices fetched.");
 });
 
+// Notice
+function notice(message) {
+    switch (message.type) {
+        case 'channelJoin':
+        case 'channelMessage':
+        case 'channelLeave':
+            var channel = store.channels[message.channel]
+            var users = store.getUsersByChannel(channel, false)
+            users.forEach(user => user.notices.push(message));
+            break;
+
+        default:
+    }
+}
+
+
 // Error handling
 
 function error(req, res) {
@@ -154,5 +173,12 @@ app.delete('*', error);
 
 // Server listening
 
-console.info('Server started on port ' + port);
-app.listen(port)
+if (__filename == process.argv[1]) {
+    console.info('Server started on port ' + port);
+    app.listen(port)
+} else {
+    module.exports = app;
+    module.exports.reset = function() {
+        store = new Store();
+    }
+}
