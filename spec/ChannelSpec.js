@@ -11,14 +11,14 @@ describe('App', function() {
             const id = res.body.id;
             expect(id).not.toBeUndefined();
 
-            agent.put('/id/' + id + '/channels/toto/join/').end(function(err, res) {
+            agent.put('/user/' + id + '/channels/toto/join/').end(function(err, res) {
                 expect(err).toBeNull();
 
                 expect(res.body.length).toEqual(1);
                 const channels = res.body[0].channels;
                 expect(channels[0].name).toEqual('toto');
 
-                agent.put('/id/' + id + '/channels/toto/say/')
+                agent.put('/user/' + id + '/channels/toto/say/')
                     .send({'message': 'hello world!'})
                     .end(function(err, res) {
                         expect(err).toBeNull();
