@@ -1,5 +1,3 @@
-"use strict";
-
 const version = 'v0.2-alpha';
 const port = 8081;
 
