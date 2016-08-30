@@ -13,7 +13,7 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
-var store = new Store();
+const store = new Store();
 
 // API
 
@@ -36,14 +36,14 @@ app.get('/info/', function(req, res) {
 // List users
 
 app.get('/users/', function(req, res) {
-    res.send(User.list.map(user => getPublicUser()));
+    res.send(store.users.map(user => user.getPublicUser()));
     console.log('* User list requested');
 });
 
 // Register
 
 app.post('/users/register/:nick/', function(req, res) {
-    const user = new User(User.getAvailableNick(req.params.nick));
+    const user = new User(store.getAvailableNick(req.params.nick));
     store.addUser(user);
     res.send(user);
     console.log('* ' + user.nick + ' is connected');
@@ -52,8 +52,8 @@ app.post('/users/register/:nick/', function(req, res) {
 // Disconnect
 
 app.delete('/user/:id/disconnect/', function(req, res) {
-    const user = User.list[req.params.id];
-    delete User.list[user.id];
+    const user = store.getUser(req.params.id);
+    store.removeUser(user.id);
     res.send({ 'version': version });
     console.log('* ' + user.nick + ' is disconnected');
 });
@@ -61,8 +61,8 @@ app.delete('/user/:id/disconnect/', function(req, res) {
 // Whois
 
 app.get('/users/whois/:nick/', function(req, res) {
-    const user = User.list.find(user => user.nick == req.params.nick);
-    if (user == null) {
+    const user = store.users.find(user => user.nick === req.params.nick);
+    if (user === null) {
         res.send(400).send({ 'error': 'Unknown nick.' });
     }
     else {
@@ -74,7 +74,7 @@ app.get('/users/whois/:nick/', function(req, res) {
 // List channels
 
 app.get('/channels/', function(req, res){
-    res.send(Channel.list.map(channel => channel.name));
+    res.send(store.channels.map(channel => channel.name));
     console.log('* Channel list requested');
 });
 
@@ -103,7 +103,7 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
         Channel.list[channel.name] = channel;
     }
 
-    if (user.channels[channel.name] == undefined) {
+    if (user.channels[channel.name] === undefined) {
         user.channels[channel.name] = channel;
     }
     const message = req.body.message;
@@ -116,16 +116,16 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
 // Leave channel
 
 app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
-    const user = User.list[req.params.id];
-    const channel = Channel.list[req.params.channel];
-    if (user.channels[channel.name] != undefined)
+    const user = store.getUser(req.params.id);
+    const channel = store.getChannel(req.params.channel);
+    if (user.channels[channel.name] !== undefined)
     {
         delete user.channels[channel.name];
-        if (channel != undefined) {
+        if (channel !== undefined) {
             if (!channel.keep && channel.getUsers().length == 0) {
-                delete Channel.list[channel.name];
+                store.removeChannel(channel.name);
             }
-            User.notice({ 'type': 'channelLeave', 'user': user.nick, 'channel': channel.name });
+            notice({ 'type': 'channelLeave', 'user': user.nick, 'channel': channel.name });
             console.log('* ' + user.nick + ' left ' + channel.name);
         }
     }
@@ -138,27 +138,27 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
 // Fetch notices
 
 app.get('/user/:id/notices', function(req, res) {
-    const user = User.list[req.params.id];
+    const user = store.getUser(req.params.id);
     res.send(user.notices);
     user.notices = [];
     console.log("* Notices fetched.");
 });
 
 // Notice
+
 function notice(message) {
     switch (message.type) {
         case 'channelJoin':
         case 'channelMessage':
         case 'channelLeave':
-            var channel = store.channels[message.channel]
-            var users = store.getUsersByChannel(channel, false)
+            const channel = store.getChannel(message.channel);
+            const users = store.getUsersByChannel(channel, false);
             users.forEach(user => user.notices.push(message));
             break;
 
         default:
     }
 }
-
 
 // Error handling
 

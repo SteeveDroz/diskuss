@@ -28,22 +28,7 @@ class User {
         }
         return user;
     }
-
-    static getAvailableNick(nick) {
-        if (User.list[nick] == undefined) {
-            return nick;
-        }
-        let suffix = 1;
-        do {
-            if (User.list[nick + '_' + suffix] == undefined)
-            {
-                break;
-            }
-            suffix++;
-        } while (true);
-        return nick + '_' + suffix;
-    }
-
+    
     isInChannel(channel) {
         return this.channels.indexOf(channel) >= 0;
     }
@@ -56,7 +41,4 @@ class User {
     }
 }
 
-const list = {};
-
 module.exports = User;
-module.exports.list = list;
