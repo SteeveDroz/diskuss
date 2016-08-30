@@ -96,7 +96,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
         store.addChannel(channel);
     }
     user.channels[channel.name] = channel;
-    notice({ 'type': 'channelJoin', 'user': user.nick, 'channel': channel.name });
+    notice({ type: 'channelJoin', user: user.nick, channel: channel.name });
     res.send(user);
     console.log('* ' + user.nick + ' joined ' + channel.name);
 });
@@ -120,7 +120,7 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
     }
     const message = req.body.message;
 
-    notice({ 'type': 'channelMessage', 'user': user.nick, 'channel': channel.name, 'message': message });
+    notice({ type: 'channelMessage', user: user.nick, channel: channel.name, message: message });
     res.send(user);
     console.log('<' + user.nick + '#' + channel.name + '> ' + message);
 });
@@ -141,7 +141,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
             if (!channel.keep && channel.getUsers().length == 0) {
                 store.removeChannel(channel.name);
             }
-            notice({ 'type': 'channelLeave', 'user': user.nick, 'channel': channel.name });
+            notice({ type: 'channelLeave', user: user.nick, channel: channel.name });
             console.log('* ' + user.nick + ' left ' + channel.name);
         }
     }
