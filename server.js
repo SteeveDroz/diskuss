@@ -53,6 +53,10 @@ app.post('/users/register/:nick/', function(req, res) {
 
 app.delete('/user/:id/disconnect/', function(req, res) {
     const user = store.getUser(req.params.id);
+    if (user === undefined) {
+        res.status(404).send({ error: 'Unknow user ID' })
+        return
+    }
     store.removeUser(user.id);
     res.send({ 'version': version });
     console.log('* ' + user.nick + ' is disconnected');
@@ -82,6 +86,10 @@ app.get('/channels/', function(req, res){
 
 app.put('/user/:id/channels/:channel/join/', function(req, res) {
     const user = store.getUser(req.params.id);
+    if (user === undefined) {
+        res.status(404).send({ error: 'Unknow user ID' })
+        return
+    }
     let channel = store.getChannel(req.params.channel);
     if (channel === undefined) {
         channel = new Channel(req.params.channel);
@@ -97,6 +105,10 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
 
 app.put('/user/:id/channels/:channel/say/', function(req, res) {
     const user = store.getUser(req.params.id);
+    if (user === undefined) {
+        res.status(404).send({ error: 'Unknow user ID' })
+        return
+    }
     let channel = store.getChannel(req.params.channel);
     if (channel === undefined) {
         channel = new Channel(req.params.channel);
@@ -117,6 +129,10 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
 
 app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     const user = store.getUser(req.params.id);
+    if (user === undefined) {
+        res.status(404).send({ error: 'Unknow user ID' })
+        return
+    }
     const channel = store.getChannel(req.params.channel);
     if (user.channels[channel.name] !== undefined)
     {
@@ -139,6 +155,10 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
 
 app.get('/user/:id/notices', function(req, res) {
     const user = store.getUser(req.params.id);
+    if (user === undefined) {
+        res.status(404).send({ error: 'Unknow user ID' })
+        return
+    }
     res.send(user.notices);
     user.notices = [];
     console.log("* Notices fetched.");
