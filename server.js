@@ -65,9 +65,10 @@ app.delete('/user/:id/disconnect/', function(req, res) {
 // Whois
 
 app.get('/users/whois/:nick/', function(req, res) {
-    const user = store.users.find(user => user.nick === req.params.nick);
-    if (user === null) {
-        res.send(400).send({ 'error': 'Unknown nick.' });
+    const id = Object.keys(store.users).find(id => store.users[id].nick === req.params.nick);
+	const user = store.getUser(id)
+    if (user === undefined) {
+        res.status(400).send({ 'error': 'Unknown nick' });
     }
     else {
         res.send(user.getPublicUser());
