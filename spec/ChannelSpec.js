@@ -6,20 +6,22 @@ describe('Valid app', function() {
     let id;
     it('connects to server', function(){
         agent.post('/users/register/toto/').end(function(err, res) {
+			expect(true).toBe(false);
             expect(err).toBeNull();
             id = res.body.id;
             expect(id).not.toBeUndefined();
+			done()
         })
     })
     
     it('joins a channel', function() {
         agent.put('/user/' + id + '/channels/channel-1/join/')
             .end(function(err, res) {
-                done()
                 expect(err).toBeNull();
                 const user = res.body.user;
                 expect(user).not.toBeNull();
                 expect(user.id).toEqual(id);
+				done()
             })
     })
     
@@ -27,18 +29,17 @@ describe('Valid app', function() {
         agent.put('/user/' + id + '/channels/channel-1/say/')
             .send({ message: 'Hello, world!' })
             .end(function(err, res) {
-                done()
                 expect(err).toBeNull()
                 const user = res.body.user;
                 expect(user).not.toBeNull();
                 expect(user.id).toEqual(id);
+				done()
             })
     })
     
     it('checks for notices', function() {
         agent.put('/user/' + id + '/notices/')
             .end(function(err, res) {
-                done()
                 expect(err).toBeNull()
                 const notices = res.body.notices
                 expect(notices).not.toBeNull()
@@ -50,16 +51,17 @@ describe('Valid app', function() {
                 expect(notices[1]['type']).toEqual('channelMessage');
                 expect(notices[1]['nick']).toEqual('toto');
                 expect(notices[1]['channel']).toEqual('channel-1');
+				done()
             })
     })
     
     it('disconnects', function() {
         agent.put('/user/' + id + '/disconnect/')
             .end(function(err, res) {
-                done()
                 expect(err).toBeNull()
                 const version = res.body.version
                 expect(version).not.toBeNull()
+				done()
             })
     })
 });
