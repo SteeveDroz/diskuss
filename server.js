@@ -96,7 +96,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
         store.addChannel(channel);
     }
     user.channels[channel.name] = channel;
-    notice({ type: 'channelJoin', user: user.nick, channel: channel.name });
+    notice({ type: 'channelJoin', nick: user.nick, channel: channel.name });
     res.send(user);
     console.log('* ' + user.nick + ' joined ' + channel.name);
 });
@@ -120,7 +120,7 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
     }
     const message = req.body.message;
 
-    notice({ type: 'channelMessage', user: user.nick, channel: channel.name, message: message });
+    notice({ type: 'channelMessage', nick: user.nick, channel: channel.name, message: message });
     res.send(user);
     console.log('<' + user.nick + '#' + channel.name + '> ' + message);
 });
@@ -141,7 +141,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
             if (!channel.keep && channel.getUsers().length == 0) {
                 store.removeChannel(channel.name);
             }
-            notice({ type: 'channelLeave', user: user.nick, channel: channel.name });
+            notice({ type: 'channelLeave', nick: user.nick, channel: channel.name });
             console.log('* ' + user.nick + ' left ' + channel.name);
         }
     }
@@ -153,7 +153,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
 
 // Fetch notices
 
-app.get('/user/:id/notices', function(req, res) {
+app.get('/user/:id/notices/', function(req, res) {
     const user = store.getUser(req.params.id);
     if (user === undefined) {
         res.status(404).send({ error: 'Unknow user ID' })
@@ -184,6 +184,7 @@ function notice(message) {
 
 function error(req, res) {
      res.status(404).send({error: "Unknown route or method."});
+	 console.log('ERROR accessing ' + req.method + ' ' + req.path)
 }
 
 app.get('*', error);

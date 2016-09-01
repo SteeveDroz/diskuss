@@ -7,7 +7,6 @@ describe('Valid app', function() {
     it('connects to server', function(done){
         agent.post('/users/register/toto/')
 		.end(function(err, res) {
-				expect(true).toBe(false);
 				expect(err).toBeNull();
 				id = res.body.id;
 				expect(id).not.toBeUndefined();
@@ -19,7 +18,7 @@ describe('Valid app', function() {
         agent.put('/user/' + id + '/channels/channel-1/join/')
             .end(function(err, res) {
                 expect(err).toBeNull();
-                const user = res.body.user;
+                const user = res.body;
                 expect(user).not.toBeNull();
                 expect(user.id).toEqual(id);
 				done()
@@ -31,7 +30,7 @@ describe('Valid app', function() {
             .send({ message: 'Hello, world!' })
             .end(function(err, res) {
                 expect(err).toBeNull()
-                const user = res.body.user;
+                const user = res.body;
                 expect(user).not.toBeNull();
                 expect(user.id).toEqual(id);
 				done()
@@ -39,10 +38,10 @@ describe('Valid app', function() {
     })
     
     it('checks for notices', function(done) {
-        agent.put('/user/' + id + '/notices/')
+        agent.get('/user/' + id + '/notices/')
             .end(function(err, res) {
                 expect(err).toBeNull()
-                const notices = res.body.notices
+                const notices = res.body
                 expect(notices).not.toBeNull()
                 expect(notices.length).toEqual(2)
                 expect(notices[0]['type']).toEqual('channelJoin');
@@ -57,7 +56,7 @@ describe('Valid app', function() {
     })
     
     it('disconnects', function(done) {
-        agent.put('/user/' + id + '/disconnect/')
+        agent.del('/user/' + id + '/disconnect/')
             .end(function(err, res) {
                 expect(err).toBeNull()
                 const version = res.body.version
