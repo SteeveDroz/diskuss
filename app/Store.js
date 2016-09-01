@@ -24,13 +24,13 @@ class Store {
         removeId = removeId === undefined ? true : removeId;
 
         let users = [];
-        for(var id in this.users) {
-            if (this.getUser(id).channels[channel.name] !== undefined) {
-                users.push(this.users[id])
+        for(let id in this.users) {
+            if (this.getUser(id).channels[channel] !== undefined) {
+                users.push(this.getUser(id))
             }
         }
         if (removeId) {
-            return this.users.map(user => user.getPublicUser())
+            return users.map(user => user.getPublicUser())
         }
         return users
     }

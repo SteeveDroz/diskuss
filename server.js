@@ -36,7 +36,7 @@ app.get('/info/', function(req, res) {
 // List users
 
 app.get('/users/', function(req, res) {
-    res.send(store.users.map(user => user.getPublicUser()));
+    res.send(Object.keys(store.users).map(id => store.users[id].getPublicUser()));
     console.log('* User list requested');
 });
 
@@ -54,7 +54,7 @@ app.post('/users/register/:nick/', function(req, res) {
 app.delete('/user/:id/disconnect/', function(req, res) {
     const user = store.getUser(req.params.id);
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknow user ID' })
+        res.status(404).send({ error: 'Unknown user ID' })
         return
     }
     store.removeUser(user.id);
@@ -98,7 +98,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
     }
     user.channels[channel.name] = channel;
     notice({ type: 'channelJoin', nick: user.nick, channel: channel.name });
-    res.send(user);
+    res.send(store.getUsersByChannel(channel.name, true))
     console.log('* ' + user.nick + ' joined ' + channel.name);
 });
 
@@ -113,7 +113,7 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
     let channel = store.getChannel(req.params.channel);
     if (channel === undefined) {
         channel = new Channel(req.params.channel);
-        Channel.list[channel.name] = channel;
+        store.addChannel(channel)
     }
 
     if (user.channels[channel.name] === undefined) {
@@ -173,7 +173,7 @@ function notice(message) {
         case 'channelMessage':
         case 'channelLeave':
             const channel = store.getChannel(message.channel);
-            const users = store.getUsersByChannel(channel, false);
+            const users = store.getUsersByChannel(channel.name, false);
             users.forEach(user => user.notices.push(message));
             break;
 
