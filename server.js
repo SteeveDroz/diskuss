@@ -87,7 +87,7 @@ app.get('/channels/', function(req, res){
 app.put('/user/:id/channels/:channel/join/', function(req, res) {
     const user = store.getUser(req.params.id);
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknow user ID' })
+        res.status(404).send({ error: 'Unknown user ID' })
         return
     }
     let channel = store.getChannel(req.params.channel);
@@ -106,7 +106,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
 app.put('/user/:id/channels/:channel/say/', function(req, res) {
     const user = store.getUser(req.params.id);
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknow user ID' })
+        res.status(404).send({ error: 'Unknown user ID' })
         return
     }
     let channel = store.getChannel(req.params.channel);
@@ -156,7 +156,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
 app.get('/user/:id/notices/', function(req, res) {
     const user = store.getUser(req.params.id);
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknow user ID' })
+        res.status(404).send({ error: 'Unknown user ID' })
         return
     }
     res.send(user.notices);
