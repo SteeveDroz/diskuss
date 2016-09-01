@@ -45,7 +45,7 @@ describe('Valid app', function() {
     
     it('talks in channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/say/')
-            .send({ message: 'Hello, world!' })
+            .send({ message: 'Hello, Channel 1!' })
             .end(function(err, res) {
                 expect(200)
                 const user = res.body;
@@ -57,7 +57,7 @@ describe('Valid app', function() {
     
     it('talks in another channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-2/say/')
-            .send({ message: 'Hello, world!' })
+            .send({ message: 'Hello, Channel 2!' })
             .end(function(err, res) {
                 expect(200)
                 const user = res.body;
@@ -82,10 +82,12 @@ describe('Valid app', function() {
 					expect(notices[1].type).toEqual('channelMessage');
 					expect(notices[1].nick).toEqual('toto');
 					expect(notices[1].channel).toEqual('channel-1');
+					expect(notices[1].message).toEqual('Hello, Channel 1!');
 					
 					expect(notices[2].type).toEqual('channelMessage');
 					expect(notices[2].nick).toEqual('toto');
 					expect(notices[2].channel).toEqual('channel-2');
+					expect(notices[2].message).toEqual('Hello, Channel 2!');
 				}
 				done()
             })
@@ -250,6 +252,20 @@ describe('Multiuser app', function() {
 			})
 	})
 	
+	it('makes user1 talk in channel', function(done) {
+		agent.put('/user/' + id1 + '/channels/talk/say')
+			.send({message: 'Message 1'})
+			.end(function(err, res) {
+				expect(200)
+				const user = res.body
+				expect(user).not.toBeUndefined()
+				if (user !== undefined) {
+					expect(user.nick).toBe('user1')
+				}
+				done()
+			})
+	})
+	
 	it('makes user2 enter a channel', function(done) {
 		agent.put('/user/' + id2 + '/channels/talk/join/')
 			.end(function(err, res) {
@@ -262,6 +278,97 @@ describe('Multiuser app', function() {
 						expect(users[0].nick).toBe('user1')
 						expect(users[1].nick).toBe('user2')
 					}
+				}
+				done()
+			})
+	})
+	
+	it('makes user1 talk again in channel', function(done) {
+		agent.put('/user/' + id1 + '/channels/talk/say/')
+			.send({message: 'Message 2'})
+			.end(function(err, res) {
+				expect(200)
+				const user = res.body
+				expect(user).not.toBeUndefined()
+				if (user !== undefined) {
+					expect(user.nick).toBe('user1')
+				}
+				done()
+			})
+	})
+	
+	it('makes user1 check for notices', function(done) {
+		agent.get('/user/' + id1 + '/notices/')
+			.end(function(err, res) {
+                expect(200)
+                const notices = res.body
+                expect(notices).not.toBeUndefined()
+                expect(notices.length).toEqual(4)
+				if (notices.length == 4) {
+					expect(notices[0].type).toEqual('channelJoin');
+					expect(notices[0].nick).toEqual('user1');
+					expect(notices[0].channel).toEqual('talk');
+					
+					expect(notices[1].type).toEqual('channelMessage');
+					expect(notices[1].nick).toEqual('user1');
+					expect(notices[1].channel).toEqual('talk');
+					expect(notices[1].message).toEqual('Message 1');
+					
+					expect(notices[2].type).toEqual('channelJoin');
+					expect(notices[2].nick).toEqual('user2');
+					expect(notices[2].channel).toEqual('talk');
+					
+					expect(notices[3].type).toEqual('channelMessage');
+					expect(notices[3].nick).toEqual('user1');
+					expect(notices[3].channel).toEqual('talk');
+					expect(notices[3].message).toEqual('Message 2');
+				}
+				done()
+			})
+	})
+	
+	it('makes user2 check for notices', function(done) {
+		agent.get('/user/' + id2 + '/notices/')
+			.end(function(err, res) {
+                expect(200)
+                const notices = res.body
+                expect(notices).not.toBeUndefined()
+                expect(notices.length).toEqual(2)
+				if (notices.length == 2) {
+					expect(notices[0].type).toEqual('channelJoin');
+					expect(notices[0].nick).toEqual('user2');
+					expect(notices[0].channel).toEqual('talk');
+					
+					expect(notices[1].type).toEqual('channelMessage');
+					expect(notices[1].nick).toEqual('user1');
+					expect(notices[1].channel).toEqual('talk');
+					expect(notices[1].message).toEqual('Message 2');
+				}
+				done()
+			})
+	})
+	
+	it('disconnects user1', function(done) {
+		agent.del('/user/' + id1 + '/disconnect/')
+			.end(function(err, res) {
+				expect(200)
+				const version = res.body
+				expect(version).not.toBeUndefined()
+				done()
+			})
+	})
+	
+	it('makes user2 check for notices aain', function(done) {
+		agent.get('/user/' + id2 + '/notices/')
+			.end(function(err, res) {
+                expect(200)
+                const notices = res.body
+                expect(notices).not.toBeUndefined()
+                expect(notices.length).toEqual(1)
+				if (notices.length == 1) {
+					expect(notices[0].type).toEqual('channelLeave');
+					expect(notices[0].nick).toEqual('user1');
+					expect(notices[0].channel).toEqual('talk');
 				}
 				done()
 			})
