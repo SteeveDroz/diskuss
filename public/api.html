@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=en>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <title>Diskuss API v0.4-beta</title>
@@ -311,7 +311,7 @@
                     <thead>
                         <tr>
                             <th>Type</th>
-                            <th colspan="3">Other attributes</th>
+                            <th colspan="4">Other attributes</th>
                             <th>Example</th>
                         </tr>
                     </thead>
@@ -320,47 +320,55 @@
                             <th rowspan="2">channelJoin</th>
                             <th>nick</th>
                             <th>channel</th>
+                            <th>time</th>
                             <th rowspan="2"></th>
-                            <td rowspan="2"><code>{ type: 'channelJoin', nick: 'user_1', channel: 'help' }</code></td>
+                            <td rowspan="2"><code>{ type: 'channelJoin', nick: 'user_1', channel: 'help', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <td>The nick of the user that joins the channel.</td>
                             <td>The channel concerned.</td>
+                            <td>The time of the event.</td>
                         </tr>
                         <tr>
                             <th rowspan="2">channelMessage</th>
                             <th>nick</th>
                             <th>channel</th>
                             <th>message</th>
-                            <td rowspan="2"><code>{ type: 'channelMessage', nick: 'user_1', channel: 'help', message:'Hello, world!' }</code></td>
+                            <th>time</th>
+                            <td rowspan="2"><code>{ type: 'channelMessage', nick: 'user_1', channel: 'help', message:'Hello, world!', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <td>The nick of the speaker.</td>
                             <td>The channel concerned.</td>
                             <td>The message to display.</td>
+                            <td>The time of the event.</td>
                         </tr>
                         <tr>
                             <th rowspan="2">channelLeave</th>
                             <th>nick</th>
                             <th>channel</th>
+                            <th>time</th>
                             <th rowspan="2"></th>
-                            <td rowspan="2"><code>{ type: 'channelLeave', nick: 'user_1', channel: 'help' }</code></td>
+                            <td rowspan="2"><code>{ type: 'channelLeave', nick: 'user_1', channel: 'help', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <td>The nick of the leaving user.</td>
                             <td>The channel concerned.</td>
+                            <td>The time of the event.</td>
                         </tr>
                         <tr>
                             <th rowspan="2">privateMessage</th>
                             <th>sender</th>
                             <th>recipient</th>
                             <th>message</th>
-                            <td rowspan="2"><code>{ type: 'privateMessage', sender: 'user_1', recipient: 'user_2', message: 'Hello, world!' }</code></td>
+                            <th>time</th>
+                            <td rowspan="2"><code>{ type: 'privateMessage', sender: 'user_1', recipient: 'user_2', message: 'Hello, world!', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <td>The nick of the sender.</td>
                             <td>The nick of the recipient</td>
                             <td>The message to display.</td>
+                            <td>The time of the event.</td>
                         </tr>
                     </tbody>
                 </table>
