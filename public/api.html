@@ -241,17 +241,48 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>channel</td>
-                            <td>The name of the channel.</td>
-                        </tr>
-                        <tr>
                             <td>id</td>
                             <td>The user GUID.</td>
+                        </tr>
+                        <tr>
+                            <td>channel</td>
+                            <td>The name of the channel.</td>
                         </tr>
                     </tbody>
                 </table>
                 <h3>Response</h3>
                 <p>The user object.</p>
+            </section>
+            
+            <section>
+                <h2>Send private message</h2>
+                <p>A user can send a private message that will only be viewable by the recipient.</p>
+                <h3>Request</h3>
+                <code>PUT /user/:id/message/:nick/?message=:message</code>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>The sender GUID</td>
+                        </tr>
+                        <tr>
+                            <td>nick</td>
+                            <td>The recipient nick</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>The message to be sent</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Response</h3>
+                <p>The user object of the recipient</p>
             </section>
             
             <section>
@@ -287,10 +318,10 @@
                     <tbody>
                         <tr>
                             <th rowspan="2">channelJoin</th>
-                            <th>user</th>
+                            <th>nick</th>
                             <th>channel</th>
                             <th rowspan="2"></th>
-                            <td rowspan="2"><code>{ type: 'channelJoin', user: 'user_1', channel: 'help' }</code></td>
+                            <td rowspan="2"><code>{ type: 'channelJoin', nick: 'user_1', channel: 'help' }</code></td>
                         </tr>
                         <tr>
                             <td>The nick of the user that joins the channel.</td>
@@ -298,10 +329,10 @@
                         </tr>
                         <tr>
                             <th rowspan="2">channelMessage</th>
-                            <th>user</th>
+                            <th>nick</th>
                             <th>channel</th>
                             <th>message</th>
-                            <td rowspan="2"><code>{ type: 'channelMessage', user: 'user_1', channel: 'help', message:'Hello, world!' }</code></td>
+                            <td rowspan="2"><code>{ type: 'channelMessage', nick: 'user_1', channel: 'help', message:'Hello, world!' }</code></td>
                         </tr>
                         <tr>
                             <td>The nick of the speaker.</td>
@@ -310,14 +341,26 @@
                         </tr>
                         <tr>
                             <th rowspan="2">channelLeave</th>
-                            <th>user</th>
+                            <th>nick</th>
                             <th>channel</th>
                             <th rowspan="2"></th>
-                            <td rowspan="2"><code>{ type: 'channelLeave', user: 'user_1', channel: 'help' }</code></td>
+                            <td rowspan="2"><code>{ type: 'channelLeave', nick: 'user_1', channel: 'help' }</code></td>
                         </tr>
                         <tr>
                             <td>The nick of the leaving user.</td>
                             <td>The channel concerned.</td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">privateMessage</th>
+                            <th>sender</th>
+                            <th>recipient</th>
+                            <th>message</th>
+                            <td rowspan="2"><code>{ type: 'privateMessage', sender: 'user_1', recipient: 'user_2', message: 'Hello, world!' }</code></td>
+                        </tr>
+                        <tr>
+                            <td>The nick of the sender.</td>
+                            <td>The nick of the recipient</td>
+                            <td>The message to display.</td>
                         </tr>
                     </tbody>
                 </table>

@@ -68,7 +68,7 @@ describe('Valid app', function() {
     })
     
     it('sends a private message', function(done) {
-        agent.put('/user/' + id + '/messages/toto/')
+        agent.put('/user/' + id + '/message/toto/')
             .send({ message: 'Private message' })
             .end(function(err, res) {
                 expect(200)
@@ -174,7 +174,7 @@ describe('Invalid app', function() {
     })
     
     it('sends a private message with wrong ID', function(done) {
-        agent.put('/user/INVALID-ID/messages/toto/')
+        agent.put('/user/INVALID-ID/message/toto/')
             .send({ message: 'Private message 1' })
             .end(function(err, res) {
                 expect(404)
@@ -188,7 +188,7 @@ describe('Invalid app', function() {
     })
     
     it('sends a private message to a non existing user', function(done) {
-        agent.put('/user/' + id + '/messages/foobar/')
+        agent.put('/user/' + id + '/message/foobar/')
             .send({ message: 'Private message 2' })
             .end(function(err, res) {
                 expect(200)
@@ -353,7 +353,7 @@ describe('Multiuser app', function() {
 	})
     
     it('makes user1 send a private message to user2', function(done) {
-        agent.put('/user/' + id1 + '/messages/user2/')
+        agent.put('/user/' + id1 + '/message/user2/')
             .send({ message: 'Private message' })
             .end(function(err, res) {
                 expect(200)
