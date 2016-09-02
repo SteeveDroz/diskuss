@@ -153,6 +153,26 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     res.send(user);
 });
 
+// Send private message
+
+app.put('/user/:id/message/:nick/', function(req, res) {
+    const sender = store.getUser(req.params.id)
+    const recipient = store.getUserByNick(req.params.nick)
+    const message = req.body.message
+    if (sender === undefined) {
+        res.status(404).send({ error: 'Unknown user ID'})
+        return
+    }
+    if (recipient === undefined) {
+        res.status(404).send({ error: 'Unknown username'})
+        return
+    }
+    
+    notice({ type: 'privateMessage', sender: sender.nick, recipient: recipient.nick, message: message})
+    res.send(recipient)
+    console.log('|' + sender.nick + '->' + recipient.nick + '| ' + message)
+})
+
 // Fetch notices
 
 app.get('/user/:id/notices/', function(req, res) {
@@ -177,6 +197,13 @@ function notice(message) {
             const users = store.getUsersByChannel(channel.name, false);
             users.forEach(user => user.notices.push(message));
             break;
+        
+        case 'privateMessage':
+            const recipient = store.getUserByNick(message.recipient)
+            if (recipient !== undefined) {
+                recipient.notices.push(message)
+            }
+            break
 
         default:
     }

@@ -15,6 +15,10 @@ class Store {
     getUser(id) {
         return this.users[id];
     }
+    
+    getUserByNick(nick) {
+        return this.users[Object.keys(this.users).find(id => this.users[id].nick === nick)]
+    }
 
     getChannel(name) {
         return this.channels[name];

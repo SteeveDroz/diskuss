@@ -86,6 +86,7 @@ describe('Valid app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(4)
+                console.log(notices)
 				if (notices.length == 4) {
                     expect(notices[0].type).toEqual('channelJoin');
                     expect(notices[0].nick).toEqual('toto');
@@ -102,7 +103,8 @@ describe('Valid app', function() {
                     expect(notices[2].message).toEqual('Hello, Channel 2!');
 
                     expect(notices[3].type).toEqual('privateMessage')
-                    expect(notices[3].nick).toEqual('toto')
+                    expect(notices[3].sender).toEqual('toto')
+                    expect(notices[3].recipient).toEqual('toto')
                     expect(notices[3].message).toEqual('Private message')
 				}
 				done()
@@ -413,7 +415,7 @@ describe('Multiuser app', function() {
                     expect(notices[1].message).toEqual('Message 2');
 
                     expect(notices[2].type).toBe('privateMessage')
-                    expect(notices[2].nick).toBe('user1')
+                    expect(notices[2].sender).toBe('user1')
                     expect(notices[2].message).toBe('Private message')
 				}
 				done()
@@ -430,7 +432,7 @@ describe('Multiuser app', function() {
 			})
 	})
 	
-	it('makes user2 check for notices aain', function(done) {
+	it('makes user2 check for notices again', function(done) {
 		agent.get('/user/' + id2 + '/notices/')
 			.end(function(err, res) {
                 expect(200)
