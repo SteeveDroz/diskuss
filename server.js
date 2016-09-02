@@ -1,4 +1,4 @@
-const version = 'v0.4-beta'
+const version = 'v1.0'
 const port = 8081
 
 const express = require('express')
