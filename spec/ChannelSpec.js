@@ -1,15 +1,15 @@
 var app = require('../server'),
-    request = require('supertest');
+    request = require('supertest')
 
 describe('Valid app', function() {
-    const agent = request.agent(app);
-    let id;
+    const agent = request.agent(app)
+    let id
     it('connects to server', function(done){
         agent.post('/users/register/toto/')
 			.end(function(err, res) {
-				expect(200);
-				id = res.body.id;
-				expect(id).not.toBeUndefined();
+				expect(200)
+				id = res.body.id
+				expect(id).not.toBeUndefined()
 				done()
 			})
     })
@@ -18,7 +18,7 @@ describe('Valid app', function() {
 		agent.get('/users/whois/toto/')
 			.end(function(err, res) {
 				expect(200)
-				const user = res.body;
+				const user = res.body
 				expect(user).not.toBeUndefined()
 				if (user !== undefined) {
 					expect(user.nick).toBe('toto')
@@ -30,7 +30,7 @@ describe('Valid app', function() {
     it('joins a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/join/')
             .end(function(err, res) {
-                expect(200);
+                expect(200)
 				const users = res.body
 				expect(users).not.toBeUndefined()
 				if (users !== undefined) {
@@ -48,9 +48,9 @@ describe('Valid app', function() {
             .send({ message: 'Hello, Channel 1!' })
             .end(function(err, res) {
                 expect(200)
-                const user = res.body;
-                expect(user).not.toBeUndefined();
-                expect(user.id).toEqual(id);
+                const user = res.body
+                expect(user).not.toBeUndefined()
+                expect(user.id).toEqual(id)
 				done()
             })
     })
@@ -60,9 +60,9 @@ describe('Valid app', function() {
             .send({ message: 'Hello, Channel 2!' })
             .end(function(err, res) {
                 expect(200)
-                const user = res.body;
-                expect(user).not.toBeUndefined();
-                expect(user.id).toEqual(id);
+                const user = res.body
+                expect(user).not.toBeUndefined()
+                expect(user.id).toEqual(id)
 				done()
             })
     })
@@ -87,19 +87,19 @@ describe('Valid app', function() {
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(4)
 				if (notices.length == 4) {
-                    expect(notices[0].type).toEqual('channelJoin');
-                    expect(notices[0].nick).toEqual('toto');
-                    expect(notices[0].channel).toEqual('channel-1');
+                    expect(notices[0].type).toEqual('channelJoin')
+                    expect(notices[0].nick).toEqual('toto')
+                    expect(notices[0].channel).toEqual('channel-1')
 
-                    expect(notices[1].type).toEqual('channelMessage');
-                    expect(notices[1].nick).toEqual('toto');
-                    expect(notices[1].channel).toEqual('channel-1');
-                    expect(notices[1].message).toEqual('Hello, Channel 1!');
+                    expect(notices[1].type).toEqual('channelMessage')
+                    expect(notices[1].nick).toEqual('toto')
+                    expect(notices[1].channel).toEqual('channel-1')
+                    expect(notices[1].message).toEqual('Hello, Channel 1!')
 
-                    expect(notices[2].type).toEqual('channelMessage');
-                    expect(notices[2].nick).toEqual('toto');
-                    expect(notices[2].channel).toEqual('channel-2');
-                    expect(notices[2].message).toEqual('Hello, Channel 2!');
+                    expect(notices[2].type).toEqual('channelMessage')
+                    expect(notices[2].nick).toEqual('toto')
+                    expect(notices[2].channel).toEqual('channel-2')
+                    expect(notices[2].message).toEqual('Hello, Channel 2!')
 
                     expect(notices[3].type).toEqual('privateMessage')
                     expect(notices[3].sender).toEqual('toto')
@@ -119,17 +119,17 @@ describe('Valid app', function() {
 				done()
             })
     })
-});
+})
 
 describe('Invalid app', function() {
-    const agent = request.agent(app);
-    let id;
+    const agent = request.agent(app)
+    let id
     it('connects to server', function(done){
         agent.post('/users/register/toto/')
 		.end(function(err, res) {
 				expect(200)
-				id = res.body.id;
-				expect(id).not.toBeUndefined();
+				id = res.body.id
+				expect(id).not.toBeUndefined()
 				done()
 			})
     })
@@ -138,7 +138,7 @@ describe('Invalid app', function() {
 		agent.get('/users/whois/nobody/')
 			.end(function(err, res) {
 				expect(404)
-				const message = res.body;
+				const message = res.body
 				expect(message).not.toBeUndefined()
 				if (message !== undefined) {
 					expect(message.error).toBe('Unknown nick')
@@ -150,9 +150,9 @@ describe('Invalid app', function() {
     it('joins a channel', function(done) {
         agent.put('/user/INVALID-ID/channels/channel-1/join/')
             .end(function(err, res) {
-                expect(404);
-                const message = res.body;
-                expect(message).not.toBeUndefined();
+                expect(404)
+                const message = res.body
+                expect(message).not.toBeUndefined()
 				if (message !== undefined) {
 					expect(message.error).toEqual('Unknown user ID')
 				}
@@ -165,8 +165,8 @@ describe('Invalid app', function() {
             .send({ message: 'Hello, world!' })
             .end(function(err, res) {
                 expect(404)
-                const message = res.body;
-                expect(message).not.toBeUndefined();
+                const message = res.body
+                expect(message).not.toBeUndefined()
 				if (message !== undefined) {
 					expect(message.error).toEqual('Unknown user ID')
 				}
@@ -179,8 +179,8 @@ describe('Invalid app', function() {
             .send({ message: 'Private message 1' })
             .end(function(err, res) {
                 expect(404)
-                const message = res.body;
-                expect(message).not.toBeUndefined();
+                const message = res.body
+                expect(message).not.toBeUndefined()
 				if (message !== undefined) {
 					expect(message.error).toEqual('Unknown user ID')
 				}
@@ -193,8 +193,8 @@ describe('Invalid app', function() {
             .send({ message: 'Private message 2' })
             .end(function(err, res) {
                 expect(200)
-                const message = res.body;
-                expect(message).not.toBeUndefined();
+                const message = res.body
+                expect(message).not.toBeUndefined()
 				if (message !== undefined) {
 					expect(message.error).toEqual('Unknown username')
 				}
@@ -374,23 +374,23 @@ describe('Multiuser app', function() {
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(4)
 				if (notices.length == 4) {
-                    expect(notices[0].type).toEqual('channelJoin');
-                    expect(notices[0].nick).toEqual('user1');
-                    expect(notices[0].channel).toEqual('talk');
+                    expect(notices[0].type).toEqual('channelJoin')
+                    expect(notices[0].nick).toEqual('user1')
+                    expect(notices[0].channel).toEqual('talk')
 
-                    expect(notices[1].type).toEqual('channelMessage');
-                    expect(notices[1].nick).toEqual('user1');
-                    expect(notices[1].channel).toEqual('talk');
-                    expect(notices[1].message).toEqual('Message 1');
+                    expect(notices[1].type).toEqual('channelMessage')
+                    expect(notices[1].nick).toEqual('user1')
+                    expect(notices[1].channel).toEqual('talk')
+                    expect(notices[1].message).toEqual('Message 1')
 
-                    expect(notices[2].type).toEqual('channelJoin');
-                    expect(notices[2].nick).toEqual('user2');
-                    expect(notices[2].channel).toEqual('talk');
+                    expect(notices[2].type).toEqual('channelJoin')
+                    expect(notices[2].nick).toEqual('user2')
+                    expect(notices[2].channel).toEqual('talk')
 
-                    expect(notices[3].type).toEqual('channelMessage');
-                    expect(notices[3].nick).toEqual('user1');
-                    expect(notices[3].channel).toEqual('talk');
-                    expect(notices[3].message).toEqual('Message 2');
+                    expect(notices[3].type).toEqual('channelMessage')
+                    expect(notices[3].nick).toEqual('user1')
+                    expect(notices[3].channel).toEqual('talk')
+                    expect(notices[3].message).toEqual('Message 2')
 				}
 				done()
 			})
@@ -404,14 +404,14 @@ describe('Multiuser app', function() {
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(3)
 				if (notices.length == 3) {
-                    expect(notices[0].type).toEqual('channelJoin');
-                    expect(notices[0].nick).toEqual('user2');
-                    expect(notices[0].channel).toEqual('talk');
+                    expect(notices[0].type).toEqual('channelJoin')
+                    expect(notices[0].nick).toEqual('user2')
+                    expect(notices[0].channel).toEqual('talk')
 
-                    expect(notices[1].type).toEqual('channelMessage');
-                    expect(notices[1].nick).toEqual('user1');
-                    expect(notices[1].channel).toEqual('talk');
-                    expect(notices[1].message).toEqual('Message 2');
+                    expect(notices[1].type).toEqual('channelMessage')
+                    expect(notices[1].nick).toEqual('user1')
+                    expect(notices[1].channel).toEqual('talk')
+                    expect(notices[1].message).toEqual('Message 2')
 
                     expect(notices[2].type).toBe('privateMessage')
                     expect(notices[2].sender).toBe('user1')
@@ -439,9 +439,9 @@ describe('Multiuser app', function() {
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(1)
 				if (notices.length == 1) {
-					expect(notices[0].type).toEqual('channelLeave');
-					expect(notices[0].nick).toEqual('user1');
-					expect(notices[0].channel).toEqual('talk');
+					expect(notices[0].type).toEqual('channelLeave')
+					expect(notices[0].nick).toEqual('user1')
+					expect(notices[0].channel).toEqual('talk')
 				}
 				done()
 			})

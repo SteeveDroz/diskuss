@@ -1,19 +1,19 @@
 class Store {
     constructor() {
-        this._users = {};
-        this._channels = {};
+        this._users = {}
+        this._channels = {}
     }
     
     get users() {
-        return this._users;
+        return this._users
     }
     
     get channels() {
-        return this._channels;
+        return this._channels
     }
 
     getUser(id) {
-        return this.users[id];
+        return this.users[id]
     }
     
     getUserByNick(nick) {
@@ -21,13 +21,13 @@ class Store {
     }
 
     getChannel(name) {
-        return this.channels[name];
+        return this.channels[name]
     }
 
     getUsersByChannel(channel, removeId) {
-        removeId = removeId === undefined ? true : removeId;
+        removeId = removeId === undefined ? true : removeId
 
-        let users = [];
+        let users = []
         for(let id in this.users) {
             if (this.getUser(id).channels[channel] !== undefined) {
                 users.push(this.getUser(id))
@@ -40,41 +40,41 @@ class Store {
     }
     
     getAvailableNick(nick) {
-        let id = Object.keys(this.users).find(id => this.getUser(id).nick === nick);
+        let id = Object.keys(this.users).find(id => this.getUser(id).nick === nick)
         if (id === undefined) {
-            return nick;
+            return nick
         }
-        let user = this.getUser(id);
-        let suffix = 1;
+        let user = this.getUser(id)
+        let suffix = 1
         do {
             if (this.users.find(user => user.nick === nick + '_' + suffix) === undefined)
             {
-                break;
+                break
             }
-            suffix++;
-        } while (true);
-        return nick + '_' + suffix;
+            suffix++
+        } while (true)
+        return nick + '_' + suffix
     }
 
     addUser(user) {
-        this.users[user.id] = user;
-        return this;
+        this.users[user.id] = user
+        return this
     }
 
     addChannel(channel) {
-        this.channels[channel.name] = channel;
-        return this;
+        this.channels[channel.name] = channel
+        return this
     }
     
     removeUser(id) {
-        delete this.users[id];
-        return this;
+        delete this.users[id]
+        return this
     }
     
     removeChannel(name) {
-        delete this.channels[name];
-        return this;
+        delete this.channels[name]
+        return this
     }
 }
 
-module.exports = Store;
+module.exports = Store
