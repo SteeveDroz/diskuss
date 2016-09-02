@@ -19,25 +19,18 @@ const store = new Store();
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/public/api.html');
-    console.log('# delivering API');
 });
 
 // Info
 
 app.get('/info/', function(req, res) {
     res.send({ 'version':version });
-    console.log('* Info requested');
-    console.log('# Users:');
-    console.log(store.users);
-    console.log('# Channels:');
-    console.log(store.channels);
 });
 
 // List users
 
 app.get('/users/', function(req, res) {
     res.send(Object.keys(store.users).map(id => store.users[id].getPublicUser()));
-    console.log('* User list requested');
 });
 
 // Register
@@ -46,7 +39,6 @@ app.post('/users/register/:nick/', function(req, res) {
     const user = new User(store.getAvailableNick(req.params.nick));
     store.addUser(user);
     res.send(user);
-    console.log('* ' + user.nick + ' is connected');
 });
 
 // Disconnect
@@ -60,7 +52,6 @@ app.delete('/user/:id/disconnect/', function(req, res) {
 	Object.keys(user.channels).forEach(channel => notice({ type: 'channelLeave', nick: user.nick, channel: channel }))
     store.removeUser(user.id);
     res.send({ 'version': version });
-    console.log('* ' + user.nick + ' is disconnected');
 });
 
 // Whois
@@ -74,14 +65,12 @@ app.get('/users/whois/:nick/', function(req, res) {
     else {
         res.send(user.getPublicUser());
     }
-    console.log('* Whois on ' + req.params.nick);
 });
 
 // List channels
 
 app.get('/channels/', function(req, res){
     res.send(store.channels.map(channel => channel.name));
-    console.log('* Channel list requested');
 });
 
 // Join channel
@@ -100,7 +89,6 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
     user.channels[channel.name] = channel;
     notice({ type: 'channelJoin', nick: user.nick, channel: channel.name });
     res.send(store.getUsersByChannel(channel.name, true))
-    console.log('* ' + user.nick + ' joined ' + channel.name);
 });
 
 // Talk in channel
@@ -124,7 +112,6 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
 
     notice({ type: 'channelMessage', nick: user.nick, channel: channel.name, message: message });
     res.send(user);
-    console.log('<' + user.nick + '#' + channel.name + '> ' + message);
 });
 
 // Leave channel
@@ -144,7 +131,6 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
                 store.removeChannel(channel.name);
             }
             notice({ type: 'channelLeave', nick: user.nick, channel: channel.name });
-            console.log('* ' + user.nick + ' left ' + channel.name);
         }
     }
     else {
@@ -170,7 +156,6 @@ app.put('/user/:id/message/:nick/', function(req, res) {
     
     notice({ type: 'privateMessage', sender: sender.nick, recipient: recipient.nick, message: message})
     res.send(recipient)
-    console.log('|' + sender.nick + '->' + recipient.nick + '| ' + message)
 })
 
 // Fetch notices
@@ -183,7 +168,6 @@ app.get('/user/:id/notices/', function(req, res) {
     }
     res.send(user.notices);
     user.notices = [];
-    console.log("* Notices fetched.");
 });
 
 // Notice

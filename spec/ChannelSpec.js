@@ -86,7 +86,6 @@ describe('Valid app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(4)
-                console.log(notices)
 				if (notices.length == 4) {
                     expect(notices[0].type).toEqual('channelJoin');
                     expect(notices[0].nick).toEqual('toto');
