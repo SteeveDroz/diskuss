@@ -173,6 +173,8 @@ app.get('/user/:id/notices/', function(req, res) {
 // Notice
 
 function notice(message) {
+    message.time = new Date().toJSON()
+    
     switch (message.type) {
         case 'channelJoin':
         case 'channelMessage':
