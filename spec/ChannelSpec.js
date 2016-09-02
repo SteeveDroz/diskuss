@@ -67,27 +67,43 @@ describe('Valid app', function() {
             })
     })
     
+    it('sends a private message', function(done) {
+        agent.put('/user/' + id + '/messages/toto/')
+            .send({ message: 'Private message' })
+            .end(function(err, res) {
+                expect(200)
+                const user = res.body
+                expect(user).not.toBeUndefined()
+                expect(user.nick).toBe('toto')
+                done()
+            })
+    })
+    
     it('checks for notices', function(done) {
         agent.get('/user/' + id + '/notices/')
             .end(function(err, res) {
                 expect(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
-                expect(notices.length).toEqual(3)
-				if (notices.length == 3) {
-					expect(notices[0].type).toEqual('channelJoin');
-					expect(notices[0].nick).toEqual('toto');
-					expect(notices[0].channel).toEqual('channel-1');
-					
-					expect(notices[1].type).toEqual('channelMessage');
-					expect(notices[1].nick).toEqual('toto');
-					expect(notices[1].channel).toEqual('channel-1');
-					expect(notices[1].message).toEqual('Hello, Channel 1!');
-					
-					expect(notices[2].type).toEqual('channelMessage');
-					expect(notices[2].nick).toEqual('toto');
-					expect(notices[2].channel).toEqual('channel-2');
-					expect(notices[2].message).toEqual('Hello, Channel 2!');
+                expect(notices.length).toEqual(4)
+				if (notices.length == 4) {
+                    expect(notices[0].type).toEqual('channelJoin');
+                    expect(notices[0].nick).toEqual('toto');
+                    expect(notices[0].channel).toEqual('channel-1');
+
+                    expect(notices[1].type).toEqual('channelMessage');
+                    expect(notices[1].nick).toEqual('toto');
+                    expect(notices[1].channel).toEqual('channel-1');
+                    expect(notices[1].message).toEqual('Hello, Channel 1!');
+
+                    expect(notices[2].type).toEqual('channelMessage');
+                    expect(notices[2].nick).toEqual('toto');
+                    expect(notices[2].channel).toEqual('channel-2');
+                    expect(notices[2].message).toEqual('Hello, Channel 2!');
+
+                    expect(notices[3].type).toEqual('privateMessage')
+                    expect(notices[3].nick).toEqual('toto')
+                    expect(notices[3].message).toEqual('Private message')
 				}
 				done()
             })
@@ -157,7 +173,35 @@ describe('Invalid app', function() {
             })
     })
     
-    it('checks for notices', function(done) {
+    it('sends a private message with wrong ID', function(done) {
+        agent.put('/user/INVALID-ID/messages/toto/')
+            .send({ message: 'Private message 1' })
+            .end(function(err, res) {
+                expect(404)
+                const message = res.body;
+                expect(message).not.toBeUndefined();
+				if (message !== undefined) {
+					expect(message.error).toEqual('Unknown user ID')
+				}
+                done()
+            })
+    })
+    
+    it('sends a private message to a non existing user', function(done) {
+        agent.put('/user/' + id + '/messages/foobar/')
+            .send({ message: 'Private message 2' })
+            .end(function(err, res) {
+                expect(200)
+                const message = res.body;
+                expect(message).not.toBeUndefined();
+				if (message !== undefined) {
+					expect(message.error).toEqual('Unknown username')
+				}
+                done()
+            })
+    })
+    
+    it('checks for notices with wrong ID', function(done) {
         agent.get('/user/INVALID-ID/notices/')
             .end(function(err, res) {
                 expect(404)
@@ -167,6 +211,17 @@ describe('Invalid app', function() {
 				if (message.error !== undefined) {
 					expect(message.error).toEqual('Unknown user ID')
 				}
+				done()
+            })
+    })
+    
+    it('checks for notices with good ID', function(done) {
+        agent.get('/user/' + id + '/notices/')
+            .end(function(err, res) {
+                expect(200)
+                const notices = res.body
+                expect(notices).not.toBeUndefined()
+				expect(notices.length).toBe(0)
 				done()
             })
     })
@@ -296,6 +351,19 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
+    
+    it('makes user1 send a private message to user2', function(done) {
+        agent.put('/user/' + id1 + '/messages/user2/')
+            .send({ message: 'Private message' })
+            .end(function(err, res) {
+                expect(200)
+                const user = res.body
+                expect(user).not.toBeUndefined()
+                expect(user.nick).toBe('user2')
+                done()
+            })
+    })
+
 	
 	it('makes user1 check for notices', function(done) {
 		agent.get('/user/' + id1 + '/notices/')
@@ -305,23 +373,23 @@ describe('Multiuser app', function() {
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(4)
 				if (notices.length == 4) {
-					expect(notices[0].type).toEqual('channelJoin');
-					expect(notices[0].nick).toEqual('user1');
-					expect(notices[0].channel).toEqual('talk');
-					
-					expect(notices[1].type).toEqual('channelMessage');
-					expect(notices[1].nick).toEqual('user1');
-					expect(notices[1].channel).toEqual('talk');
-					expect(notices[1].message).toEqual('Message 1');
-					
-					expect(notices[2].type).toEqual('channelJoin');
-					expect(notices[2].nick).toEqual('user2');
-					expect(notices[2].channel).toEqual('talk');
-					
-					expect(notices[3].type).toEqual('channelMessage');
-					expect(notices[3].nick).toEqual('user1');
-					expect(notices[3].channel).toEqual('talk');
-					expect(notices[3].message).toEqual('Message 2');
+                    expect(notices[0].type).toEqual('channelJoin');
+                    expect(notices[0].nick).toEqual('user1');
+                    expect(notices[0].channel).toEqual('talk');
+
+                    expect(notices[1].type).toEqual('channelMessage');
+                    expect(notices[1].nick).toEqual('user1');
+                    expect(notices[1].channel).toEqual('talk');
+                    expect(notices[1].message).toEqual('Message 1');
+
+                    expect(notices[2].type).toEqual('channelJoin');
+                    expect(notices[2].nick).toEqual('user2');
+                    expect(notices[2].channel).toEqual('talk');
+
+                    expect(notices[3].type).toEqual('channelMessage');
+                    expect(notices[3].nick).toEqual('user1');
+                    expect(notices[3].channel).toEqual('talk');
+                    expect(notices[3].message).toEqual('Message 2');
 				}
 				done()
 			})
@@ -333,16 +401,20 @@ describe('Multiuser app', function() {
                 expect(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
-                expect(notices.length).toEqual(2)
-				if (notices.length == 2) {
-					expect(notices[0].type).toEqual('channelJoin');
-					expect(notices[0].nick).toEqual('user2');
-					expect(notices[0].channel).toEqual('talk');
-					
-					expect(notices[1].type).toEqual('channelMessage');
-					expect(notices[1].nick).toEqual('user1');
-					expect(notices[1].channel).toEqual('talk');
-					expect(notices[1].message).toEqual('Message 2');
+                expect(notices.length).toEqual(3)
+				if (notices.length == 3) {
+                    expect(notices[0].type).toEqual('channelJoin');
+                    expect(notices[0].nick).toEqual('user2');
+                    expect(notices[0].channel).toEqual('talk');
+
+                    expect(notices[1].type).toEqual('channelMessage');
+                    expect(notices[1].nick).toEqual('user1');
+                    expect(notices[1].channel).toEqual('talk');
+                    expect(notices[1].message).toEqual('Message 2');
+
+                    expect(notices[2].type).toBe('privateMessage')
+                    expect(notices[2].nick).toBe('user1')
+                    expect(notices[2].message).toBe('Private message')
 				}
 				done()
 			})
