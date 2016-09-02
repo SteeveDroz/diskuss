@@ -90,21 +90,37 @@ describe('Valid app', function() {
                     expect(notices[0].type).toEqual('channelJoin')
                     expect(notices[0].nick).toEqual('toto')
                     expect(notices[0].channel).toEqual('channel-1')
+                    expect(notices[0].time).not.toBeUndefined()
+                    if (notices[0].time !== undefined) {
+                        expect(notices[0].time.length).toBe(24)
+                    }
 
                     expect(notices[1].type).toEqual('channelMessage')
                     expect(notices[1].nick).toEqual('toto')
                     expect(notices[1].channel).toEqual('channel-1')
                     expect(notices[1].message).toEqual('Hello, Channel 1!')
+                    expect(notices[1].time).not.toBeUndefined()
+                    if (notices[1].time !== undefined) {
+                        expect(notices[1].time.length).toBe(24)
+                    }
 
                     expect(notices[2].type).toEqual('channelMessage')
                     expect(notices[2].nick).toEqual('toto')
                     expect(notices[2].channel).toEqual('channel-2')
                     expect(notices[2].message).toEqual('Hello, Channel 2!')
+                    expect(notices[2].time).not.toBeUndefined()
+                    if (notices[2].time !== undefined) {
+                        expect(notices[2].time.length).toBe(24)
+                    }
 
                     expect(notices[3].type).toEqual('privateMessage')
                     expect(notices[3].sender).toEqual('toto')
                     expect(notices[3].recipient).toEqual('toto')
                     expect(notices[3].message).toEqual('Private message')
+                    expect(notices[3].time).not.toBeUndefined()
+                    if (notices[3].time !== undefined) {
+                        expect(notices[3].time.length).toBe(24)
+                    }
 				}
 				done()
             })
@@ -377,20 +393,36 @@ describe('Multiuser app', function() {
                     expect(notices[0].type).toEqual('channelJoin')
                     expect(notices[0].nick).toEqual('user1')
                     expect(notices[0].channel).toEqual('talk')
+                    expect(notices[0].time).not.toBeUndefined()
+                    if (notices[0].time !== undefined) {
+                        expect(notices[0].time.length).toBe(24)
+                    }
 
                     expect(notices[1].type).toEqual('channelMessage')
                     expect(notices[1].nick).toEqual('user1')
                     expect(notices[1].channel).toEqual('talk')
                     expect(notices[1].message).toEqual('Message 1')
+                    expect(notices[1].time).not.toBeUndefined()
+                    if (notices[1].time !== undefined) {
+                        expect(notices[1].time.length).toBe(24)
+                    }
 
                     expect(notices[2].type).toEqual('channelJoin')
                     expect(notices[2].nick).toEqual('user2')
                     expect(notices[2].channel).toEqual('talk')
+                    expect(notices[2].time).not.toBeUndefined()
+                    if (notices[2].time !== undefined) {
+                        expect(notices[2].time.length).toBe(24)
+                    }
 
                     expect(notices[3].type).toEqual('channelMessage')
                     expect(notices[3].nick).toEqual('user1')
                     expect(notices[3].channel).toEqual('talk')
                     expect(notices[3].message).toEqual('Message 2')
+                    expect(notices[3].time).not.toBeUndefined()
+                    if (notices[3].time !== undefined) {
+                        expect(notices[3].time.length).toBe(24)
+                    }
 				}
 				done()
 			})
@@ -407,15 +439,27 @@ describe('Multiuser app', function() {
                     expect(notices[0].type).toEqual('channelJoin')
                     expect(notices[0].nick).toEqual('user2')
                     expect(notices[0].channel).toEqual('talk')
+                    expect(notices[0].time).not.toBeUndefined()
+                    if (notices[0].time !== undefined) {
+                        expect(notices[0].time.length).toBe(24)
+                    }
 
                     expect(notices[1].type).toEqual('channelMessage')
                     expect(notices[1].nick).toEqual('user1')
                     expect(notices[1].channel).toEqual('talk')
                     expect(notices[1].message).toEqual('Message 2')
+                    expect(notices[1].time).not.toBeUndefined()
+                    if (notices[1].time !== undefined) {
+                        expect(notices[1].time.length).toBe(24)
+                    }
 
                     expect(notices[2].type).toBe('privateMessage')
                     expect(notices[2].sender).toBe('user1')
                     expect(notices[2].message).toBe('Private message')
+                    expect(notices[2].time).not.toBeUndefined()
+                    if (notices[2].time !== undefined) {
+                        expect(notices[2].time.length).toBe(24)
+                    }
 				}
 				done()
 			})
@@ -442,6 +486,10 @@ describe('Multiuser app', function() {
 					expect(notices[0].type).toEqual('channelLeave')
 					expect(notices[0].nick).toEqual('user1')
 					expect(notices[0].channel).toEqual('talk')
+                    expect(notices[0].time).not.toBeUndefined()
+                    if (notices[0].time !== undefined) {
+                        expect(notices[0].time.length).toBe(24)
+                    }
 				}
 				done()
 			})
