@@ -2,7 +2,7 @@
 
 Diskuss is a Node.js chat server that offers an API but no official client.
 
-## install
+## Install
 
 1. This application requires **[node.js](https://nodejs.org/en/download/)** and **NPM** (included with Node.js), please install it if you haven't.
 2. From the directory where `server.js` is located, use the command line `npm install` to download and install dependencies.
