@@ -166,6 +166,12 @@ app.get('/user/:id/notices/', function(req, res) {
         res.status(404).send({ error: 'Unknown user ID' })
         return
     }
+    user.update()
+    const idlingUsers = store.getIdlingUsers()
+	idlingUsers.forEach(user => {
+        Object.keys(user.channels).forEach(channel => notice({ type: 'channelLeave', nick: user.nick, channel: channel }))
+        store.removeUser(user.id)
+    })
     res.send(user.notices)
     user.notices = []
 })

@@ -55,6 +55,10 @@ class Store {
         } while (true)
         return nick + '_' + suffix
     }
+    
+    getIdlingUsers() {
+        return Object.keys(this.users).filter(id => this.users[id].lastSeen < Date.now() - 5000 /* 5 seconds */).map(id => this.users[id])
+    }
 
     addUser(user) {
         this.users[user.id] = user

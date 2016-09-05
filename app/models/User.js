@@ -8,6 +8,7 @@ class User {
         this.id = User.guid()
         this.channels = {}
         this.notices = []
+        this.lastSeen = Date.now()
     }
 
     static guid() {
@@ -37,7 +38,12 @@ class User {
         const publicUser = User.copy(this)
         publicUser.id = undefined
         publicUser.notices = []
+        publicUser.lastSeen = undefined
         return publicUser
+    }
+    
+    update() {
+        this.lastSeen = Date.now()
     }
 }
 
