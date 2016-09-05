@@ -1,4 +1,4 @@
-const version = 'v1.1.1'
+const version = require('./package.json').version
 const port = 8081
 
 const express = require('express')
@@ -224,7 +224,7 @@ app.delete('*', error)
 // Server listening
 
 if (__filename == process.argv[1]) {
-    console.info('Server started on port ' + port)
+    console.info('Diskuss v' + version + ' started on port ' + port)
     app.listen(port)
 } else {
     module.exports = app
