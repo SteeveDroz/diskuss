@@ -13,7 +13,7 @@ app.use(favicon(__dirname + '/public/favicon.ico'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-const store = new Store()
+let store = new Store()
 
 // API
 
@@ -49,7 +49,10 @@ app.delete('/user/:id/disconnect/', function(req, res) {
         res.status(404).send({ error: 'Unknown user ID' })
         return
     }
-	Object.keys(user.channels).forEach(channel => notice({ type: 'channelLeave', nick: user.nick, channel: channel }))
+	Object.keys(user.channels).forEach(channel => {
+            notice({ type: 'channelLeave', nick: user.nick, channel: channel })
+            store.removeChannel(channel)
+    })
     store.removeUser(user.id)
     res.send({ 'version': version })
 })
@@ -70,7 +73,7 @@ app.get('/users/whois/:nick/', function(req, res) {
 // List channels
 
 app.get('/channels/', function(req, res){
-    res.send(store.channels.map(channel => channel.name))
+    res.send(Object.keys(store.channels))
 })
 
 // Join channel
