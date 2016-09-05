@@ -1,4 +1,4 @@
-var app = require('../server'),
+const app = require('../server'),
     request = require('supertest')
 
 describe('Valid app', function() {
