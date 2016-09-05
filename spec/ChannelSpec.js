@@ -4,6 +4,17 @@ const app = require('../server'),
 describe('Valid app', function() {
     const agent = request.agent(app)
     let id
+    
+    it('asks informations', function(done) {
+        agent.get('/info/')
+            .end(function(err, res) {
+                expect(200)
+                const version = res.body.version
+                expect(version).not.toBeUndefined()
+                done()
+            })
+    })
+    
     it('connects to server', function(done){
         agent.post('/users/register/toto/')
 			.end(function(err, res) {
