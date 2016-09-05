@@ -269,7 +269,7 @@ describe('Invalid app', function() {
 
 describe('Multiuser app', function() {
 	const agent = request.agent(app)
-	let id1, id2
+	let id1, id2, id3
 	
 	it('connects the first user', function(done) {
 		agent.post('/users/register/user1/')
@@ -474,7 +474,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+    	
 	it('makes user2 check for notices again', function(done) {
 		agent.get('/user/' + id2 + '/notices/')
 			.end(function(err, res) {
@@ -491,7 +491,42 @@ describe('Multiuser app', function() {
                         expect(notices[0].time.length).toBe(24)
                     }
 				}
-				done()
+            done()
 			})
 	})
+    
+    it('connects user3', function(done) {
+        agent.post('/users/register/user3/')
+            .end(function(err, res) {
+                expect(200)
+                id3 = res.body.id
+                expect(id3).not.toBeUndefined()
+                done()
+            })
+    })
+    
+    it('waits for 6 seconds', function(done) {
+        setTimeout(done, 6000 /* 6 seconds */)
+    }, 10000 /* Jasmine timeout */)
+    
+    it('makes user2 check for notices after 6 seconds', function(done) {
+        agent.get('/user/' + id2 + '/notices/')
+            .end(function(err, res) {
+                expect(200)
+                done()
+            })
+    })
+    
+    it('makes user3 check for notices', function(done) {
+        agent.get('/user/' + id3 + '/notices/')
+            .end(function(err, res) {
+                expect(404)
+                const notice = res.body
+                expect(notice).not.toBeUndefined()
+                if (notice !== undefined) {
+                    expect(notice.error).toBe('Unknown user ID')
+                }
+                done()
+            })
+    })
 })
