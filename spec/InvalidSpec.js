@@ -7,7 +7,7 @@ describe('Invalid app', function() {
     it('connects to server', function(done){
         agent.post('/users/register/toto/')
 		.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				id = res.body.id
 				expect(id).not.toBeUndefined()
 				done()
@@ -17,7 +17,7 @@ describe('Invalid app', function() {
 	it('asks who is a user', function(done) {
 		agent.get('/users/whois/nobody/')
 			.end(function(err, res) {
-				expect(404)
+                expect(res.status).toBe(404)
 				const message = res.body
 				expect(message).not.toBeUndefined()
 				if (message !== undefined) {
@@ -30,7 +30,7 @@ describe('Invalid app', function() {
     it('joins a channel', function(done) {
         agent.put('/user/INVALID-ID/channels/channel-1/join/')
             .end(function(err, res) {
-                expect(404)
+                expect(res.status).toBe(404)
                 const message = res.body
                 expect(message).not.toBeUndefined()
 				if (message !== undefined) {
@@ -44,7 +44,7 @@ describe('Invalid app', function() {
         agent.put('/user/INVALID-ID/channels/channel-1/say/')
             .send({ message: 'Hello, world!' })
             .end(function(err, res) {
-                expect(404)
+                expect(res.status).toBe(404)
                 const message = res.body
                 expect(message).not.toBeUndefined()
 				if (message !== undefined) {
@@ -58,7 +58,7 @@ describe('Invalid app', function() {
         agent.put('/user/INVALID-ID/message/toto/')
             .send({ message: 'Private message 1' })
             .end(function(err, res) {
-                expect(404)
+                expect(res.status).toBe(404)
                 const message = res.body
                 expect(message).not.toBeUndefined()
 				if (message !== undefined) {
@@ -72,7 +72,7 @@ describe('Invalid app', function() {
         agent.put('/user/' + id + '/message/foobar/')
             .send({ message: 'Private message 2' })
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(404)
                 const message = res.body
                 expect(message).not.toBeUndefined()
 				if (message !== undefined) {
@@ -85,7 +85,7 @@ describe('Invalid app', function() {
     it('checks for notices with wrong ID', function(done) {
         agent.get('/user/INVALID-ID/notices/')
             .end(function(err, res) {
-                expect(404)
+                expect(res.status).toBe(404)
                 const message = res.body
                 expect(message).not.toBeUndefined()
 				expect(message.error).not.toBeUndefined()
@@ -99,7 +99,7 @@ describe('Invalid app', function() {
     it('checks for notices with good ID', function(done) {
         agent.get('/user/' + id + '/notices/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
 				expect(notices.length).toBe(0)
@@ -110,7 +110,7 @@ describe('Invalid app', function() {
     it('disconnects', function(done) {
         agent.del('/user/INVALID-ID/disconnect/')
             .end(function(err, res) {
-                expect(404)
+                expect(res.status).toBe(404)
                 const message = res.body
                 expect(message).not.toBeUndefined()
 				if (message !== undefined) {
@@ -123,7 +123,7 @@ describe('Invalid app', function() {
     it('disconnects', function(done) {
         agent.del('/user/' + id + '/disconnect/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const version = res.body.version
                 expect(version).not.toBeUndefined()
 				done()

@@ -66,7 +66,7 @@ app.get('/users/whois/:nick/', function(req, res) {
     const id = Object.keys(store.users).find(id => store.users[id].nick === req.params.nick)
 	const user = store.getUser(id)
     if (user === undefined) {
-        res.status(400).send({ 'error': 'Unknown nick' })
+        res.status(404).send({ 'error': 'Unknown nick' })
     }
     else {
         res.send(user.getPublicUser())
@@ -140,7 +140,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
         }
     }
     else {
-        res.send(400).send({ error: "Not in channel, can't leave." })
+        res.send(404).send({ error: "Not in channel, can't leave." })
     }
     res.send(user)
 })

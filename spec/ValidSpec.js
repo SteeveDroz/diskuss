@@ -8,7 +8,7 @@ describe('Valid app', function() {
     it('asks informations', function(done) {
         agent.get('/info/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const version = res.body.version
                 expect(version).not.toBeUndefined()
                 done()
@@ -18,7 +18,7 @@ describe('Valid app', function() {
     it('connects to server', function(done){
         agent.post('/users/register/toto/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				id = res.body.id
 				expect(id).not.toBeUndefined()
 				done()
@@ -28,7 +28,7 @@ describe('Valid app', function() {
 	it('asks who is a user', function(done) {
 		agent.get('/users/whois/toto/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				const user = res.body
 				expect(user).not.toBeUndefined()
 				if (user !== undefined) {
@@ -41,7 +41,7 @@ describe('Valid app', function() {
     it('joins a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/join/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
 				const users = res.body
 				expect(users).not.toBeUndefined()
 				if (users !== undefined) {
@@ -58,7 +58,7 @@ describe('Valid app', function() {
         agent.put('/user/' + id + '/channels/channel-1/say/')
             .send({ message: 'Hello, Channel 1!' })
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const user = res.body
                 expect(user).not.toBeUndefined()
                 expect(user.id).toEqual(id)
@@ -70,7 +70,7 @@ describe('Valid app', function() {
         agent.put('/user/' + id + '/channels/channel-2/say/')
             .send({ message: 'Hello, Channel 2!' })
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const user = res.body
                 expect(user).not.toBeUndefined()
                 expect(user.id).toEqual(id)
@@ -82,7 +82,7 @@ describe('Valid app', function() {
         agent.put('/user/' + id + '/message/toto/')
             .send({ message: 'Private message' })
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const user = res.body
                 expect(user).not.toBeUndefined()
                 expect(user.nick).toBe('toto')
@@ -93,7 +93,7 @@ describe('Valid app', function() {
     it('checks for notices', function(done) {
         agent.get('/user/' + id + '/notices/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(4)
@@ -140,7 +140,7 @@ describe('Valid app', function() {
     it('disconnects', function(done) {
         agent.del('/user/' + id + '/disconnect/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const version = res.body.version
                 expect(version).not.toBeUndefined()
 				done()
@@ -150,7 +150,7 @@ describe('Valid app', function() {
     it('asks for the list of channels after disconnecting', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const channels = res.body
                 expect(channels).not.toBeUndefined()
                 if (channels !== undefined) {
