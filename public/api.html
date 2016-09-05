@@ -288,6 +288,7 @@
             <section>
                 <h2>Fetch notices</h2>
                 <p>Notices are stored in the user object, on the server. If a client wants to retrieve thoses notices, it must send a request to ask for them.</p>
+                <p>IMPORTANT: the fetching of notices is used to check if users are still connected. Any user not asking for notices every 5 seconds will be disconnected by the server.</p>
                 <h3>Request</h3>
                 <code>GET /user/:id/notices</code>
                 <table>
