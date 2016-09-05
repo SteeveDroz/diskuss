@@ -133,7 +133,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     {
         delete user.channels[channel.name]
         if (channel !== undefined) {
-            if (!channel.keep && channel.getUsers().length == 0) {
+            if (!channel.keep && store.getUsersByChannel(channel.name).length == 0) {
                 store.removeChannel(channel.name)
             }
             notice({ type: 'channelLeave', nick: user.nick, channel: channel.name })
@@ -192,8 +192,10 @@ function notice(message) {
         case 'channelMessage':
         case 'channelLeave':
             const channel = store.getChannel(message.channel)
-            const users = store.getUsersByChannel(channel.name, false)
-            users.forEach(user => user.notices.push(message))
+            if (channel !== undefined) {
+                const users = store.getUsersByChannel(channel.name, false)
+                users.forEach(user => user.notices.push(message))
+            }
             break
         
         case 'privateMessage':

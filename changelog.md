@@ -4,8 +4,10 @@ Here are all the updates since v1.0
 
 ## [v1.1.2]: Idle update
 
-The last user leaving a channel destroys it.
+The following features have been fixed:
 
+- The last user leaving a channel destroys it.
+- Asking for a list of channels returns the expected value.
 
 ## [v1.1.1]: Idle update
 

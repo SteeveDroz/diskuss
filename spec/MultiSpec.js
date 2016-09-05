@@ -334,4 +334,24 @@ describe('Multiuser app', function() {
                 done()
             })
     })
+    
+    it('makes user2 leave the channel', function(done) {
+        agent.del('/user/' + id2 + '/channels/talk/leave/')
+            .end(function(err, res) {
+                expect(200)
+                const user = res.body
+                expect(user).not.toBeUndefined()
+                done()
+            })
+    })
+    
+    it('disconnects user2', function(done) {
+        agent.del('/user/' + id2 + '/disconnect/')
+            .end(function(err, res) {
+                expect(200)
+                const version = res.body
+                expect(version).not.toBeUndefined()
+                done()
+            })
+    })
 })
