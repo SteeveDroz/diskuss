@@ -1,6 +1,6 @@
 {
   "name": "diskuss",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A chat server that offers an API but no client",
   "author": "Steeve Droz <steeve.droz@rpn.ch>",
   "main": "server.js",
