@@ -2,6 +2,11 @@
 
 Here are all the updates since v1.0
 
+## [v1.1.2]: Idle update
+
+The last user leaving a channel destroys it.
+
+
 ## [v1.1.1]: Idle update
 
 The informations about v1.1 have been added to the API.
@@ -31,3 +36,4 @@ The application was created from scratch, the current version offers the followi
 [v1.0]: https://github.com/SteeveDroz/diskuss/compare/v0.1-alpha...v1.0
 [v1.1]: https://github.com/SteeveDroz/diskuss/compare/v1.0...v1.1
 [v1.1.1]: https://github.com/SteeveDroz/diskuss/compare/v1.1...v1.1.1
+[v1.1.2]: https://github.com/SteeveDroz/diskuss/compare/v1.1.1...v1.1.2

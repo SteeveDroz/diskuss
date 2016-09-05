@@ -49,9 +49,12 @@ app.delete('/user/:id/disconnect/', function(req, res) {
         res.status(404).send({ error: 'Unknown user ID' })
         return
     }
-	Object.keys(user.channels).forEach(channel => {
-            notice({ type: 'channelLeave', nick: user.nick, channel: channel })
-            store.removeChannel(channel)
+	Object.keys(user.channels).forEach(name => {
+            notice({ type: 'channelLeave', nick: user.nick, channel: name })
+            const channel = store.getChannel(name)
+            if (!channel.keep && store.getUsersByChannel(channel.name).length == 1) {
+                store.removeChannel(channel.name)
+            }
     })
     store.removeUser(user.id)
     res.send({ 'version': version })
