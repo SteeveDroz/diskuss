@@ -98,7 +98,7 @@
                 <h2><a name="connection">Connection</a></h2>
                 <p>In order to connect to the server, the client must request a GUID.</p>
                 <h3>Request</h3>
-                <code>POST /users/register/:nick</code>
+                <code>POST /users/register/:nick/</code>
                 <table>
                     <thead>
                         <tr>
@@ -146,7 +146,7 @@
                 <h2><a name="whois">Whois</a></h2>
                 <p>Anyone can ask the server informations about a connected user.</p>
                 <h3>Request</h3>
-                <code>GET /users/whois/:nick</code>
+                <code>GET /users/whois/:nick/</code>
                 <table>
                     <thead>
                         <tr>
@@ -301,7 +301,7 @@
                 <p>Notices are stored in the <a href="#user-object">user object</a>, on the server. If a client wants to retrieve thoses notices, it must send a request to ask for them.</p>
                 <p>IMPORTANT: the fetching of notices is used to check if users are still connected. Any user not asking for notices every 5 seconds will be disconnected by the server.</p>
                 <h3>Request</h3>
-                <code>GET /user/:id/notices</code>
+                <code>GET /user/:id/notices/</code>
                 <table>
                     <thead>
                         <tr>
