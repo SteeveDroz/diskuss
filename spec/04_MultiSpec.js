@@ -9,7 +9,7 @@ describe('Multiuser app', function() {
 	it('connects the first user', function(done) {
 		agent.post('/users/register/user1/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				id1 = res.body.id
 				expect(id1).not.toBeUndefined()
 				done()
@@ -19,7 +19,7 @@ describe('Multiuser app', function() {
 	it('connects the second user', function(done) {
 		agent.post('/users/register/user2/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				id2 = res.body.id
 				expect(id2).not.toBeUndefined()
 				done()
@@ -29,7 +29,7 @@ describe('Multiuser app', function() {
 	it('asks for the list of users', function(done) {
 		agent.get('/users/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				const users = res.body
 				expect(users).not.toBeUndefined()
 				if (users !== undefined) {
@@ -46,7 +46,7 @@ describe('Multiuser app', function() {
     it('asks for the list of channels before joining', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const channels = res.body
                 expect(channels).not.toBeUndefined()
                 if (channels !== undefined) {
@@ -59,7 +59,7 @@ describe('Multiuser app', function() {
 	it('makes user1 enter a channel', function(done) {
 		agent.put('/user/' + id1 + '/channels/talk/join/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
                 const channel = res.body.channel
 				const users = res.body.users
                 expect(channel).not.toBeUndefined()
@@ -80,7 +80,7 @@ describe('Multiuser app', function() {
     it('asks for the list of channels after joining', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const channels = res.body
                 expect(channels).not.toBeUndefined()
                 if (channels !== undefined) {
@@ -96,7 +96,7 @@ describe('Multiuser app', function() {
 	it('makes user1 enter another channel', function(done) {
 		agent.put('/user/' + id1 + '/channels/chat/join/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
                 const channel = res.body.channel
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
@@ -117,7 +117,7 @@ describe('Multiuser app', function() {
     it('asks for the list of channels after joining a second one', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const channels = res.body
                 expect(channels).not.toBeUndefined()
                 if (channels !== undefined) {
@@ -135,7 +135,7 @@ describe('Multiuser app', function() {
 		agent.put('/user/' + id1 + '/channels/talk/say')
 			.send({message: 'Message 1'})
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				const status = res.body.status
 				expect(status).toBe('Message sent correctly')
                 const message = res.body.message
@@ -147,7 +147,7 @@ describe('Multiuser app', function() {
 	it('makes user2 enter a channel', function(done) {
 		agent.put('/user/' + id2 + '/channels/talk/join/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
                 const channel = res.body.channel
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
@@ -170,7 +170,7 @@ describe('Multiuser app', function() {
 		agent.put('/user/' + id1 + '/channels/talk/say/')
 			.send({message: 'Message 2'})
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				const status = res.body.status
 				expect(status).toBe('Message sent correctly')
                 const message = res.body.message
@@ -183,7 +183,7 @@ describe('Multiuser app', function() {
         agent.put('/user/' + id1 + '/message/user2/')
             .send({ message: 'Private message' })
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
 				const status = res.body.status
 				expect(status).toBe('Private message sent correctly')
                 const message = res.body.message
@@ -201,7 +201,7 @@ describe('Multiuser app', function() {
 	it('makes user1 check for notices', function(done) {
 		agent.get('/user/' + id1 + '/notices/')
 			.end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(5)
@@ -255,7 +255,7 @@ describe('Multiuser app', function() {
 	it('makes user2 check for notices', function(done) {
 		agent.get('/user/' + id2 + '/notices/')
 			.end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(3)
@@ -292,7 +292,7 @@ describe('Multiuser app', function() {
 	it('disconnects user1', function(done) {
 		agent.del('/user/' + id1 + '/disconnect/')
 			.end(function(err, res) {
-				expect(200)
+                expect(res.status).toBe(200)
 				const status = res.body.status
 				expect(status).toBe('Successfully disconnected from the server')
 				done()
@@ -302,7 +302,7 @@ describe('Multiuser app', function() {
 	it('makes user2 check for notices again', function(done) {
 		agent.get('/user/' + id2 + '/notices/')
 			.end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(1)
@@ -322,7 +322,7 @@ describe('Multiuser app', function() {
     it('connects user3', function(done) {
         agent.post('/users/register/user3/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 id3 = res.body.id
                 expect(id3).not.toBeUndefined()
                 done()
@@ -336,7 +336,7 @@ describe('Multiuser app', function() {
     it('makes user2 check for notices after 6 seconds', function(done) {
         agent.get('/user/' + id2 + '/notices/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 done()
             })
     })
@@ -344,7 +344,7 @@ describe('Multiuser app', function() {
     it('makes user3 check for notices', function(done) {
         agent.get('/user/' + id3 + '/notices/')
             .end(function(err, res) {
-                expect(404)
+                expect(res.status).toBe(404)
                 const notice = res.body
                 expect(notice).not.toBeUndefined()
                 if (notice !== undefined) {
@@ -357,7 +357,7 @@ describe('Multiuser app', function() {
     it('makes user2 leave the channel', function(done) {
         agent.del('/user/' + id2 + '/channels/talk/leave/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const status = res.body.status
                 expect(status).toBe('Leaving the channel')
                 const channel = res.body.channel
@@ -372,7 +372,7 @@ describe('Multiuser app', function() {
     it('disconnects user2', function(done) {
         agent.del('/user/' + id2 + '/disconnect/')
             .end(function(err, res) {
-                expect(200)
+                expect(res.status).toBe(200)
                 const status = res.body.status
                 expect(status).toBe('Successfully disconnected from the server')
                 done()
