@@ -27,6 +27,7 @@
             
             section h1 {
                 font-size:24pt;
+                margin:0;
             }
             
             section h2 {
@@ -55,13 +56,13 @@
     <body>
         <article>
             <section>
-                <h1>Diskuss API v1.1.2</h1>
+                <h1><a name="top">Diskuss API v1.1.2</a></h1>
                 <p>This page shows the comprehensive list of request that are included in the Diskuss API.</p>
                 <p>Diskuss is a chat server that can host numerous people in any number of channels. It handles group chat along with private chat.</p>
             </section>
 
             <section>
-                <h2>Information</h2>
+                <h2><a name="information">Information</a></h2>
                 <p>This request returns informations about the server itself to anyone, without authentication.</p>
                 <h3>Request</h3>
                 <code>GET /info/</code>
@@ -80,19 +81,21 @@
                         </tr>
                     </tbody>
                 </table>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>List users</h2>
+                <h2><a name="list-users">List users</a></h2>
                 <p>Anyone can ask for the list of connected users.</p>
                 <h3>Request</h3>
                 <code>GET /users/</code>
                 <h3>Response</h3>
-                <p>An array containing user objects.</p>
+                <p>An array containing <a href="#user-object">user objects</a>.</p>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>Connection</h2>
+                <h2><a name="connection">Connection</a></h2>
                 <p>In order to connect to the server, the client must request a GUID.</p>
                 <h3>Request</h3>
                 <code>POST /users/register/:nick</code>
@@ -111,11 +114,12 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>A user object containing all the informations about the newly created user (including the GUID).</p>
+                <p>A <a href="#user-object">user object</a> containing all the informations about the newly created user (including the GUID).</p>
+                <a href="#top">Back to top</a>
             </section>
             
             <section>
-                <h2>Disconnection</h2>
+                <h2><a name="disconnection">Disconnection</a></h2>
                 <p>To disconnect from the server means having its GUID revoked.</p>
                 <h3>Request</h3>
                 <code>DELETE /user/:id/disconnect/</code>
@@ -135,10 +139,11 @@
                 </table>
                 <h3>Response</h3>
                 <p>The version of the server.</p>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>Whois</h2>
+                <h2><a name="whois">Whois</a></h2>
                 <p>Anyone can ask the server informations about a connected user.</p>
                 <h3>Request</h3>
                 <code>GET /users/whois/:nick</code>
@@ -157,20 +162,22 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>A user object representing whose nick matches the request.</p>
+                <p>A <a href="#user-object">user object</a> representing whose nick matches the request.</p>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>List channels</h2>
+                <h2><a name="list-channels">List channels</a></h2>
                 <p>Anyone can ask for the list of existing channels</p>
                 <h3>Request</h3>
                 <code>GET /channels/</code>
                 <h3>Response</h3>
-                <p>A list of channel objects.</p>
+                <p>A list of <a href="#channel-object">channel objects</a>.</p>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>Join channel</h2>
+                <h2><a name="join-channel">Join channel</a></h2>
                 <p>A user can join a channel with that request</p>
                 <h3>Request</h3>
                 <code>PUT /user/:id/channels/:channel/join/</code>
@@ -193,11 +200,12 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The list of user objects representing the users that are currently in the channel.</p>
+                <p>The list of <a href="#user-object">user objects</a> representing the users that are currently in the channel.</p>
+                <a href="#top">Back to top</a>
             </section>
             
             <section>
-                <h2>Talk in channel</h2>
+                <h2><a name="talk-in-channel">Talk in channel</a></h2>
                 <p>When a user is in a channel, he or she can say something that will be viewable by every other user in the same channel.</p>
                 <h3>Request</h3>
                 <code>PUT /user/:id/channels/:channel/say/?message=:message</code>
@@ -224,11 +232,12 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The user object that sent the message.</p>
+                <p>The <a href="#user-object">user object</a> that sent the message.</p>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>Leave channel</h2>
+                <h2><a name="leave-channel">Leave channel</a></h2>
                 <p>A user can leave a channel with that request</p>
                 <h3>Request</h3>
                 <code>DELETE /user/:id/channels/:channel/leave/</code>
@@ -251,11 +260,12 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The user object.</p>
+                <p>The <a href="#user-object">user object</a>.</p>
+                <a href="#top">Back to top</a>
             </section>
             
             <section>
-                <h2>Send private message</h2>
+                <h2><a name="send-private-message">Send private message</a></h2>
                 <p>A user can send a private message that will only be viewable by the recipient.</p>
                 <h3>Request</h3>
                 <code>PUT /user/:id/message/:nick/?message=:message</code>
@@ -282,12 +292,13 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The user object of the recipient</p>
+                <p>The <a href="#user-object">user object</a> of the recipient</p>
+                <a href="#top">Back to top</a>
             </section>
             
             <section>
-                <h2>Fetch notices</h2>
-                <p>Notices are stored in the user object, on the server. If a client wants to retrieve thoses notices, it must send a request to ask for them.</p>
+                <h2><a name="fetch-notices">Fetch notices</a></h2>
+                <p>Notices are stored in the <a href="#user-object">user object</a>, on the server. If a client wants to retrieve thoses notices, it must send a request to ask for them.</p>
                 <p>IMPORTANT: the fetching of notices is used to check if users are still connected. Any user not asking for notices every 5 seconds will be disconnected by the server.</p>
                 <h3>Request</h3>
                 <code>GET /user/:id/notices</code>
@@ -380,10 +391,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>User object</h2>
+                <h2><a name="user-object">User object</a></h2>
                 <p>A user object is composed of:</p>
                 <table>
                     <thead>
@@ -407,10 +419,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>Channel object</h2>
+                <h2><a name="channel-object">Channel object</a></h2>
                 <p>A channel object is composed of:</p>
                 <table>
                     <thead>
@@ -434,11 +447,13 @@
                         </tr>
                     </tbody>
                 </table>
+                <a href="#top">Back to top</a>
             </section>
 
             <section>
-                <h2>Error handling</h2>
+                <h2><a name="error-handling">Error handling</a></h2>
                 <p>Whatever the URI may be, if the resource or action asked is unavailable for some reason or the action is illegal, a JSON containing a single entry which key is called <code>error</code> will be sent. The value of that entry is the error message.</p>
+                <a href="#top">Back to top</a>
             </section>
         </article>
     </body>
