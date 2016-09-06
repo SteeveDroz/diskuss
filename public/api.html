@@ -83,7 +83,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
@@ -93,7 +92,6 @@
                 <code>GET /users/</code>
                 <h3>Response</h3>
                 <p>An array containing <a href="#user-object">user objects</a>.</p>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
@@ -117,7 +115,6 @@
                 </table>
                 <h3>Response</h3>
                 <p>A <a href="#user-object">user object</a> containing all the informations about the newly created user (including the GUID).</p>
-                <a href="#top">Back to top</a>
             </section>
             
             <section>
@@ -154,7 +151,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
@@ -178,7 +174,6 @@
                 </table>
                 <h3>Response</h3>
                 <p>A <a href="#user-object">user object</a> representing whose nick matches the request.</p>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
@@ -188,7 +183,6 @@
                 <code>GET /channels/</code>
                 <h3>Response</h3>
                 <p>A list of <a href="#channel-object">channel objects</a>.</p>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
@@ -233,7 +227,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
             
             <section>
@@ -282,7 +275,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
@@ -327,7 +319,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
             
             <section>
@@ -380,7 +371,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
             
             <section>
@@ -478,7 +468,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
@@ -506,7 +495,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
@@ -534,14 +522,18 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="#top">Back to top</a>
             </section>
 
             <section>
                 <h2><a name="error-handling">Error handling</a></h2>
                 <p>Whatever the URI may be, if the resource or action asked is unavailable for some reason or the action is illegal, a JSON containing a single entry which key is called <code>error</code> will be sent. The value of that entry is the error message.</p>
-                <a href="#top">Back to top</a>
             </section>
         </article>
+        <script language="javascript" defer>
+            const sections = document.getElementsByTagName('section')
+            for (let i in sections) {
+                sections[i].innerHTML += '<a href="#top">Back to top</a>'
+            }
+        </script>
     </body>
 </html>
