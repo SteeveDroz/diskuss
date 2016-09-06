@@ -57,7 +57,7 @@ app.delete('/user/:id/disconnect/', function(req, res) {
             }
     })
     store.removeUser(user.id)
-    res.send({ 'version': version })
+    res.send({ status: 'Successfully disconnected from the server' })
 })
 
 // Whois
@@ -94,7 +94,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
     }
     user.channels[channel.name] = channel
     notice({ type: 'channelJoin', nick: user.nick, channel: channel.name })
-    res.send(store.getUsersByChannel(channel.name, true))
+    res.send({ channel: channel, users: store.getUsersByChannel(channel.name, true) })
 })
 
 // Talk in channel
@@ -117,7 +117,7 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
     const message = req.body.message
 
     notice({ type: 'channelMessage', nick: user.nick, channel: channel.name, message: message })
-    res.send(user)
+    res.send({ status: 'Message sent correctly', message: message })
 })
 
 // Leave channel
@@ -142,7 +142,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     else {
         res.send(404).send({ error: "Not in channel, can't leave." })
     }
-    res.send(user)
+    res.send({ status: 'Leaving the channel', channel: channel })
 })
 
 // Send private message
@@ -161,7 +161,7 @@ app.put('/user/:id/message/:nick/', function(req, res) {
     }
     
     notice({ type: 'privateMessage', sender: sender.nick, recipient: recipient.nick, message: message})
-    res.send(recipient)
+    res.send({ status: 'Private message sent correctly', message: message, recipient: recipient })
 })
 
 // Fetch notices
