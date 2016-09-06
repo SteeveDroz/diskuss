@@ -124,8 +124,8 @@ describe('Invalid app', function() {
         agent.del('/user/' + id + '/disconnect/')
             .end(function(err, res) {
                 expect(res.status).toBe(200)
-                const version = res.body.version
-                expect(version).not.toBeUndefined()
+                const status = res.body.status
+                expect(status).toBe('Successfully disconnected from the server')
 				done()
             })
     })

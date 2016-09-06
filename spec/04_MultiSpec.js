@@ -60,7 +60,12 @@ describe('Multiuser app', function() {
 		agent.put('/user/' + id1 + '/channels/talk/join/')
 			.end(function(err, res) {
 				expect(200)
-				const users = res.body
+                const channel = res.body.channel
+				const users = res.body.users
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('talk')
+                }
 				expect(users).not.toBeUndefined()
 				if (users !== undefined) {
 					expect(users.length).toBe(1)
@@ -92,7 +97,12 @@ describe('Multiuser app', function() {
 		agent.put('/user/' + id1 + '/channels/chat/join/')
 			.end(function(err, res) {
 				expect(200)
-				const users = res.body
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('chat')
+                }
+				const users = res.body.users
 				expect(users).not.toBeUndefined()
 				if (users !== undefined) {
 					expect(users.length).toBe(1)
@@ -126,11 +136,10 @@ describe('Multiuser app', function() {
 			.send({message: 'Message 1'})
 			.end(function(err, res) {
 				expect(200)
-				const user = res.body
-				expect(user).not.toBeUndefined()
-				if (user !== undefined) {
-					expect(user.nick).toBe('user1')
-				}
+				const status = res.body.status
+				expect(status).toBe('Message sent correctly')
+                const message = res.body.message
+                expect(message).toBe('Message 1')
 				done()
 			})
 	})
@@ -139,7 +148,12 @@ describe('Multiuser app', function() {
 		agent.put('/user/' + id2 + '/channels/talk/join/')
 			.end(function(err, res) {
 				expect(200)
-				const users = res.body
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('chat')
+                }
+				const users = res.body.users
 				expect(users).not.toBeUndefined()
 				if (users !== undefined) {
 					expect(users.length).toBe(2)
@@ -157,11 +171,10 @@ describe('Multiuser app', function() {
 			.send({message: 'Message 2'})
 			.end(function(err, res) {
 				expect(200)
-				const user = res.body
-				expect(user).not.toBeUndefined()
-				if (user !== undefined) {
-					expect(user.nick).toBe('user1')
-				}
+				const status = res.body.status
+				expect(status).toBe('Message sent correctly')
+                const message = res.body.message
+                expect(message).toBe('Message 2')
 				done()
 			})
 	})
@@ -171,9 +184,15 @@ describe('Multiuser app', function() {
             .send({ message: 'Private message' })
             .end(function(err, res) {
                 expect(200)
-                const user = res.body
-                expect(user).not.toBeUndefined()
-                expect(user.nick).toBe('user2')
+				const status = res.body.status
+				expect(status).toBe('Message sent correctly')
+                const message = res.body.message
+                expect(message).toBe('Private message')
+                const recipient = res.body.recipient
+                expect(recipient).not.toBeUndefined()
+                if (recipient !== undefined) {
+                    expect(recipient.nick).toBe('user2')
+                }
                 done()
             })
     })
@@ -274,8 +293,8 @@ describe('Multiuser app', function() {
 		agent.del('/user/' + id1 + '/disconnect/')
 			.end(function(err, res) {
 				expect(200)
-				const version = res.body
-				expect(version).not.toBeUndefined()
+				const status = res.body.status
+				expect(status).toBe('Successfully disconnected from the server')
 				done()
 			})
 	})
@@ -339,8 +358,13 @@ describe('Multiuser app', function() {
         agent.del('/user/' + id2 + '/channels/talk/leave/')
             .end(function(err, res) {
                 expect(200)
-                const user = res.body
-                expect(user).not.toBeUndefined()
+                const status = res.body.status
+                expect(status).toBe('Leaving the channel')
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('talk')
+                }
                 done()
             })
     })
@@ -349,8 +373,8 @@ describe('Multiuser app', function() {
         agent.del('/user/' + id2 + '/disconnect/')
             .end(function(err, res) {
                 expect(200)
-                const version = res.body
-                expect(version).not.toBeUndefined()
+                const status = res.body.status
+                expect(status).toBe('Successfully disconnected by the server')
                 done()
             })
     })
