@@ -140,7 +140,20 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The version of the server.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>status</td>
+                            <td>The string "Successfully disconnected from the server"</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <a href="#top">Back to top</a>
             </section>
 
@@ -202,7 +215,24 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The list of <a href="#user-object">user objects</a> representing the users that are currently in the channel.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>channel</td>
+                            <td>A <a href="#channel-object">channel object</a> representing the channel</td>
+                        </tr>
+                        <tr>
+                            <td>users</td>
+                            <td>An array of <a href="#user-object">user objects</a> representing the users that are currently in the channel</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <a href="#top">Back to top</a>
             </section>
             
@@ -234,7 +264,24 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The <a href="#user-object">user object</a> that sent the message.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>status</td>
+                            <td>The string "Message sent correctly"</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>The message sent</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <a href="#top">Back to top</a>
             </section>
 
@@ -262,7 +309,24 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The <a href="#user-object">user object</a>.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>status</td>
+                            <td>The string "Leaving the channel"</td>
+                        </tr>
+                        <tr>
+                            <td>channel</td>
+                            <td>A <a href="#channel-object">channel object</a> representing the channel</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <a href="#top">Back to top</a>
             </section>
             
@@ -294,7 +358,28 @@
                     </tbody>
                 </table>
                 <h3>Response</h3>
-                <p>The <a href="#user-object">user object</a> of the recipient</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>status</td>
+                            <td>The string "Private message sent correctly"</td>
+                        </tr>
+                        <tr>
+                            <td>message</td>
+                            <td>The message sent</td>
+                        </tr>
+                        <tr>
+                            <td>recipient</td>
+                            <td>A <a href="#user-object">user object</a> representing the recipient</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <a href="#top">Back to top</a>
             </section>
             

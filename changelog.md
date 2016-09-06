@@ -2,6 +2,20 @@
 
 Here are all the updates since v1.0
 
+## [v1.2]: Logical update
+
+**:warning: This update breaks backwards compatibility!**
+
+To be more logical, the responses have been changed. It was, for example, not logical at all that leaving a channel would return the user object of oneself.
+
+The following responses have been updated:
+
+- **Disconnection** now sends a JSON object with `status` property.
+- **Join channel** now sends a JSON object containing a `channel` and a `users` propoerties.
+- **Talk in channel** now sends a JSON object containing a `status` and a `message` properties.
+- **Leave channel** now sends a JSON object containing a `status` and a `channel` properties.
+- **Send private message** now sends a JSON object containing a `status`, a `message` and a `recipient` properties.
+
 ## [v1.1.2]: Idle update
 
 The following features have been fixed:
@@ -39,3 +53,4 @@ The application was created from scratch, the current version offers the followi
 [v1.1]: https://github.com/SteeveDroz/diskuss/compare/v1.0...v1.1
 [v1.1.1]: https://github.com/SteeveDroz/diskuss/compare/v1.1...v1.1.1
 [v1.1.2]: https://github.com/SteeveDroz/diskuss/compare/v1.1.1...v1.1.2
+[v1.2]: https://github.com/SteeveDroz/diskuss/compare/v1.1.2...v1.2
