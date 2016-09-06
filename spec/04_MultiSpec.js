@@ -151,7 +151,7 @@ describe('Multiuser app', function() {
                 const channel = res.body.channel
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
-                    expect(channel.name).toBe('chat')
+                    expect(channel.name).toBe('talk')
                 }
 				const users = res.body.users
 				expect(users).not.toBeUndefined()
@@ -166,7 +166,7 @@ describe('Multiuser app', function() {
 			})
 	})
 	
-	it('makes user1 talk again in channel', function(done) {
+	it('makes user1 talk in channel again', function(done) {
 		agent.put('/user/' + id1 + '/channels/talk/say/')
 			.send({message: 'Message 2'})
 			.end(function(err, res) {
@@ -185,7 +185,7 @@ describe('Multiuser app', function() {
             .end(function(err, res) {
                 expect(200)
 				const status = res.body.status
-				expect(status).toBe('Message sent correctly')
+				expect(status).toBe('Private message sent correctly')
                 const message = res.body.message
                 expect(message).toBe('Private message')
                 const recipient = res.body.recipient
@@ -374,7 +374,7 @@ describe('Multiuser app', function() {
             .end(function(err, res) {
                 expect(200)
                 const status = res.body.status
-                expect(status).toBe('Successfully disconnected by the server')
+                expect(status).toBe('Successfully disconnected from the server')
                 done()
             })
     })

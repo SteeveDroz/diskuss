@@ -91,7 +91,7 @@ describe('Valid app', function() {
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
-                expect(status).toEqual('Message sent correctly')
+                expect(status).toEqual('Private message sent correctly')
                 const message = res.body.message
                 expect(message).toEqual('Private message')
                 const recipient = res.body.recipient
