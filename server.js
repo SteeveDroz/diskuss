@@ -9,16 +9,19 @@ const Store = require('./app/Store')
 
 const bodyParser = require('body-parser')
 const app = express()
+
 app.use(favicon(__dirname + '/public/favicon.ico'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.set('views', './public')
+app.set('view engine', 'ejs')
 
 let store = new Store()
 
 // API
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/public/api.html')
+    res.render('api.ejs', { version: version })
 })
 
 // Info
