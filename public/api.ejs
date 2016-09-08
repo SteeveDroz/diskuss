@@ -276,6 +276,24 @@
                     </tbody>
                 </table>
             </section>
+            
+            <section>
+                <h2><a name="change-channel-description">Change channel description</a></h2>
+                <p>A user can change the description of a channel.</p>
+                <h3>Request</h3>
+                <code>PUT /user/:id/channels/:channel/description/?description=:description</code>
+                <div class="key-value">
+                    id|The user GUID.||
+                    channel|The name of the channel.||
+                    description|The description of the channel.
+                </div>
+                <h3>Response</h3>
+                <div class="key-value">
+                    status|The string "Changing the description".||
+                    channel|The name of the channel.||
+                    description|The new description.
+                </div>
+            </section>
 
             <section>
                 <h2><a name="leave-channel">Leave channel</a></h2>
@@ -466,6 +484,22 @@
                         <tr>
                             <td colspan="4"><code>{ type: 'privateMessage', sender: 'user_1', recipient: 'user_2', message: 'Hello, world!', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
+                        <tr>
+                            <th rowspan="3">channelDescription</th>
+                            <th>nick</th>
+                            <th>channel</th>
+                            <th>description</th>
+                            <th>time</th>
+                        </tr>
+                        <tr>
+                            <td>The nick of the user who changed the description.</td>
+                            <td>The name of the channel which description has been changed.</td>
+                            <td>The new description</td>
+                            <td>The time of the event.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><code>{ type: 'channelDescription', nick: 'user_1', channel: 'help', description: 'Please post your questions in this channel', time: '2000-12-31T23:59:59.999Z' }</code></td>
+                        </tr>
                     </tbody>
                 </table>
             </section>
@@ -535,7 +569,7 @@
                 sections[i].innerHTML += '<a href="#top">Back to top</a>'
             }
             
-            const tables = Array.prototype.forEach.call(document.getElementsByClassName('key-value'), function(tableData) {
+            const tables = [].forEach.call(document.getElementsByClassName('key-value'), function(tableData) {
                 const table = document.createElement('table')
                 table.innerHTML = '<thead><tr><th>Key</th><th>Value</th></tr></thead>'
                 const body = document.createElement('tbody')
@@ -552,7 +586,8 @@
                 })
                 table.appendChild(body)
                 
-                tableData.parentNode.replaceChild(table, tableData)
+                tableData.innerHTML = ''
+                tableData.appendChild(table)
             })
         </script>
     </body>
