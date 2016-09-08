@@ -83,26 +83,26 @@ describe('Invalid app', function() {
     })
     
     it('changes the description with a wrong username', function(done) {
-        agent.put('/user/INVALID-ID/channel/channel-1/description/')
+        agent.put('/user/INVALID-ID/channels/channel-1/description/')
             .send( { description: 'Some description' })
             .end(function(err, res) {
                 expect(res.status).toBe(404)
                 const message = res.body
-                expect(message).not.toBeundefined()
+                expect(message).not.toBeUndefined()
                 if (message !== undefined) {
-                    expect(message.error).toEqual('Unknown channel')
+                    expect(message.error).toEqual('Unknown user ID')
                 }
                 done()
             })
     })
     
     it('changes the description of a non existing channel', function(done) {
-        agent.put('/user/' + id + '/channel/INVALID-NAME/description/')
+        agent.put('/user/' + id + '/channels/INVALID-NAME/description/')
             .send( { description: 'Some description' })
             .end(function(err, res) {
                 expect(res.status).toBe(404)
                 const message = res.body
-                expect(message).not.toBeundefined()
+                expect(message).not.toBeUndefined()
                 if (message !== undefined) {
                     expect(message.error).toEqual('Unknown channel')
                 }

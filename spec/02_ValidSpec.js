@@ -111,7 +111,7 @@ describe('Valid app', function() {
                 const status = res.body.status
                 expect(status).toBe('Changing the description')
                 const channel = res.body.channel
-                expect(channel).not.toBeUndefined
+                expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
                     expect(channel.name).toBe('channel-1')
                 }

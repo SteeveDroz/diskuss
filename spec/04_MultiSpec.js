@@ -198,7 +198,7 @@ describe('Multiuser app', function() {
     })
     
     it('makes user1 change the channel description', function(done) {
-        agent.put('/user/' + id1 + '/channel/talk/description/')
+        agent.put('/user/' + id1 + '/channels/talk/description/')
             .send({ description: 'Talk in there' })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
@@ -287,8 +287,8 @@ describe('Multiuser app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(3)
-                    if (notices.length == 3) {
+                    expect(notices.length).toEqual(4)
+                    if (notices.length == 4) {
                         expect(notices[0].type).toEqual('channelJoin')
                         expect(notices[0].nick).toEqual('user2')
                         expect(notices[0].channel).toEqual('talk')

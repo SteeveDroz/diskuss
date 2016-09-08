@@ -290,7 +290,7 @@
                 <h3>Response</h3>
                 <div class="key-value">
                     status|The string "Changing the description".||
-                    channel|The name of the channel.||
+                    channel|A <a href="#channel-object">channel object</a> representing the channel.||
                     description|The new description.
                 </div>
             </section>
@@ -493,7 +493,7 @@
                         </tr>
                         <tr>
                             <td>The nick of the user who changed the description.</td>
-                            <td>The name of the channel which description has been changed.</td>
+                            <td>The channel concerned.</td>
                             <td>The new description</td>
                             <td>The time of the event.</td>
                         </tr>
@@ -573,13 +573,13 @@
                 const table = document.createElement('table')
                 table.innerHTML = '<thead><tr><th>Key</th><th>Value</th></tr></thead>'
                 const body = document.createElement('tbody')
-                const lines = tableData.innerText.split('||')
+                const lines = tableData.innerHTML.split('||')
                 lines.forEach(function(lineData) {
                     const line = document.createElement('tr')
                     const cells = lineData.split('|')
                     cells.forEach(function(cellData) {
                         const cell = document.createElement('td')
-                        cell.innerText = cellData.trim()
+                        cell.innerHTML = cellData.trim()
                         line.appendChild(cell)
                     })
                     body.appendChild(line)

@@ -123,6 +123,25 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
     res.send({ status: 'Message sent correctly', message: message })
 })
 
+// Change channel description
+
+app.put('/user/:id/channels/:channel/description/', function(req, res) {
+    const user = store.getUser(req.params.id)
+    if (user === undefined) {
+        res.status(404).send({ error: 'Unknown user ID' })
+        return
+    }
+    const channel = store.getChannel(req.params.channel)
+    if (channel === undefined) {
+        res.status(404).send({ error: 'Unknown channel' })
+        return
+    }
+    const description = req.body.description
+    
+    notice({ type: 'channelDescription', nick: user.nick, channel: channel.name, description: description })
+    res.send({ status: 'Changing the description', channel: channel, description: description })
+})
+
 // Leave channel
 
 app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
@@ -194,6 +213,7 @@ function notice(message) {
         case 'channelJoin':
         case 'channelMessage':
         case 'channelLeave':
+        case 'channelDescription':
             const channel = store.getChannel(message.channel)
             if (channel !== undefined) {
                 const users = store.getUsersByChannel(channel.name, false)
