@@ -53,7 +53,7 @@ app.delete('/user/:id/disconnect/', function(req, res) {
         return
     }
 	Object.keys(user.channels).forEach(name => {
-            notice({ type: 'channelLeave', nick: user.nick, channel: name })
+            notice({ type: 'channelLeave', nick: user.nick, channel: store.getChannel(name) })
             const channel = store.getChannel(name)
             if (!channel.keep && store.getUsersByChannel(channel.name).length == 1) {
                 store.removeChannel(channel.name)
@@ -79,7 +79,7 @@ app.get('/users/whois/:nick/', function(req, res) {
 // List channels
 
 app.get('/channels/', function(req, res){
-    res.send(Object.keys(store.channels))
+    res.send(Object.keys(store.channels).map(name => store.channels[name]))
 })
 
 // Join channel
@@ -96,7 +96,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
         store.addChannel(channel)
     }
     user.channels[channel.name] = channel
-    notice({ type: 'channelJoin', nick: user.nick, channel: channel.name })
+    notice({ type: 'channelJoin', nick: user.nick, channel: channel })
     res.send({ channel: channel, users: store.getUsersByChannel(channel.name, true) })
 })
 
@@ -119,7 +119,7 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
     }
     const message = req.body.message
 
-    notice({ type: 'channelMessage', nick: user.nick, channel: channel.name, message: message })
+    notice({ type: 'channelMessage', nick: user.nick, channel: channel, message: message })
     res.send({ status: 'Message sent correctly', message: message })
 })
 
@@ -138,8 +138,35 @@ app.put('/user/:id/channels/:channel/description/', function(req, res) {
     }
     const description = req.body.description
     
-    notice({ type: 'channelDescription', nick: user.nick, channel: channel.name, description: description })
+    channel.description = description
+    
+    notice({ type: 'channelDescription', nick: user.nick, channel: channel })
     res.send({ status: 'Changing the description', channel: channel, description: description })
+})
+
+// Keep channel
+
+app.put('/user/:id/channels/:channel/keep', function(req, res) {
+    const user = store.getUser(req.params.id)
+    if (user === undefined) {
+        res.status(404).send({ error: 'Unknown user ID' })
+        return
+    }
+    const channel = store.getChannel(req.params.channel)
+    if (channel === undefined) {
+        res.status(404).send({ error: 'Unknown channel' })
+        return
+    }
+    const keep = req.body.keep
+    
+    channel.keep = keep == true
+    
+    if (!channel.keep && store.getUsersByChannel(channel.name).length == 0) {
+        store.removeChannel(channel.name)
+    }
+    
+    notice({ type: 'channelKeep', nick: user.nick, channel: channel })
+    res.send({ status: 'Changing the persistence', channel: channel })
 })
 
 // Leave channel
@@ -158,7 +185,7 @@ app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
             if (!channel.keep && store.getUsersByChannel(channel.name).length == 0) {
                 store.removeChannel(channel.name)
             }
-            notice({ type: 'channelLeave', nick: user.nick, channel: channel.name })
+            notice({ type: 'channelLeave', nick: user.nick, channel: channel })
         }
     }
     else {
@@ -214,7 +241,8 @@ function notice(message) {
         case 'channelMessage':
         case 'channelLeave':
         case 'channelDescription':
-            const channel = store.getChannel(message.channel)
+        case 'channelKeep':
+            const channel = store.getChannel(message.channel.name)
             if (channel !== undefined) {
                 const users = store.getUsersByChannel(channel.name, false)
                 users.forEach(user => user.notices.push(message))

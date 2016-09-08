@@ -114,9 +114,25 @@ describe('Valid app', function() {
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
                     expect(channel.name).toBe('channel-1')
+                    expect(channel.description).toBe('First channel')
                 }
-                const description = res.body.description
-                expect(description).toBe('First channel')
+                done()
+            })
+    })
+    
+    it('keeps a channel', function(done) {
+        agent.put('/user/' + id + '/channels/channel-1/keep/')
+            .send({ keep: true })
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('Changing the persistence')
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('channel-1')
+                    expect(channel.keep).toBe(true)
+                }
                 done()
             })
     })
@@ -128,11 +144,14 @@ describe('Valid app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(5)
-                    if (notices.length == 5) {
+                    expect(notices.length).toEqual(6)
+                    if (notices.length == 6) {
                         expect(notices[0].type).toEqual('channelJoin')
                         expect(notices[0].nick).toEqual('toto')
-                        expect(notices[0].channel).toEqual('channel-1')
+                        expect(notices[0].channel).not.toBeUndefined()
+                        if (notices[0].channel !== undefined) {
+                            expect(notices[0].channel.name).toEqual('channel-1')
+                        }
                         expect(notices[0].time).not.toBeUndefined()
                         if (notices[0].time !== undefined) {
                             expect(notices[0].time.length).toBe(24)
@@ -140,7 +159,9 @@ describe('Valid app', function() {
 
                         expect(notices[1].type).toEqual('channelMessage')
                         expect(notices[1].nick).toEqual('toto')
-                        expect(notices[1].channel).toEqual('channel-1')
+                        if (notices[1].channel !== undefined) {
+                            expect(notices[1].channel.name).toEqual('channel-1')
+                        }
                         expect(notices[1].message).toEqual('Hello, Channel 1!')
                         expect(notices[1].time).not.toBeUndefined()
                         if (notices[1].time !== undefined) {
@@ -149,7 +170,9 @@ describe('Valid app', function() {
 
                         expect(notices[2].type).toEqual('channelMessage')
                         expect(notices[2].nick).toEqual('toto')
-                        expect(notices[2].channel).toEqual('channel-2')
+                        if (notices[2].channel !== undefined) {
+                            expect(notices[2].channel.name).toEqual('channel-2')
+                        }
                         expect(notices[2].message).toEqual('Hello, Channel 2!')
                         expect(notices[2].time).not.toBeUndefined()
                         if (notices[2].time !== undefined) {
@@ -167,15 +190,45 @@ describe('Valid app', function() {
                         
                         expect(notices[4].type).toEqual('channelDescription')
                         expect(notices[4].nick).toEqual('toto')
-                        expect(notices[4].channel).toEqual('channel-1')
-                        expect(notices[4].description).toEqual('First channel')
+                        if (notices[4].channel !== undefined) {
+                            expect(notices[4].channel.name).toEqual('channel-1')
+                            expect(notices[4].channel.description).toEqual('First channel')
+                        }
                         expect(notices[4].time).not.toBeUndefined()
                         if (notices[4].time !== undefined) {
                             expect(notices[4].time.length).toBe(24)
                         }
+                        
+                        expect(notices[5].type).toEqual('channelKeep')
+                        expect(notices[5].nick).toEqual('toto')
+                        if (notices[5].channel !== undefined) {
+                            expect(notices[5].channel.name).toEqual('channel-1')
+                            expect(notices[5].channel.keep).toEqual(true)
+                        }
+                        expect(notices[5].time).not.toBeUndefined()
+                        if (notices[5].time !== undefined) {
+                            expect(notices[5].time.length).toBe(24)
+                        }
                     }
                 }
 				done()
+            })
+    })
+    
+    it('releases a channel', function(done) {
+        agent.put('/user/' + id + '/channels/channel-1/keep/')
+            .send({ keep: false })
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('Changing the persistence')
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('channel-1')
+                    expect(channel.keep).toBe(false)
+                }
+                done()
             })
     })
     
