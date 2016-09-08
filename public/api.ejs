@@ -534,6 +534,26 @@
             for (let i in sections) {
                 sections[i].innerHTML += '<a href="#top">Back to top</a>'
             }
+            
+            const tables = Array.prototype.forEach.call(document.getElementsByClassName('key-value'), function(tableData) {
+                const table = document.createElement('table')
+                table.innerHTML = '<thead><tr><th>Key</th><th>Value</th></tr></thead>'
+                const body = document.createElement('tbody')
+                const lines = tableData.innerText.split('||')
+                lines.forEach(function(lineData) {
+                    const line = document.createElement('tr')
+                    const cells = lineData.split('|')
+                    cells.forEach(function(cellData) {
+                        const cell = document.createElement('td')
+                        cell.innerText = cellData.trim()
+                        line.appendChild(cell)
+                    })
+                    body.appendChild(line)
+                })
+                table.appendChild(body)
+                
+                tableData.parentNode.replaceChild(table, tableData)
+            })
         </script>
     </body>
 </html>
