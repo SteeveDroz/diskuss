@@ -69,20 +69,9 @@
                 <h3>Request</h3>
                 <code>GET /info/</code>
                 <h3>Response</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>version</td>
-                            <td>The version of the server.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    version|The version of the server.
+                </div>
             </section>
 
             <section>
@@ -99,20 +88,9 @@
                 <p>In order to connect to the server, the client must request a GUID.</p>
                 <h3>Request</h3>
                 <code>POST /users/register/:nick/</code>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>nick</td>
-                            <td>The nickname linked to the client. If the desired nickname was unavailable, "_1" will be append to it. If this is also unavailable, "_2" will be append instead and so on.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    nick|The nickname linked to the client. If the desired nickname was unavailable, "_1" will be append to it. If this is also unavailable, "_2" will be append instead and so on.
+                </div>
                 <h3>Response</h3>
                 <p>A <a href="#user-object">user object</a> containing all the informations about the newly created user (including the GUID).</p>
             </section>
@@ -122,35 +100,13 @@
                 <p>To disconnect from the server means having its GUID revoked.</p>
                 <h3>Request</h3>
                 <code>DELETE /user/:id/disconnect/</code>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>id</td>
-                            <td>The user GUID.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    id|The user GUID.
+                </div>
                 <h3>Response</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>status</td>
-                            <td>The string "Successfully disconnected from the server"</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    status|The string "Successfully disconnected from the server".
+                </div>
             </section>
 
             <section>
@@ -158,20 +114,9 @@
                 <p>Anyone can ask the server informations about a connected user.</p>
                 <h3>Request</h3>
                 <code>GET /users/whois/:nick/</code>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>nick</td>
-                            <td>The nickname of the user one wants to have informations about</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    nick|The nickname of the user one wants to have informations about.
+                </div>
                 <h3>Response</h3>
                 <p>A <a href="#user-object">user object</a> representing whose nick matches the request.</p>
             </section>
@@ -190,43 +135,15 @@
                 <p>A user can join a channel with that request</p>
                 <h3>Request</h3>
                 <code>PUT /user/:id/channels/:channel/join/</code>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>id</td>
-                            <td>The user GUID.</td>
-                        </tr>
-                        <tr>
-                            <td>channel</td>
-                            <td>The name of the channel.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    id|The user GUID.||
+                    channel|The name of the channel.
+                </div>
                 <h3>Response</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>channel</td>
-                            <td>A <a href="#channel-object">channel object</a> representing the channel</td>
-                        </tr>
-                        <tr>
-                            <td>users</td>
-                            <td>An array of <a href="#user-object">user objects</a> representing the users that are currently in the channel</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    channel|A <a href="#channel-object">channel object</a> representing the channel.||
+                    users|An array of <a href="#user-object">user objects</a> representing the users that are currently in the channel.
+                </div>
             </section>
             
             <section>
@@ -234,47 +151,16 @@
                 <p>When a user is in a channel, he or she can say something that will be viewable by every other user in the same channel.</p>
                 <h3>Request</h3>
                 <code>PUT /user/:id/channels/:channel/say/?message=:message</code>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>id</td>
-                            <td>The user GUID.</td>
-                        </tr>
-                        <tr>
-                            <td>channel</td>
-                            <td>The name of the channel.</td>
-                        </tr>
-                        <tr>
-                            <td>message</td>
-                            <td>The message to transmit to other users.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    id|The user GUID.||
+                    channel|The name of the channel.||
+                    message|The message to transmit to other users.
+                </div>
                 <h3>Response</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>status</td>
-                            <td>The string "Message sent correctly"</td>
-                        </tr>
-                        <tr>
-                            <td>message</td>
-                            <td>The message sent</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    status|The string "Message sent correctly".||
+                    message|The message sent.
+                </div>
             </section>
             
             <section>
@@ -300,43 +186,15 @@
                 <p>A user can leave a channel with that request</p>
                 <h3>Request</h3>
                 <code>DELETE /user/:id/channels/:channel/leave/</code>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>id</td>
-                            <td>The user GUID.</td>
-                        </tr>
-                        <tr>
-                            <td>channel</td>
-                            <td>The name of the channel.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    id|The user GUID.||
+                    channel|The name of the channel.
+                </div>
                 <h3>Response</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>status</td>
-                            <td>The string "Leaving the channel"</td>
-                        </tr>
-                        <tr>
-                            <td>channel</td>
-                            <td>A <a href="#channel-object">channel object</a> representing the channel</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    status|The string "Leaving the channel".||
+                    channel|A <a href="#channel-object">channel object</a> representing the channel.
+                </div>
             </section>
             
             <section>
@@ -344,51 +202,17 @@
                 <p>A user can send a private message that will only be viewable by the recipient.</p>
                 <h3>Request</h3>
                 <code>PUT /user/:id/message/:nick/?message=:message</code>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>id</td>
-                            <td>The sender GUID</td>
-                        </tr>
-                        <tr>
-                            <td>nick</td>
-                            <td>The recipient nick</td>
-                        </tr>
-                        <tr>
-                            <td>message</td>
-                            <td>The message to be sent</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    id|The sender GUID.||
+                    nick|The recipient nick.||
+                    message|The message to be sent.
+                </div>
                 <h3>Response</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>status</td>
-                            <td>The string "Private message sent correctly"</td>
-                        </tr>
-                        <tr>
-                            <td>message</td>
-                            <td>The message sent</td>
-                        </tr>
-                        <tr>
-                            <td>recipient</td>
-                            <td>A <a href="#user-object">user object</a> representing the recipient</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    status|The string "Private message sent correctly".||
+                    message|The message sent.||
+                    recipient|A <a href="#user-object">user object</a> representing the recipient.
+                </div>
             </section>
             
             <section>
@@ -397,20 +221,9 @@
                 <p>IMPORTANT: the fetching of notices is used to check if users are still connected. Any user not asking for notices every 5 seconds will be disconnected by the server.</p>
                 <h3>Request</h3>
                 <code>GET /user/:id/notices/</code>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>id</td>
-                            <td>The user GUID.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    id|The user GUID.
+                </div>
                 <h3>Response</h3>
                 <p>A JSON list that contains all the notices addressed to the user.</p>
                 <p>Possible notices have different structure with a common attribute <code>type</code>. Here are the structures of the notices:</p>
@@ -507,55 +320,21 @@
             <section>
                 <h2><a name="user-object">User object</a></h2>
                 <p>A user object is composed of:</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>id</td>
-                            <td>A GUID (this is never shown, except when a new user registers).</td>
-                        </tr>
-                        <tr>
-                            <td>nick</td>
-                            <td>The nickname of the user.</td>
-                        </tr>
-                        <tr>
-                            <td>channels</td>
-                            <td>The list of channels the user is currently in as <a href="#channel-object">channel objects</a>.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    id|A GUID (this is never shown, except when a new user registers).||
+                    nick|The nickname of the user.||
+                    channels|The list of channles the user is currently in as <a href="#channel-object">channel objects</a>.
+                </div>
             </section>
 
             <section>
                 <h2><a name="channel-object">Channel object</a></h2>
                 <p>A channel object is composed of:</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>name</td>
-                            <td>The name of the channel is also its identifier.</td>
-                        </tr>
-                        <tr>
-                            <td>description</td>
-                            <td>A description of the channel.</td>
-                        </tr>
-                        <tr>
-                            <td>keep</td>
-                            <td>If true, the channel will exist even if it contains no user. <i>(Not yet implemented)</i></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="key-value">
+                    name|The name of the channel is also its identifier.||
+                    description|A description of the channel.||
+                    keep|If true, the channel will exist even if it contains no user. <i>(Not yet implemented)</i>
+                </div>
             </section>
 
             <section>
