@@ -2,6 +2,18 @@
 
 Here are all the updates since v1.0
 
+## [v1.3]: Channel update
+
+**:warning: This update breaks a little backwards compatibility! The notices have changed**
+
+The "channel" side of the application has been developped.
+
+- Channel descriptions can be changed.
+- Channels can be kept even if no user is in (the description will remain, more features are to be added)
+- Notices have been changed. When a channel name was part of it, it has been replaced by a channel object containing all the useful data.
+- Use of JavaScript in the API to ease the writing of new features.
+- Various bug fixes.
+
 ## [v1.2]: Logical update
 
 **:warning: This update breaks backwards compatibility!**
@@ -54,3 +66,4 @@ The application was created from scratch, the current version offers the followi
 [v1.1.1]: https://github.com/SteeveDroz/diskuss/compare/v1.1...v1.1.1
 [v1.1.2]: https://github.com/SteeveDroz/diskuss/compare/v1.1.1...v1.1.2
 [v1.2]: https://github.com/SteeveDroz/diskuss/compare/v1.1.2...v1.2
+[v1.3]: https://github.com/SteeveDroz/diskuss/compare/v1.2...v1.3
