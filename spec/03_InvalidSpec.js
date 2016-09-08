@@ -82,6 +82,34 @@ describe('Invalid app', function() {
             })
     })
     
+    it('changes the description with a wrong username', function(done) {
+        agent.put('/user/INVALID-ID/channel/channel-1/description/')
+            .send( { description: 'Some description' })
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                const message = res.body
+                expect(message).not.toBeundefined()
+                if (message !== undefined) {
+                    expect(message.error).toEqual('Unknown channel')
+                }
+                done()
+            })
+    })
+    
+    it('changes the description of a non existing channel', function(done) {
+        agent.put('/user/' + id + '/channel/INVALID-NAME/description/')
+            .send( { description: 'Some description' })
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                const message = res.body
+                expect(message).not.toBeundefined()
+                if (message !== undefined) {
+                    expect(message.error).toEqual('Unknown channel')
+                }
+                done()
+            })
+    })
+    
     it('checks for notices with wrong ID', function(done) {
         agent.get('/user/INVALID-ID/notices/')
             .end(function(err, res) {

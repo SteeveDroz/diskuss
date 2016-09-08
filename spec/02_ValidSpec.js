@@ -103,6 +103,24 @@ describe('Valid app', function() {
             })
     })
     
+    it('changes the description of a channel', function(done) {
+        agent.put('/user/' + id + '/channels/channel-1/description/')
+            .send({ description: 'First channel' })
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('Changing the description')
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('channel-1')
+                }
+                const description = res.body.description
+                expect(description).toBe('First channel')
+                done()
+            })
+    })
+    
     it('checks for notices', function(done) {
         agent.get('/user/' + id + '/notices/')
             .end(function(err, res) {
@@ -110,8 +128,8 @@ describe('Valid app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(4)
-                    if (notices.length == 4) {
+                    expect(notices.length).toEqual(5)
+                    if (notices.length == 5) {
                         expect(notices[0].type).toEqual('channelJoin')
                         expect(notices[0].nick).toEqual('toto')
                         expect(notices[0].channel).toEqual('channel-1')
@@ -145,6 +163,15 @@ describe('Valid app', function() {
                         expect(notices[3].time).not.toBeUndefined()
                         if (notices[3].time !== undefined) {
                             expect(notices[3].time.length).toBe(24)
+                        }
+                        
+                        expect(notices[4].type).toEqual('channelDescription')
+                        expect(notices[4].nick).toEqual('toto')
+                        expect(notices[4].channel).toEqual('channel-1')
+                        expect(notices[4].description).toEqual('First channel')
+                        expect(notices[4].time).not.toBeUndefined()
+                        if (notices[4].time !== undefined) {
+                            expect(notices[4].time.length).toBe(24)
                         }
                     }
                 }
