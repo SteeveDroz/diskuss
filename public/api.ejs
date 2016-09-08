@@ -435,7 +435,7 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelJoin', nick: 'user_1', channel: 'help', time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelJoin', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <th rowspan="3">channelMessage</th>
@@ -451,7 +451,7 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelMessage', nick: 'user_1', channel: 'help', message:'Hello, world!', time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelMessage', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, message:'Hello, world!', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <th rowspan="3">channelLeave</th>
@@ -466,7 +466,7 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelLeave', nick: 'user_1', channel: 'help', time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelLeave', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <th rowspan="3">privateMessage</th>
@@ -498,7 +498,7 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelDescription', nick: 'user_1', channel: 'help', description: 'Please post your questions in this channel', time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelDescription', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, description: 'Please post your questions in this channel', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                     </tbody>
                 </table>
@@ -548,7 +548,7 @@
                         </tr>
                         <tr>
                             <td>description</td>
-                            <td>A description of the channel. <i>(Not yet implemented)</i></td>
+                            <td>A description of the channel.</td>
                         </tr>
                         <tr>
                             <td>keep</td>
