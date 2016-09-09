@@ -138,6 +138,33 @@ describe('Invalid app', function() {
             })
     })
     
+    it('gives ownership with wrong ID', function(done) {
+        agent.put('/id/INVALID-ID/channels/channel-1/owner/toto/')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                expect(res.body.error).toBe('Unknown user ID')
+                done()
+            })
+    })
+    
+    it('gives ownership of unexisting channel', function(done) {
+        agent.put('/id/' + id + '/channels/INVALID-NAME/owner/toto/')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                expect(res.body.error).toBe('Unknown channel')
+                done()
+            })
+    })
+    
+    it('gives ownership to an unexisting user', function(done) {
+        agent.put('/id/' + id + '/channels/channel-1/owner/INVALID-NICK/')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                expect(res.body.error).toBe('Unknown username')
+                done()
+            })
+    })
+    
     it('checks for notices with wrong ID', function(done) {
         agent.get('/user/INVALID-ID/notices/')
             .end(function(err, res) {

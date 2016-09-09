@@ -46,6 +46,7 @@ describe('Valid app', function() {
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
                     expect(channel.name).toBe('channel-1')
+                    expect(channel.owner).toBe('toto')
                 }
 				const users = res.body.users
 				expect(users).not.toBeUndefined()
