@@ -92,7 +92,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
     }
     let channel = store.getChannel(req.params.channel)
     if (channel === undefined) {
-        channel = new Channel(req.params.channel)
+        channel = new Channel(req.params.channel, user.nick)
         store.addChannel(channel)
     }
     user.channels[channel.name] = channel
@@ -252,7 +252,12 @@ app.get('/user/:id/notices/', function(req, res) {
     user.update()
     const idlingUsers = store.getIdlingUsers()
 	idlingUsers.forEach(user => {
-        Object.keys(user.channels).forEach(channel => notice({ type: 'channelLeave', nick: user.nick, channel: channel }))
+        Object.keys(user.channels).forEach(channel => {
+            notice({ type: 'channelLeave', nick: user.nick, channel: channel })
+            if (store.getUsersByChannel(channel).length == 1) {
+                store.removeChannel(channel)
+            }
+        })
         store.removeUser(user.id)
     })
     res.send(user.notices)

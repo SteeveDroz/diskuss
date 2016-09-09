@@ -240,7 +240,7 @@ describe('Multiuser app', function() {
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
-                expect('status').toBe('Ownership transfered')
+                expect(status).toBe('Ownership transfered')
                 const channel = res.body.channel
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
@@ -258,8 +258,8 @@ describe('Multiuser app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(7)
-                    if (notices.length == 7) {
+                    expect(notices.length).toEqual(8)
+                    if (notices.length == 8) {
                         expect(notices[0].type).toEqual('channelJoin')
                         expect(notices[0].nick).toEqual('user1')
                         if (notices[0].channel !== undefined) {
@@ -332,6 +332,17 @@ describe('Multiuser app', function() {
                         expect(notices[6].time).not.toBeUndefined()
                         if (notices[6].time !== undefined) {
                             expect(notices[6].time.length).toBe(24)
+                        }
+                        
+                        expect(notices[7].type).toBe('channelOwner')
+                        expect(notices[7].channel).not.toBeUndefined()
+                        if (notices[7].channel !== undefined) {
+                            expect(notices[7].channel.name).toBe('talk')
+                            expect(notices[7].channel.owner).toBe('user2')
+                        }
+                        expect(notices[7].time).not.toBeUndefined()
+                        if (notices[7].time !== undefined) {
+                            expect(notices[7].time.length).toBe(24)
                         }
                     }
 				}
@@ -452,6 +463,14 @@ describe('Multiuser app', function() {
                 expect(res.status).toBe(200)
                 id3 = res.body.id
                 expect(id3).not.toBeUndefined()
+                done()
+            })
+    })
+    
+    it('makes user3 join a channel', function(done) {
+        agent.put('/user/' + id3 + '/channels/chat/join')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
                 done()
             })
     })
