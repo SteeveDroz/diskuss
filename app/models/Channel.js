@@ -3,10 +3,11 @@
 const User = require('./User')
 
 class Channel {
-    constructor(name) {
+    constructor(name, owner) {
         this.name = name
         this.description = name
         this.keep = false
+        this.owner = owner
     }
 
     static copy(other) {

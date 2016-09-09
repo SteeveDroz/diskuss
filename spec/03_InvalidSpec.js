@@ -82,6 +82,14 @@ describe('Invalid app', function() {
             })
     })
     
+    it('joins a channel for real', function(done) {
+        agent.put('/user/' + id + '/channels/channel-1/join/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                done()
+            })
+    })
+    
     it('changes the description with a wrong username', function(done) {
         agent.put('/user/INVALID-ID/channels/channel-1/description/')
             .send( { description: 'Some description' })
@@ -138,6 +146,33 @@ describe('Invalid app', function() {
             })
     })
     
+    it('gives ownership with wrong ID', function(done) {
+        agent.put('/user/INVALID-ID/channels/channel-1/owner/toto/')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                expect(res.body.error).toBe('Unknown user ID')
+                done()
+            })
+    })
+    
+    it('gives ownership of unexisting channel', function(done) {
+        agent.put('/user/' + id + '/channels/INVALID-NAME/owner/toto/')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                expect(res.body.error).toBe('Unknown channel')
+                done()
+            })
+    })
+    
+    it('gives ownership to an unexisting user', function(done) {
+        agent.put('/user/' + id + '/channels/channel-1/owner/INVALID-NICK/')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                expect(res.body.error).toBe('Unknown username')
+                done()
+            })
+    })
+    
     it('checks for notices with wrong ID', function(done) {
         agent.get('/user/INVALID-ID/notices/')
             .end(function(err, res) {
@@ -158,7 +193,12 @@ describe('Invalid app', function() {
                 expect(res.status).toBe(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
-				expect(notices.length).toBe(0)
+                if (notices !== undefined) {
+				    expect(notices.length).toBe(1)
+                    if (notices.length == 1) {
+                        expect(notices[0].type).toBe('channelJoin')
+                    }
+                }
 				done()
             })
     })
