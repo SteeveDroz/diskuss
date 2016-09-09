@@ -92,7 +92,7 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
     }
     let channel = store.getChannel(req.params.channel)
     if (channel === undefined) {
-        channel = new Channel(req.params.channel)
+        channel = new Channel(req.params.channel, user.nick)
         store.addChannel(channel)
     }
     user.channels[channel.name] = channel
@@ -157,6 +157,10 @@ app.put('/user/:id/channels/:channel/keep', function(req, res) {
         res.status(404).send({ error: 'Unknown channel' })
         return
     }
+    if (channel.owner !== user.nick) {
+        res.status(404).send({ error: 'You don\'t own the channel' })
+        return
+    }
     const keep = req.body.keep
     
     channel.keep = keep == true
@@ -167,6 +171,34 @@ app.put('/user/:id/channels/:channel/keep', function(req, res) {
     
     notice({ type: 'channelKeep', nick: user.nick, channel: channel })
     res.send({ status: 'Changing the persistence', channel: channel })
+})
+
+// Give channel ownership
+
+app.put('/user/:id/channels/:channel/owner/:nick/', function(req, res) {
+    const user = store.getUser(req.params.id)
+    if (user === undefined) {
+        res.status(404).send({ error: 'Unknown user ID' })
+        return
+    }
+    const channel = store.getChannel(req.params.channel)
+    if (channel === undefined) {
+        res.status(404).send({ error: 'Unknown channel' })
+        return
+    }
+    const recipient = store.getUserByNick(req.params.nick)
+    if (recipient === undefined) {
+        res.status(404).send({ error: 'Unknown username' })
+        return
+    }
+    if (channel.owner !== user.nick) {
+        res.status(404).send({ error: 'You don\'t own the channel' })
+        return
+    }
+    channel.owner = recipient.nick
+    
+    notice({ type:'channelOwner', channel: channel, nick: user.nick })
+    res.send({ status: 'Ownership transfered', channel: channel })
 })
 
 // Leave channel
@@ -224,7 +256,12 @@ app.get('/user/:id/notices/', function(req, res) {
     user.update()
     const idlingUsers = store.getIdlingUsers()
 	idlingUsers.forEach(user => {
-        Object.keys(user.channels).forEach(channel => notice({ type: 'channelLeave', nick: user.nick, channel: channel }))
+        Object.keys(user.channels).forEach(channel => {
+            notice({ type: 'channelLeave', nick: user.nick, channel: channel })
+            if (store.getUsersByChannel(channel).length == 1) {
+                store.removeChannel(channel)
+            }
+        })
         store.removeUser(user.id)
     })
     res.send(user.notices)
@@ -242,6 +279,7 @@ function notice(message) {
         case 'channelLeave':
         case 'channelDescription':
         case 'channelKeep':
+        case 'channelOwner':
             const channel = store.getChannel(message.channel.name)
             if (channel !== undefined) {
                 const users = store.getUsersByChannel(channel.name, false)

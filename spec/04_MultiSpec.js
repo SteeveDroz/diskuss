@@ -65,6 +65,7 @@ describe('Multiuser app', function() {
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
                     expect(channel.name).toBe('talk')
+                    expect(channel.owner).toBe('user1')
                 }
 				expect(users).not.toBeUndefined()
 				if (users !== undefined) {
@@ -101,6 +102,7 @@ describe('Multiuser app', function() {
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
                     expect(channel.name).toBe('chat')
+                    expect(channel.owner).toBe('user1')
                 }
 				const users = res.body.users
 				expect(users).not.toBeUndefined()
@@ -152,6 +154,7 @@ describe('Multiuser app', function() {
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
                     expect(channel.name).toBe('talk')
+                    expect(channel.owner).toBe('user1')
                 }
 				const users = res.body.users
 				expect(users).not.toBeUndefined()
@@ -231,6 +234,22 @@ describe('Multiuser app', function() {
                 done()
             })
     })
+    
+    it('transfers ownership of channel from user1 to user2', function(done) {
+        agent.put('/user/' + id1 + '/channels/talk/owner/user2')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('Ownership transfered')
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('talk')
+                    expect(channel.owner).toBe('user2')
+                }
+                done()
+            })
+    })
 	
 	it('makes user1 check for notices', function(done) {
 		agent.get('/user/' + id1 + '/notices/')
@@ -239,8 +258,8 @@ describe('Multiuser app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(7)
-                    if (notices.length == 7) {
+                    expect(notices.length).toEqual(8)
+                    if (notices.length == 8) {
                         expect(notices[0].type).toEqual('channelJoin')
                         expect(notices[0].nick).toEqual('user1')
                         if (notices[0].channel !== undefined) {
@@ -314,6 +333,17 @@ describe('Multiuser app', function() {
                         if (notices[6].time !== undefined) {
                             expect(notices[6].time.length).toBe(24)
                         }
+                        
+                        expect(notices[7].type).toBe('channelOwner')
+                        expect(notices[7].channel).not.toBeUndefined()
+                        if (notices[7].channel !== undefined) {
+                            expect(notices[7].channel.name).toBe('talk')
+                            expect(notices[7].channel.owner).toBe('user2')
+                        }
+                        expect(notices[7].time).not.toBeUndefined()
+                        if (notices[7].time !== undefined) {
+                            expect(notices[7].time.length).toBe(24)
+                        }
                     }
 				}
 				done()
@@ -327,8 +357,8 @@ describe('Multiuser app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(5)
-                    if (notices.length == 5) {
+                    expect(notices.length).toEqual(6)
+                    if (notices.length == 6) {
                         expect(notices[0].type).toEqual('channelJoin')
                         expect(notices[0].nick).toEqual('user2')
                         if (notices[0].channel !== undefined) {
@@ -379,6 +409,16 @@ describe('Multiuser app', function() {
                         if (notices[4].time !== undefined) {
                             expect(notices[4].time.length).toBe(24)
                         }
+                        expect(notices[5].type).toEqual('channelOwner')
+                        expect(notices[5].channel).not.toBeUndefined()
+                        if (notices[5].channel !== undefined) {
+                            expect(notices[5].channel.name).toBe('talk')
+                            expect(notices[5].channel.owner).toBe('user2')
+                        }
+                        expect(notices[5].time).not.toBeUndefined()
+                        if (notices[5].time !== undefined) {
+                            expect(notices[5].time.length).toBe(24)
+                        }
                     }
 				}
 				done()
@@ -423,6 +463,35 @@ describe('Multiuser app', function() {
                 expect(res.status).toBe(200)
                 id3 = res.body.id
                 expect(id3).not.toBeUndefined()
+                done()
+            })
+    })
+    
+    it('makes user3 join a channel', function(done) {
+        agent.put('/user/' + id3 + '/channels/chat/join')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                done()
+            })
+    })
+    
+    it('tries to give ownership for the wrong channel', function(done) {
+        agent.put('/user/' + id2 + '/channels/chat/owner/user3')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                const error = res.body.error
+                expect(error).toBe('You don\'t own the channel')
+                done()
+            })
+    })
+    
+    it('tries to make user3 keep the channel', function(done) {
+        agent.put('/user/' + id3 + '/channels/talk/keep/')
+            .send({ keep: true })
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                const error = res.body.error
+                expect(error).toBe('You don\'t own the channel')
                 done()
             })
     })

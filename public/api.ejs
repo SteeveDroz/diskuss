@@ -196,6 +196,23 @@
                     channel|A <a href="#channel-object">channel object</a> representing the channel.
                 </div>
             </section>
+            
+            <section>
+                <h2><a name="give-channel-ownership">Give channel ownership</a></h2>
+                <p>When a user owns a channel, they can give it to another user. The first user thereby loses the ownership.</p>
+                <h3>Request</h3>
+                <code>PUT /user/:id/channels/:channel/owner/:nick</code>
+                <div class="key-value">
+                    id|The user GUID.||
+                    channel|The name of the channel.||
+                    nick|The nick of the new owner.
+                </div>
+                <h3>Response</h3>
+                <div class="key-value">
+                    status|The string "Ownership transfered".||
+                    channel|A <a href="#channel-object">channel object</a> representing the channel.
+                </div>
+            </section>
 
             <section>
                 <h2><a name="leave-channel">Leave channel</a></h2>
@@ -264,7 +281,7 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelJoin', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelJoin', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_1' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <th rowspan="3">channelMessage</th>
@@ -280,7 +297,7 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelMessage', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, message:'Hello, world!', time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelMessage', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_1' }, message:'Hello, world!', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <th rowspan="3">channelLeave</th>
@@ -295,7 +312,7 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelLeave', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelLeave', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_1' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <th rowspan="3">privateMessage</th>
@@ -326,7 +343,7 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelDescription', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelDescription', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_1' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                         <tr>
                             <th rowspan="3">channelKeep</th>
@@ -341,7 +358,22 @@
                             <td>The time of the event.</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><code>{ type: 'channelKeep', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                            <td colspan="4"><code>{ type: 'channelKeep', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_1' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                        </tr>
+                        <tr>
+                            <th rowspan="3">channelOwner</th>
+                            <th>channel</th>
+                            <th>nick</th>
+                            <th>time</th>
+                            <th rowspan="2"></th>
+                        </tr>
+                        <tr>
+                            <td>The channel concerned.</td>
+                            <td>The nick of the previous owner.</td>
+                            <td>The time of the event.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><code>{ type: 'channelKeep', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_2' }, nick: 'user_1', time: '2000-12-31T23:59:59.999Z' }</code></td>
                         </tr>
                     </tbody>
                 </table>
@@ -353,7 +385,7 @@
                 <div class="key-value">
                     id|A GUID (this is never shown, except when a new user registers).||
                     nick|The nickname of the user.||
-                    channels|The list of channles the user is currently in as <a href="#channel-object">channel objects</a>.
+                    channels|The list of channels the user is currently in as <a href="#channel-object">channel objects</a>.
                 </div>
             </section>
 
@@ -378,7 +410,7 @@
                 sections[i].innerHTML += '<a href="#top">Back to top</a>'
             }
             
-            const tables = [].forEach.call(document.getElementsByClassName('key-value'), function(tableData) {
+            [].forEach.call(document.getElementsByClassName('key-value'), function(tableData) {
                 const table = document.createElement('table')
                 table.innerHTML = '<thead><tr><th>Key</th><th>Value</th></tr></thead>'
                 const body = document.createElement('tbody')
