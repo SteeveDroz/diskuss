@@ -485,6 +485,17 @@ describe('Multiuser app', function() {
             })
     })
     
+    it('tries to make user3 keep the channel', function(done) {
+        agent.put('/user/' + id3 + '/channels/talk/keep/')
+            .send({ keep: true })
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                const error = res.body.error
+                expect(error).toBe('You don\'t own the channel')
+                done()
+            })
+    })
+    
     it('waits for 6 seconds', function(done) {
         setTimeout(done, 6000 /* 6 seconds */)
     }, 10000 /* Jasmine timeout */)

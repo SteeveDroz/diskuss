@@ -157,6 +157,10 @@ app.put('/user/:id/channels/:channel/keep', function(req, res) {
         res.status(404).send({ error: 'Unknown channel' })
         return
     }
+    if (channel.owner !== user.nick) {
+        res.status(404).send({ error: 'You don\'t own the channel' })
+        return
+    }
     const keep = req.body.keep
     
     channel.keep = keep == true
