@@ -47,7 +47,7 @@ class Store {
         let user = this.getUser(id)
         let suffix = 1
         do {
-            if (this.users.find(user => user.nick === nick + '_' + suffix) === undefined)
+            if (Object.keys(this.users).find(id => this.getUser(id).nick === nick + '_' + suffix) === undefined)
             {
                 break
             }
