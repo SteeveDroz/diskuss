@@ -258,10 +258,10 @@ app.get('/user/:id/notices/', function(req, res) {
     user.update()
     const idlingUsers = store.getIdlingUsers()
 	idlingUsers.forEach(user => {
-        Object.keys(user.channels).forEach(channel => {
-            notice({ type: 'channelLeave', nick: user.nick, channel: channel })
-            if (store.getUsersByChannel(channel).length == 1) {
-                store.removeChannel(channel)
+        Object.keys(user.channels).forEach(name => {
+            notice({ type: 'channelLeave', nick: user.nick, channel: user.channels[name] })
+            if (store.getUsersByChannel(name).length == 1) {
+                store.removeChannel(name)
             }
         })
         store.removeUser(user.id)
