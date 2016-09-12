@@ -2,6 +2,12 @@
 
 Here are all the updates since v1.0
 
+## [v1.4.2]: Moderated update
+
+Fixing a bug where two people wanting the same username crashed the server.
+
+Fixing a bug where the disconnecting of idling users wasn't notified to other users.
+
 ## [v1.4.1]: Moderated update
 
 Server now allows [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing), useful for AJAX developpers.
@@ -86,3 +92,4 @@ The application was created from scratch, the current version offers the followi
 [v1.3]: https://github.com/SteeveDroz/diskuss/compare/v1.2...v1.3
 [v1.4]: https://github.com/SteeveDroz/diskuss/compare/v1.3...v1.4
 [v1.4.1]: https://github.com/SteeveDroz/diskuss/compare/v1.4...v1.4.1
+[v1.4.2]: https://github.com/SteeveDroz/diskuss/compare/v1.4.1...v1.4.2
