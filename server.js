@@ -2,6 +2,7 @@ const version = require('./package.json').version
 const port = 8081
 
 const express = require('express')
+const cors = require('cors')
 const favicon = require('serve-favicon')
 const User = require('./app/models/User')
 const Channel = require('./app/models/Channel')
@@ -13,6 +14,7 @@ const app = express()
 app.use(favicon(__dirname + '/public/favicon.ico'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(cors())
 app.set('views', './public')
 app.set('view engine', 'ejs')
 
