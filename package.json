@@ -1,6 +1,6 @@
 {
   "name": "diskuss",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A chat server that offers an API but no client",
   "author": "Steeve Droz <steeve.droz@rpn.ch>",
   "main": "server.js",
@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
     "ejs": "^2.5.1",
     "express": "^4.0",
     "serve-favicon": "^2.3.0"

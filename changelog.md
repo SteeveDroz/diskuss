@@ -2,6 +2,10 @@
 
 Here are all the updates since v1.0
 
+## [v1.4.1]: Moderated update
+
+Server now allows [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing), useful for AJAX developpers.
+
 ## [v1.4]: Moderated update
 
 Channels now belong to the user who first joined it.
@@ -81,3 +85,4 @@ The application was created from scratch, the current version offers the followi
 [v1.2]: https://github.com/SteeveDroz/diskuss/compare/v1.1.2...v1.2
 [v1.3]: https://github.com/SteeveDroz/diskuss/compare/v1.2...v1.3
 [v1.4]: https://github.com/SteeveDroz/diskuss/compare/v1.3...v1.4
+[v1.4.1]: https://github.com/SteeveDroz/diskuss/compare/v1.4...v1.4.1
