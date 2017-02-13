@@ -139,11 +139,24 @@ app.put('/user/:id/channels/:channel/description/', function(req, res) {
         return
     }
     const description = req.body.description
-    
+
     channel.description = description
-    
+
     notice({ type: 'channelDescription', nick: user.nick, channel: channel })
     res.send({ status: 'Changing the description', channel: channel, description: description })
+})
+
+// Fetch channel informations
+
+app.get('/channels/info/:name/', function(req, res) {
+  const name = req.params.name
+	const channel = store.getChannel(name)
+
+  if (channel === undefined) {
+      res.status(404).send({ 'error': 'Unknown channel' })
+  }else{
+      res.send({ channel: channel });
+  }
 })
 
 // Keep channel
@@ -164,13 +177,13 @@ app.put('/user/:id/channels/:channel/keep', function(req, res) {
         return
     }
     const keep = req.body.keep
-    
+
     channel.keep = keep == true
-    
+
     if (!channel.keep && store.getUsersByChannel(channel.name).length == 0) {
         store.removeChannel(channel.name)
     }
-    
+
     notice({ type: 'channelKeep', nick: user.nick, channel: channel })
     res.send({ status: 'Changing the persistence', channel: channel })
 })
@@ -198,7 +211,7 @@ app.put('/user/:id/channels/:channel/owner/:nick/', function(req, res) {
         return
     }
     channel.owner = recipient.nick
-    
+
     notice({ type:'channelOwner', channel: channel, nick: user.nick })
     res.send({ status: 'Ownership transfered', channel: channel })
 })
@@ -242,7 +255,7 @@ app.put('/user/:id/message/:nick/', function(req, res) {
         res.status(404).send({ error: 'Unknown username'})
         return
     }
-    
+
     notice({ type: 'privateMessage', sender: sender.nick, recipient: recipient.nick, message: message})
     res.send({ status: 'Private message sent correctly', message: message, recipient: recipient })
 })
@@ -274,7 +287,7 @@ app.get('/user/:id/notices/', function(req, res) {
 
 function notice(message) {
     message.time = new Date().toJSON()
-    
+
     switch (message.type) {
         case 'channelJoin':
         case 'channelMessage':
@@ -288,7 +301,7 @@ function notice(message) {
                 users.forEach(user => user.notices.push(message))
             }
             break
-        
+
         case 'privateMessage':
             const recipient = store.getUserByNick(message.recipient)
             if (recipient !== undefined) {
