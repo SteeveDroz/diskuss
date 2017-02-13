@@ -138,12 +138,15 @@ app.put('/user/:id/channels/:channel/description/', function(req, res) {
         res.status(404).send({ error: 'Unknown channel' })
         return
     }
-    const description = req.body.description
+    const description = req.query.description
+    if(description === undefined){
+      res.status(404).send({ 'error': 'Description cannot be null' })
+    }else{
+      channel.description = description
 
-    channel.description = description
-
-    notice({ type: 'channelDescription', nick: user.nick, channel: channel })
-    res.send({ status: 'Changing the description', channel: channel, description: description })
+      notice({ type: 'channelDescription', nick: user.nick, channel: channel })
+      res.send({ status: 'Changing the description', channel: channel})
+    }
 })
 
 // Fetch channel informations
