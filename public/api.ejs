@@ -24,17 +24,17 @@
                 padding:20px;
                 margin-bottom: 2em;
             }
-            
+
             section h1 {
                 font-size:24pt;
                 margin:0;
             }
-            
+
             section h2 {
                 font-size:18pt;
                 margin:0;
             }
-            
+
             code {
                 background:#333;
                 border: 2px solid #000;
@@ -94,7 +94,7 @@
                 <h3>Response</h3>
                 <p>A <a href="#user-object">user object</a> containing all the informations about the newly created user (including the GUID).</p>
             </section>
-            
+
             <section>
                 <h2><a name="disconnection">Disconnection</a></h2>
                 <p>To disconnect from the server means having its GUID revoked.</p>
@@ -145,7 +145,21 @@
                     users|An array of <a href="#user-object">user objects</a> representing the users that are currently in the channel.
                 </div>
             </section>
-            
+
+						<section>
+								<h2><a name="info-channel">Info channel</a></h2>
+								<p>Anyone can ask for informationsabout an existing channels</p>
+								<h3>Request</h3>
+								<code>GET /channels/infos/:name/</code>
+								<div class="key-value">
+										name|The name of the channel.
+								</div>
+								<h3>Response</h3>
+								<div class="key-value">
+										channel|A <a href="#channel-object">channel object</a> representing the channel.
+								</div>
+						</section>
+
             <section>
                 <h2><a name="talk-in-channel">Talk in channel</a></h2>
                 <p>When a user is in a channel, he or she can say something that will be viewable by every other user in the same channel.</p>
@@ -162,7 +176,7 @@
                     message|The message sent.
                 </div>
             </section>
-            
+
             <section>
                 <h2><a name="change-channel-description">Change channel description</a></h2>
                 <p>A user can change the description of a channel.</p>
@@ -179,7 +193,7 @@
                     channel|A <a href="#channel-object">channel object</a> representing the channel.
                 </div>
             </section>
-            
+
             <section>
                 <h2><a name="keep-channel">Keep channel</a></h2>
                 <p>A user can decide that a channel still exists even if all the users left.</p>
@@ -196,7 +210,7 @@
                     channel|A <a href="#channel-object">channel object</a> representing the channel.
                 </div>
             </section>
-            
+
             <section>
                 <h2><a name="give-channel-ownership">Give channel ownership</a></h2>
                 <p>When a user owns a channel, they can give it to another user. The first user thereby loses the ownership.</p>
@@ -229,7 +243,7 @@
                     channel|A <a href="#channel-object">channel object</a> representing the channel.
                 </div>
             </section>
-            
+
             <section>
                 <h2><a name="send-private-message">Send private message</a></h2>
                 <p>A user can send a private message that will only be viewable by the recipient.</p>
@@ -247,7 +261,7 @@
                     recipient|A <a href="#user-object">user object</a> representing the recipient.
                 </div>
             </section>
-            
+
             <section>
                 <h2><a name="fetch-notices">Fetch notices</a></h2>
                 <p>Notices are stored in the <a href="#user-object">user object</a>, on the server. If a client wants to retrieve thoses notices, it must send a request to ask for them.</p>
@@ -410,7 +424,7 @@
             for (let i in sections) {
                 sections[i].innerHTML += '<a href="#top">Back to top</a>'
             }
-            
+
             [].forEach.call(document.getElementsByClassName('key-value'), function(tableData) {
                 const table = document.createElement('table')
                 table.innerHTML = '<thead><tr><th>Key</th><th>Value</th></tr></thead>'
@@ -427,7 +441,7 @@
                     body.appendChild(line)
                 })
                 table.appendChild(body)
-                
+
                 tableData.innerHTML = ''
                 tableData.appendChild(table)
             })
