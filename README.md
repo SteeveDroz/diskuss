@@ -1,5 +1,7 @@
 # Diskuss
 
+[![Build Status](https://travis-ci.org/SteeveDroz/diskuss.svg?branch=master)](https://travis-ci.org/SteeveDroz/diskuss)
+
 Diskuss is a Node.js chat server that offers an API but no official client.
 
 ## Install
