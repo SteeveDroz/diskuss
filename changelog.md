@@ -2,9 +2,18 @@
 
 Here are all the updates since v1.0
 
+## [dev]: Current updates
+
+The change log is more taken care of:
+
+- Indenting has been fixed.
+- The "dev" chapter has been added.
+
 ## [v1.5.0]: Information update
 
 Informations about channels can be obtained.
+
+Regression bugs in the unit tests made the build fail, they have been fixed.
 
 ## [v1.4.2]: Moderated update
 
@@ -23,9 +32,9 @@ Channels now belong to the user who first joined it.
 Changes:
 
 - An owner (and only them) can:
- - Change the description of the channel
- - Keep or release the channel
- - Permanently transfer their ownership of the channel to another user
+  - Change the description of the channel
+  - Keep or release the channel
+  - Permanently transfer their ownership of the channel to another user
 - Update of all the notices example to include owners
 - Various bug fixes
 
@@ -98,3 +107,4 @@ The application was created from scratch, the current version offers the followi
 [v1.4.1]: https://github.com/SteeveDroz/diskuss/compare/v1.4...v1.4.1
 [v1.4.2]: https://github.com/SteeveDroz/diskuss/compare/v1.4.1...v1.4.2
 [v1.5.0]: https://github.com/SteeveDroz/diskuss/compare/v1.4.2...v1.5.0
+[dev]: https://github.com/SteeveDroz/diskuss/compare/master...dev
