@@ -20,6 +20,6 @@ Diskuss was originally created for a school project. It has been made by a teach
 
 As many other chat servers and clients exist on the market, there are no practical uses for such a half-made network, except the one described hereinabove. If you are a teacher of any kind and you want to use any of my work with your students, please *do* and give me a feedback if you have the time.
 
-###Release notes
+### Release notes
 
 Release notes can be found in the **[change log](changelog.md])**.

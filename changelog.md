@@ -2,6 +2,10 @@
 
 Here are all the updates since v1.0
 
+## [v1.5.0]: Information update
+
+Informations about channels can be obtained.
+
 ## [v1.4.2]: Moderated update
 
 Fixing a bug where two people wanting the same username crashed the server.
@@ -93,3 +97,4 @@ The application was created from scratch, the current version offers the followi
 [v1.4]: https://github.com/SteeveDroz/diskuss/compare/v1.3...v1.4
 [v1.4.1]: https://github.com/SteeveDroz/diskuss/compare/v1.4...v1.4.1
 [v1.4.2]: https://github.com/SteeveDroz/diskuss/compare/v1.4.1...v1.4.2
+[v1.5.0]: https://github.com/SteeveDroz/diskuss/compare/v1.4.2...v1.5.0
