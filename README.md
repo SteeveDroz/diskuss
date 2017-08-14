@@ -22,4 +22,4 @@ As many other chat servers and clients exist on the market, there are no practic
 
 ### Release notes
 
-Release notes can be found in the **[change log](changelog.md])**.
+Release notes can be found in the **[change log](changelog.md)**.
