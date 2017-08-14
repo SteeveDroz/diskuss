@@ -4,7 +4,7 @@ const app = require('../server'),
 describe('Valid app', function() {
     const agent = request.agent(app)
     let id
-    
+
     it('asks informations', function(done) {
         agent.get('/info/')
             .end(function(err, res) {
@@ -14,7 +14,7 @@ describe('Valid app', function() {
                 done()
             })
     })
-    
+
     it('connects to server', function(done){
         agent.post('/users/register/toto/')
 			.end(function(err, res) {
@@ -24,7 +24,7 @@ describe('Valid app', function() {
 				done()
 			})
     })
-	
+
 	it('asks who is a user', function(done) {
 		agent.get('/users/whois/toto/')
 			.end(function(err, res) {
@@ -37,7 +37,7 @@ describe('Valid app', function() {
 				done()
 			})
 	})
-    
+
     it('joins a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/join/')
             .end(function(err, res) {
@@ -59,7 +59,21 @@ describe('Valid app', function() {
 				done()
             })
     })
-    
+
+    it('gives informations about a channel', function(done) {
+        agent.get('/channels/info/channel-1/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('channel-1')
+                    expect(channel.owner).toBe('toto')
+                }
+                done()
+            })
+    })
+
     it('talks in channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/say/')
             .send({ message: 'Hello, Channel 1!' })
@@ -72,7 +86,7 @@ describe('Valid app', function() {
 				done()
             })
     })
-    
+
     it('talks in another channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-2/say/')
             .send({ message: 'Hello, Channel 2!' })
@@ -85,7 +99,7 @@ describe('Valid app', function() {
 				done()
             })
     })
-    
+
     it('sends a private message', function(done) {
         agent.put('/user/' + id + '/message/toto/')
             .send({ message: 'Private message' })
@@ -103,10 +117,10 @@ describe('Valid app', function() {
                 done()
             })
     })
-    
+
     it('changes the description of a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/description/')
-            .send({ description: 'First channel' })
+            .query({ description: 'First channel' })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -120,7 +134,7 @@ describe('Valid app', function() {
                 done()
             })
     })
-    
+
     it('keeps a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/keep/')
             .send({ keep: true })
@@ -137,7 +151,7 @@ describe('Valid app', function() {
                 done()
             })
     })
-    
+
     it('checks for notices', function(done) {
         agent.get('/user/' + id + '/notices/')
             .end(function(err, res) {
@@ -188,7 +202,7 @@ describe('Valid app', function() {
                         if (notices[3].time !== undefined) {
                             expect(notices[3].time.length).toBe(24)
                         }
-                        
+
                         expect(notices[4].type).toEqual('channelDescription')
                         expect(notices[4].nick).toEqual('toto')
                         if (notices[4].channel !== undefined) {
@@ -199,7 +213,7 @@ describe('Valid app', function() {
                         if (notices[4].time !== undefined) {
                             expect(notices[4].time.length).toBe(24)
                         }
-                        
+
                         expect(notices[5].type).toEqual('channelKeep')
                         expect(notices[5].nick).toEqual('toto')
                         if (notices[5].channel !== undefined) {
@@ -215,7 +229,7 @@ describe('Valid app', function() {
 				done()
             })
     })
-    
+
     it('releases a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/keep/')
             .send({ keep: false })
@@ -232,7 +246,7 @@ describe('Valid app', function() {
                 done()
             })
     })
-    
+
     it('disconnects', function(done) {
         agent.del('/user/' + id + '/disconnect/')
             .end(function(err, res) {
@@ -242,7 +256,7 @@ describe('Valid app', function() {
 				done()
             })
     })
-	
+
     it('asks for the list of channels after disconnecting', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {

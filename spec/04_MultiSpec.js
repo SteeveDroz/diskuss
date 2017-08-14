@@ -3,9 +3,9 @@ const app = require('../server'),
 
 describe('Multiuser app', function() {
 	const agent = request.agent(app)
-	
+
 	let id1, id2, id3
-	
+
 	it('connects the first user', function(done) {
 		agent.post('/users/register/user1/')
 			.end(function(err, res) {
@@ -15,7 +15,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+
 	it('connects the second user', function(done) {
 		agent.post('/users/register/user2/')
 			.end(function(err, res) {
@@ -25,7 +25,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+
 	it('asks for the list of users', function(done) {
 		agent.get('/users/')
 			.end(function(err, res) {
@@ -42,7 +42,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-    
+
     it('asks for the list of channels before joining', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {
@@ -55,7 +55,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-	
+
 	it('makes user1 enter a channel', function(done) {
 		agent.put('/user/' + id1 + '/channels/talk/join/')
 			.end(function(err, res) {
@@ -77,7 +77,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+
     it('asks for the list of channels after joining', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {
@@ -93,7 +93,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-	
+
 	it('makes user1 enter another channel', function(done) {
 		agent.put('/user/' + id1 + '/channels/chat/join/')
 			.end(function(err, res) {
@@ -115,7 +115,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+
     it('asks for the list of channels after joining a second one', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {
@@ -132,7 +132,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-	
+
 	it('makes user1 talk in channel', function(done) {
 		agent.put('/user/' + id1 + '/channels/talk/say')
 			.send({message: 'Message 1'})
@@ -145,7 +145,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+
 	it('makes user2 enter a channel', function(done) {
 		agent.put('/user/' + id2 + '/channels/talk/join/')
 			.end(function(err, res) {
@@ -168,7 +168,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+
 	it('makes user1 talk in channel again', function(done) {
 		agent.put('/user/' + id1 + '/channels/talk/say/')
 			.send({message: 'Message 2'})
@@ -181,7 +181,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-    
+
     it('makes user1 send a private message to user2', function(done) {
         agent.put('/user/' + id1 + '/message/user2/')
             .send({ message: 'Private message' })
@@ -199,10 +199,10 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('makes user1 change the channel description', function(done) {
         agent.put('/user/' + id1 + '/channels/talk/description/')
-            .send({ description: 'Talk in there' })
+            .query({ description: 'Talk in there' })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -212,12 +212,11 @@ describe('Multiuser app', function() {
                 if (channel !== undefined) {
                     expect(channel.name).toBe('talk')
                 }
-                const description = res.body.description
-                expect(description).toBe('Talk in there')
+                expect(channel.description).toBe('Talk in there')
                 done()
             })
     })
-    
+
     it('makes user1 keep a channel', function(done) {
         agent.put('/user/' + id1 + '/channels/talk/keep/')
             .send({ keep: true })
@@ -234,7 +233,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('transfers ownership of channel from user1 to user2', function(done) {
         agent.put('/user/' + id1 + '/channels/talk/owner/user2')
             .end(function(err, res) {
@@ -250,7 +249,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-	
+
 	it('makes user1 check for notices', function(done) {
 		agent.get('/user/' + id1 + '/notices/')
 			.end(function(err, res) {
@@ -311,7 +310,7 @@ describe('Multiuser app', function() {
                         if (notices[4].time !== undefined) {
                             expect(notices[4].time.length).toBe(24)
                         }
-                        
+
                         expect(notices[5].type).toEqual('channelDescription')
                         expect(notices[5].nick).toEqual('user1')
                         if (notices[5].channel !== undefined) {
@@ -322,7 +321,7 @@ describe('Multiuser app', function() {
                         if (notices[5].time !== undefined) {
                             expect(notices[5].time.length).toBe(24)
                         }
-                        
+
                         expect(notices[6].type).toEqual('channelKeep')
                         expect(notices[6].nick).toEqual('user1')
                         if (notices[6].channel !== undefined) {
@@ -333,7 +332,7 @@ describe('Multiuser app', function() {
                         if (notices[6].time !== undefined) {
                             expect(notices[6].time.length).toBe(24)
                         }
-                        
+
                         expect(notices[7].type).toBe('channelOwner')
                         expect(notices[7].channel).not.toBeUndefined()
                         if (notices[7].channel !== undefined) {
@@ -349,7 +348,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+
 	it('makes user2 check for notices', function(done) {
 		agent.get('/user/' + id2 + '/notices/')
 			.end(function(err, res) {
@@ -387,7 +386,7 @@ describe('Multiuser app', function() {
                         if (notices[2].time !== undefined) {
                             expect(notices[2].time.length).toBe(24)
                         }
-                        
+
                         expect(notices[3].type).toEqual('channelDescription')
                         expect(notices[3].nick).toEqual('user1')
                         if (notices[3].channel !== undefined) {
@@ -398,7 +397,7 @@ describe('Multiuser app', function() {
                         if (notices[3].time !== undefined) {
                             expect(notices[3].time.length).toBe(24)
                         }
-                        
+
                         expect(notices[4].type).toEqual('channelKeep')
                         expect(notices[4].nick).toEqual('user1')
                         if (notices[4].channel !== undefined) {
@@ -424,7 +423,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-	
+
 	it('disconnects user1', function(done) {
 		agent.del('/user/' + id1 + '/disconnect/')
 			.end(function(err, res) {
@@ -434,7 +433,7 @@ describe('Multiuser app', function() {
 				done()
 			})
 	})
-    	
+
 	it('makes user2 check for notices again', function(done) {
 		agent.get('/user/' + id2 + '/notices/')
 			.end(function(err, res) {
@@ -456,7 +455,7 @@ describe('Multiuser app', function() {
             done()
 			})
 	})
-    
+
     it('connects user3', function(done) {
         agent.post('/users/register/user3/')
             .end(function(err, res) {
@@ -466,7 +465,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('makes user3 join a channel', function(done) {
         agent.put('/user/' + id3 + '/channels/chat/join')
             .end(function(err, res) {
@@ -474,7 +473,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('tries to give ownership for the wrong channel', function(done) {
         agent.put('/user/' + id2 + '/channels/chat/owner/user3')
             .end(function(err, res) {
@@ -484,7 +483,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('tries to make user3 keep the channel', function(done) {
         agent.put('/user/' + id3 + '/channels/talk/keep/')
             .send({ keep: true })
@@ -495,11 +494,11 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('waits for 6 seconds', function(done) {
         setTimeout(done, 6000 /* 6 seconds */)
     }, 10000 /* Jasmine timeout */)
-    
+
     it('makes user2 check for notices after 6 seconds', function(done) {
         agent.get('/user/' + id2 + '/notices/')
             .end(function(err, res) {
@@ -507,7 +506,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('makes user3 check for notices', function(done) {
         agent.get('/user/' + id3 + '/notices/')
             .end(function(err, res) {
@@ -520,7 +519,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('makes user2 leave the channel', function(done) {
         agent.del('/user/' + id2 + '/channels/talk/leave/')
             .end(function(err, res) {
@@ -535,7 +534,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('checks if kept channels still exist', function(done) {
         agent.get('/channels/')
             .end(function(err, res) {
@@ -551,7 +550,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('makes user2 release a channel', function(done) {
         agent.put('/user/' + id2 + '/channels/talk/keep/')
             .send({ keep: false })
@@ -567,7 +566,7 @@ describe('Multiuser app', function() {
                 done()
             })
     })
-    
+
     it('disconnects user2', function(done) {
         agent.del('/user/' + id2 + '/disconnect/')
             .end(function(err, res) {
