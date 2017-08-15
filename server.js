@@ -196,6 +196,57 @@ app.put('/user/:id/channels/:channel/description/', function(req, res) {
     }
 })
 
+// Kick a user
+
+app.delete('/user/:id/channels/:channel/kick/:nick/', function(req, res) {
+    const user = store.getUser(req.params.id)
+    if (user === undefined) {
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
+        return
+    }
+    const channel = store.getChannel(req.params.channel)
+    if (channel === undefined) {
+        res.status(404).send({
+            error: 'Unknown channel'
+        })
+        return
+    }
+    const kickedUser = store.getUserByNick(req.params.nick)
+    if (kickedUser === undefined) {
+        res.status(404).send({
+            error: 'Unknown username'
+        })
+        return
+    }
+    if (channel.owner !== user.nick) {
+        res.status(404).send({
+            error: 'You don\'t own the channel'
+        })
+        return
+    }
+    if (kickedUser.channels[channel.name] !== undefined) {
+        delete kickedUser.channels[channel.name]
+        if (channel !== undefined) {
+            notice({
+                type: 'userKick',
+                nick: kickedUser.nick,
+                channel: channel
+            })
+        }
+        res.send({
+            status: 'User successfully kicked',
+            user: kickedUser,
+            channel: channel
+        })
+    } else {
+        res.send(404).send({
+            error: "Not in channel, can't be kicked."
+        })
+    }
+})
+
 // Fetch channel informations
 
 app.get('/channels/info/:name/', function(req, res) {
@@ -404,6 +455,7 @@ function notice(message) {
         case 'channelLeave':
         case 'channelDescription':
         case 'channelKeep':
+        case 'userKick':
         case 'channelOwner':
             const channel = store.getChannel(message.channel.name)
             if (channel !== undefined) {
