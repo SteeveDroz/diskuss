@@ -636,6 +636,14 @@ describe('Multiuser app', function() {
             })
     })
 
+    it('empties user4 notices', function(done) {
+        agent.get('/user/' + id4 + '/notices/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                done()
+            })
+    })
+
     it('makes user4 kick user5 out of the channel', function(done) {
         agent.delete('/user/' + id4 + '/channels/kick-ban/kick/user5')
             .end(function(err, res) {
@@ -651,6 +659,30 @@ describe('Multiuser app', function() {
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
                     expect(channel.name).toBe('kick-ban')
+                }
+                done()
+            })
+    })
+
+    it('makes user4 check for notices', function(done) {
+        agent.get('/user/' + id4 + '/notices/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const notices = res.body
+                expect(notices).not.toBeUndefined()
+                if (notices !== undefined) {
+                    expect(notices.length).toEqual(1)
+                    if (notices.length == 1) {
+                        expect(notices[0].type).toEqual('userKick')
+                        expect(notices[0].nick).toEqual('user5')
+                        if (notices[0].channel !== undefined) {
+                            expect(notices[0].channel.name).toEqual('kick-ban')
+                        }
+                        expect(notices[0].time).not.toBeUndefined()
+                        if (notices[0].time !== undefined) {
+                            expect(notices[0].time.length).toBe(24)
+                        }
+                    }
                 }
                 done()
             })
