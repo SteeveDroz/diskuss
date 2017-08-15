@@ -420,6 +420,36 @@
                         <td colspan="4"><code>{ type: 'userKick', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_2' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
                     </tr>
                     <tr>
+                        <th rowspan="3">userBan</th>
+                        <th>nick</th>
+                        <th>channel</th>
+                        <th>time</th>
+                        <th rowspan="2"></th>
+                    </tr>
+                    <tr>
+                        <td>The nick of the banned user.</td>
+                        <td>The channel concerned.</td>
+                        <td>The time of the event.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><code>{ type: 'userBan', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_2' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">userUnban</th>
+                        <th>nick</th>
+                        <th>channel</th>
+                        <th>time</th>
+                        <th rowspan="2"></th>
+                    </tr>
+                    <tr>
+                        <td>The nick of the unbanned user.</td>
+                        <td>The channel concerned.</td>
+                        <td>The time of the event.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><code>{ type: 'userUnban', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_2' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                    </tr>
+                    <tr>
                         <th rowspan="3">channelOwner</th>
                         <th>channel</th>
                         <th>nick</th>
