@@ -12,7 +12,9 @@ const bodyParser = require('body-parser')
 const app = express()
 
 app.use(favicon(__dirname + '/public/favicon.ico'))
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+    extended: false
+}))
 app.use(bodyParser.json())
 app.use(cors())
 app.set('views', './public')
@@ -23,13 +25,17 @@ let store = new Store()
 // API
 
 app.get('/', function(req, res) {
-    res.render('api.ejs', { version: version })
+    res.render('api.ejs', {
+        version: version
+    })
 })
 
 // Info
 
 app.get('/info/', function(req, res) {
-    res.send({ 'version':version })
+    res.send({
+        'version': version
+    })
 })
 
 // List users
@@ -51,36 +57,45 @@ app.post('/users/register/:nick/', function(req, res) {
 app.delete('/user/:id/disconnect/', function(req, res) {
     const user = store.getUser(req.params.id)
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknown user ID' })
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
         return
     }
-	Object.keys(user.channels).forEach(name => {
-            notice({ type: 'channelLeave', nick: user.nick, channel: store.getChannel(name) })
-            const channel = store.getChannel(name)
-            if (!channel.keep && store.getUsersByChannel(channel.name).length == 1) {
-                store.removeChannel(channel.name)
-            }
+    Object.keys(user.channels).forEach(name => {
+        notice({
+            type: 'channelLeave',
+            nick: user.nick,
+            channel: store.getChannel(name)
+        })
+        const channel = store.getChannel(name)
+        if (!channel.keep && store.getUsersByChannel(channel.name).length == 1) {
+            store.removeChannel(channel.name)
+        }
     })
     store.removeUser(user.id)
-    res.send({ status: 'Successfully disconnected from the server' })
+    res.send({
+        status: 'Successfully disconnected from the server'
+    })
 })
 
 // Whois
 
 app.get('/users/whois/:nick/', function(req, res) {
     const id = Object.keys(store.users).find(id => store.users[id].nick === req.params.nick)
-	const user = store.getUser(id)
+    const user = store.getUser(id)
     if (user === undefined) {
-        res.status(404).send({ 'error': 'Unknown nick' })
-    }
-    else {
+        res.status(404).send({
+            'error': 'Unknown nick'
+        })
+    } else {
         res.send(user.getPublicUser())
     }
 })
 
 // List channels
 
-app.get('/channels/', function(req, res){
+app.get('/channels/', function(req, res) {
     res.send(Object.keys(store.channels).map(name => store.channels[name]))
 })
 
@@ -89,7 +104,9 @@ app.get('/channels/', function(req, res){
 app.put('/user/:id/channels/:channel/join/', function(req, res) {
     const user = store.getUser(req.params.id)
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknown user ID' })
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
         return
     }
     let channel = store.getChannel(req.params.channel)
@@ -98,8 +115,15 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
         store.addChannel(channel)
     }
     user.channels[channel.name] = channel
-    notice({ type: 'channelJoin', nick: user.nick, channel: channel })
-    res.send({ channel: channel, users: store.getUsersByChannel(channel.name, true) })
+    notice({
+        type: 'channelJoin',
+        nick: user.nick,
+        channel: channel
+    })
+    res.send({
+        channel: channel,
+        users: store.getUsersByChannel(channel.name, true)
+    })
 })
 
 // Talk in channel
@@ -107,7 +131,9 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
 app.put('/user/:id/channels/:channel/say/', function(req, res) {
     const user = store.getUser(req.params.id)
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknown user ID' })
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
         return
     }
     let channel = store.getChannel(req.params.channel)
@@ -121,8 +147,16 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
     }
     const message = req.body.message
 
-    notice({ type: 'channelMessage', nick: user.nick, channel: channel, message: message })
-    res.send({ status: 'Message sent correctly', message: message })
+    notice({
+        type: 'channelMessage',
+        nick: user.nick,
+        channel: channel,
+        message: message
+    })
+    res.send({
+        status: 'Message sent correctly',
+        message: message
+    })
 })
 
 // Change channel description
@@ -130,36 +164,53 @@ app.put('/user/:id/channels/:channel/say/', function(req, res) {
 app.put('/user/:id/channels/:channel/description/', function(req, res) {
     const user = store.getUser(req.params.id)
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknown user ID' })
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
         return
     }
     const channel = store.getChannel(req.params.channel)
     if (channel === undefined) {
-        res.status(404).send({ error: 'Unknown channel' })
+        res.status(404).send({
+            error: 'Unknown channel'
+        })
         return
     }
     const description = req.query.description
-    if(description === undefined){
-      res.status(404).send({ 'error': 'Description cannot be null' })
-    }else{
-      channel.description = description
+    if (description === undefined) {
+        res.status(404).send({
+            'error': 'Description cannot be null'
+        })
+    } else {
+        channel.description = description
 
-      notice({ type: 'channelDescription', nick: user.nick, channel: channel })
-      res.send({ status: 'Changing the description', channel: channel})
+        notice({
+            type: 'channelDescription',
+            nick: user.nick,
+            channel: channel
+        })
+        res.send({
+            status: 'Changing the description',
+            channel: channel
+        })
     }
 })
 
 // Fetch channel informations
 
 app.get('/channels/info/:name/', function(req, res) {
-  const name = req.params.name
-	const channel = store.getChannel(name)
+    const name = req.params.name
+    const channel = store.getChannel(name)
 
-  if (channel === undefined) {
-      res.status(404).send({ 'error': 'Unknown channel' })
-  }else{
-      res.send({ channel: channel });
-  }
+    if (channel === undefined) {
+        res.status(404).send({
+            'error': 'Unknown channel'
+        })
+    } else {
+        res.send({
+            channel: channel
+        });
+    }
 })
 
 // Keep channel
@@ -167,16 +218,22 @@ app.get('/channels/info/:name/', function(req, res) {
 app.put('/user/:id/channels/:channel/keep', function(req, res) {
     const user = store.getUser(req.params.id)
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknown user ID' })
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
         return
     }
     const channel = store.getChannel(req.params.channel)
     if (channel === undefined) {
-        res.status(404).send({ error: 'Unknown channel' })
+        res.status(404).send({
+            error: 'Unknown channel'
+        })
         return
     }
     if (channel.owner !== user.nick) {
-        res.status(404).send({ error: 'You don\'t own the channel' })
+        res.status(404).send({
+            error: 'You don\'t own the channel'
+        })
         return
     }
     const keep = req.body.keep
@@ -187,8 +244,15 @@ app.put('/user/:id/channels/:channel/keep', function(req, res) {
         store.removeChannel(channel.name)
     }
 
-    notice({ type: 'channelKeep', nick: user.nick, channel: channel })
-    res.send({ status: 'Changing the persistence', channel: channel })
+    notice({
+        type: 'channelKeep',
+        nick: user.nick,
+        channel: channel
+    })
+    res.send({
+        status: 'Changing the persistence',
+        channel: channel
+    })
 })
 
 // Give channel ownership
@@ -196,27 +260,42 @@ app.put('/user/:id/channels/:channel/keep', function(req, res) {
 app.put('/user/:id/channels/:channel/owner/:nick/', function(req, res) {
     const user = store.getUser(req.params.id)
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknown user ID' })
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
         return
     }
     const channel = store.getChannel(req.params.channel)
     if (channel === undefined) {
-        res.status(404).send({ error: 'Unknown channel' })
+        res.status(404).send({
+            error: 'Unknown channel'
+        })
         return
     }
     const recipient = store.getUserByNick(req.params.nick)
     if (recipient === undefined) {
-        res.status(404).send({ error: 'Unknown username' })
+        res.status(404).send({
+            error: 'Unknown username'
+        })
         return
     }
     if (channel.owner !== user.nick) {
-        res.status(404).send({ error: 'You don\'t own the channel' })
+        res.status(404).send({
+            error: 'You don\'t own the channel'
+        })
         return
     }
     channel.owner = recipient.nick
 
-    notice({ type:'channelOwner', channel: channel, nick: user.nick })
-    res.send({ status: 'Ownership transfered', channel: channel })
+    notice({
+        type: 'channelOwner',
+        channel: channel,
+        nick: user.nick
+    })
+    res.send({
+        status: 'Ownership transfered',
+        channel: channel
+    })
 })
 
 // Leave channel
@@ -224,24 +303,33 @@ app.put('/user/:id/channels/:channel/owner/:nick/', function(req, res) {
 app.delete('/user/:id/channels/:channel/leave/', function(req, res) {
     const user = store.getUser(req.params.id)
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknow user ID' })
+        res.status(404).send({
+            error: 'Unknow user ID'
+        })
         return
     }
     const channel = store.getChannel(req.params.channel)
-    if (user.channels[channel.name] !== undefined)
-    {
+    if (user.channels[channel.name] !== undefined) {
         delete user.channels[channel.name]
         if (channel !== undefined) {
             if (!channel.keep && store.getUsersByChannel(channel.name).length == 0) {
                 store.removeChannel(channel.name)
             }
-            notice({ type: 'channelLeave', nick: user.nick, channel: channel })
+            notice({
+                type: 'channelLeave',
+                nick: user.nick,
+                channel: channel
+            })
         }
+    } else {
+        res.send(404).send({
+            error: "Not in channel, can't leave."
+        })
     }
-    else {
-        res.send(404).send({ error: "Not in channel, can't leave." })
-    }
-    res.send({ status: 'Leaving the channel', channel: channel })
+    res.send({
+        status: 'Leaving the channel',
+        channel: channel
+    })
 })
 
 // Send private message
@@ -251,16 +339,29 @@ app.put('/user/:id/message/:nick/', function(req, res) {
     const recipient = store.getUserByNick(req.params.nick)
     const message = req.body.message
     if (sender === undefined) {
-        res.status(404).send({ error: 'Unknown user ID'})
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
         return
     }
     if (recipient === undefined) {
-        res.status(404).send({ error: 'Unknown username'})
+        res.status(404).send({
+            error: 'Unknown username'
+        })
         return
     }
 
-    notice({ type: 'privateMessage', sender: sender.nick, recipient: recipient.nick, message: message})
-    res.send({ status: 'Private message sent correctly', message: message, recipient: recipient })
+    notice({
+        type: 'privateMessage',
+        sender: sender.nick,
+        recipient: recipient.nick,
+        message: message
+    })
+    res.send({
+        status: 'Private message sent correctly',
+        message: message,
+        recipient: recipient
+    })
 })
 
 // Fetch notices
@@ -268,14 +369,20 @@ app.put('/user/:id/message/:nick/', function(req, res) {
 app.get('/user/:id/notices/', function(req, res) {
     const user = store.getUser(req.params.id)
     if (user === undefined) {
-        res.status(404).send({ error: 'Unknown user ID' })
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
         return
     }
     user.update()
     const idlingUsers = store.getIdlingUsers()
-	idlingUsers.forEach(user => {
+    idlingUsers.forEach(user => {
         Object.keys(user.channels).forEach(name => {
-            notice({ type: 'channelLeave', nick: user.nick, channel: user.channels[name] })
+            notice({
+                type: 'channelLeave',
+                nick: user.nick,
+                channel: user.channels[name]
+            })
             if (store.getUsersByChannel(name).length == 1) {
                 store.removeChannel(name)
             }
@@ -319,8 +426,10 @@ function notice(message) {
 // Error handling
 
 function error(req, res) {
-     res.status(404).send({error: "Unknown route or method."})
-	 console.log('ERROR accessing ' + req.method + ' ' + req.path)
+    res.status(404).send({
+        error: "Unknown route or method."
+    })
+    console.log('ERROR accessing ' + req.method + ' ' + req.path)
 }
 
 app.get('*', error)

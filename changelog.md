@@ -32,9 +32,11 @@ Channels now belong to the user who first joined it.
 Changes:
 
 - An owner (and only them) can:
+
   - Change the description of the channel
   - Keep or release the channel
   - Permanently transfer their ownership of the channel to another user
+
 - Update of all the notices example to include owners
 - Various bug fixes
 
@@ -79,7 +81,6 @@ The informations about v1.1 have been added to the API.
 
 Diskuss uses notices to check if users are still connected. The server postulates that any client that hasn't checked for notices in the last 5 seconds must be disconnected and removes it from the list of users.
 
-
 ## [v1.0]: Original release
 
 The application was created from scratch, the current version offers the following features:
@@ -97,6 +98,7 @@ The application was created from scratch, the current version offers the followi
 - Send a private message to another user
 - Fetch notices
 
+[dev]: https://github.com/SteeveDroz/diskuss/compare/master...dev
 [v1.0]: https://github.com/SteeveDroz/diskuss/compare/v0.1-alpha...v1.0
 [v1.1]: https://github.com/SteeveDroz/diskuss/compare/v1.0...v1.1
 [v1.1.1]: https://github.com/SteeveDroz/diskuss/compare/v1.1...v1.1.1
@@ -107,4 +109,3 @@ The application was created from scratch, the current version offers the followi
 [v1.4.1]: https://github.com/SteeveDroz/diskuss/compare/v1.4...v1.4.1
 [v1.4.2]: https://github.com/SteeveDroz/diskuss/compare/v1.4.1...v1.4.2
 [v1.5.0]: https://github.com/SteeveDroz/diskuss/compare/v1.4.2...v1.5.0
-[dev]: https://github.com/SteeveDroz/diskuss/compare/master...dev
