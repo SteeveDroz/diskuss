@@ -206,6 +206,22 @@
         </section>
 
         <section>
+            <h2><a name="kick">Kick a user</h2>
+            <p>The owner of a channel can kick another user out. It corresponds to force the other user to leave.</p>
+            <h3>Request</h3>
+            <code>DELETE /user/:id/channels/:channel/kick/:nick</code>
+            <div class="key-value">
+                id|The user GUID.|| channel|The name of the channel.|| nick|The nick of the user to kick.
+            </div>
+            <h3>Response</h3>
+            <div class="key-value">
+                status|The string "User successfully kicked".||
+                user|A <a href="#user-object">user object</a> representing the user who has been kicked.||
+                channel|A <a href="#channel-object">channel object</a> representing the channel from which the user has been kicked.
+            </div>
+        </section>
+
+        <section>
             <h2><a name="give-channel-ownership">Give channel ownership</a></h2>
             <p>When a user owns a channel, they can give it to another user. The first user thereby loses the ownership.</p>
             <h3>Request</h3>
