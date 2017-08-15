@@ -9,6 +9,8 @@ The change log is more taken care of:
 - Indenting has been fixed.
 - The "dev" chapter has been added.
 
+Users can now be kicked out of channels by owner.
+
 ## [v1.5.0]: Information update
 
 Informations about channels can be obtained.
