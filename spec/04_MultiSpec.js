@@ -640,13 +640,17 @@ describe('Multiuser app', function() {
         agent.delete('/user/' + id4 + '/channels/kick-ban/kick/user5')
             .end(function(err, res) {
                 expect(res.status).toBe(200)
-                const users = res.body.users
-                expect(users).not.toBeUndefined()
-                if (users !== undefined) {
-                    expect(users.length).toBe(1)
-                    if (users.length == 1) {
-                        expect(users[0].nick).toBe('user4')
-                    }
+                const status = res.body.status
+                expect(status).toBe('User successfully kicked')
+                const user = res.body.user
+                expect(user).not.toBeUndefined()
+                if (user !== undefined) {
+                    expect(user.nick).toBe('user5')
+                }
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('kick-ban')
                 }
                 done()
             })
