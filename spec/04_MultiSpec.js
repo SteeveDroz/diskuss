@@ -664,6 +664,59 @@ describe('Multiuser app', function() {
             })
     })
 
+    it('makes user4 ban user5 from the channel', function(done) {
+        agent.post('/user/' + id4 + '/channels/kick-ban/ban/user5/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('User successfully banned')
+                const user = res.body.user
+                expect(user).not.toBeUndefined()
+                if (user !== undefined) {
+                    expect(user.nick).toBe('user5')
+                }
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('kick-ban')
+                }
+                done()
+            })
+    })
+
+    it('makes user5 try to join the channel after a ban', function(done) {
+        agent.put('/user/' + id5 + '/channels/kick-ban/')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                const message = res.body
+                expect(message).not.toBeUndefined()
+                if (message !== undefined) {
+                    expect(message.error).toBe('Unable to join, you have been banned')
+                }
+                done()
+            })
+    })
+
+    it('makes user4 unban user5 from the channel', function(done) {
+        agent.delete('/user/' + id4 + '/channels/kick-ban/unban/user5/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('User successfully unbanned')
+                const user = res.body.user
+                expect(user).not.toBeUndefined()
+                if (user !== undefined) {
+                    expect(user.nick).toBe('user5')
+                }
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('kick-ban')
+                }
+                done()
+            })
+    })
+
     it('makes user4 check for notices', function(done) {
         agent.get('/user/' + id4 + '/notices/')
             .end(function(err, res) {
@@ -671,8 +724,8 @@ describe('Multiuser app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(1)
-                    if (notices.length == 1) {
+                    expect(notices.length).toEqual(3)
+                    if (notices.length == 3) {
                         expect(notices[0].type).toEqual('userKick')
                         expect(notices[0].nick).toEqual('user5')
                         if (notices[0].channel !== undefined) {
@@ -681,6 +734,26 @@ describe('Multiuser app', function() {
                         expect(notices[0].time).not.toBeUndefined()
                         if (notices[0].time !== undefined) {
                             expect(notices[0].time.length).toBe(24)
+                        }
+
+                        expect(notices[1].type).toEqual('userBan')
+                        expect(notices[1].nick).toEqual('user5')
+                        if (notices[1].channel !== undefined) {
+                            expect(notices[1].channel.name).toEqual('kick-ban')
+                        }
+                        expect(notices[1].time).not.toBeUndefined()
+                        if (notices[1].time !== undefined) {
+                            expect(notices[1].time.length).toBe(24)
+                        }
+
+                        expect(notices[2].type).toEqual('userUnban')
+                        expect(notices[2].nick).toEqual('user5')
+                        if (notices[2].channel !== undefined) {
+                            expect(notices[2].channel.name).toEqual('kick-ban')
+                        }
+                        expect(notices[2].time).not.toBeUndefined()
+                        if (notices[2].time !== undefined) {
+                            expect(notices[2].time.length).toBe(24)
                         }
                     }
                 }
