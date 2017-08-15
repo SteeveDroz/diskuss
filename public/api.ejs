@@ -221,6 +221,36 @@
         </section>
 
         <section>
+            <h2><a name="ban">Ban a user</a></h2>
+            <p>The owner of a channel can ban another. It corresponds to forbid them to join.</p>
+            <h3>Request</h3>
+            <code>POST /user/:id/channels/:channel/ban/:nick</code>
+            <div class="key-value">
+                id|The user GUID.|| channel|The name of the channel.|| nick|The nick of the user to ban.
+            </div>
+            <h3>Response</h3>
+            <div class="key-value">
+                status|The string "User successfully banned".|| user|A <a href="#user-object">user object</a> representing the user who has been banned.|| channel|A <a href="#channel-object">channel object</a> representing the channel from which the user
+                has been banned.
+            </div>
+        </section>
+
+        <section>
+            <h2><a name="unban">Unban a user</a></h2>
+            <p>The owner of a channel can unban another. It corresponds to allow them to join after a ban period.</p>
+            <h3>Request</h3>
+            <code>DELETE /user/:id/channels/:channel/unban/:nick</code>
+            <div class="key-value">
+                id|The user GUID.|| channel|The name of the channel.|| nick|The nick of the user to unban.
+            </div>
+            <h3>Response</h3>
+            <div class="key-value">
+                status|The string "User successfully unbanned".|| user|A <a href="#user-object">user object</a> representing the user who has been unbanned.|| channel|A <a href="#channel-object">channel object</a> representing the channel from which the
+                user has been unbanned.
+            </div>
+        </section>
+
+        <section>
             <h2><a name="give-channel-ownership">Give channel ownership</a></h2>
             <p>When a user owns a channel, they can give it to another user. The first user thereby loses the ownership.</p>
             <h3>Request</h3>
