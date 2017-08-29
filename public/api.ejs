@@ -4,12 +4,13 @@
         <meta charset="utf-8">
         <title>Diskuss API v<%= version %></title>
         <style>
-            * {
-                box-sizing:border-box;
+            body {
+                background: #EEEEEE;
             }
 
-            body {
-                background:#aaf;
+            * {
+                font-family: 'Segoe UI Light', Tahoma, Geneva, Verdana, sans-serif;
+                box-sizing:border-box;
             }
 
             article {
@@ -18,53 +19,95 @@
             }
 
             section {
-                background:#fff;
-                border-radius:10px;
-                box-shadow:3px 3px 3px rgba(0, 0, 0, 0.5) inset;
-                padding:20px;
+                background: white;
+                padding: 20px;
                 margin-bottom: 2em;
+                border-radius: 7px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
             }
 
             section h1 {
-                font-size:24pt;
+                font-size: 2.5em;
                 margin:0;
+                font-weight: bold;
             }
 
             section h2 {
-                font-size:18pt;
+                font-size: 2em;
                 margin:0;
+            }
+
+            section h3 {
+                font-size: 1.6em;
             }
 
             code {
                 background:#333;
-                border: 2px solid #000;
                 color:#fff;
+                border-radius: 10px;
                 display:inline-block;
-                padding:10px;
+                padding: 10px;
             }
 
             table {
-                background:#eee;
-                margin-top:10px;
+                background:#ddd;
+                margin-top: 10px;
+                color: rgb(50, 50, 50);
             }
 
             td, th {
                 background:#fff;
                 padding:5px;
             }
+
+            table, .top, code, p {
+                font-size: 1.3em;
+            }
+
+            a {
+                text-decoration: none;
+            }
+
+            a[href="#user-object"], a[href="#channel-object"] {
+                color: #3490DE;
+                font-weight: bold;
+            }
+
+            a[href="#top"] {
+                display: inline-block;
+                margin-top: 20px;
+                font-size: 1.2em;
+                border-radius: 100px;
+                padding: 8px 18px;
+                font-family: 'Segoe UI Semibold', Tahoma, Geneva, Verdana, sans-serif;
+                transition: all .2s;
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                color: white;
+                background: #F73859;
+            }
+
+            a[href="#top"]:hover {
+                transform: scale(1.03);
+            }
+
+            a[href="#top"]:active {
+                transform: scale(.97);
+            }
         </style>
     </head>
     <body>
-        <a name="top"></a>
+        <a href="#top">Back to top</a> 
         <article>
-            <section>
+            <section id="top">
                 <h1>Diskuss API v<%= version %></h1>
                 <p>This page shows the comprehensive list of request that are included in the Diskuss API.</p>
                 <p>Diskuss is a chat server that can host numerous people in any number of channels. It handles group chat along with private chat.</p>
             </section>
 
             <section>
-                <h2><a name="information">Information</a></h2>
+                <h2>Information</h2>
                 <p>This request returns informations about the server itself to anyone, without authentication.</p>
                 <h3>Request</h3>
                 <code>GET /info/</code>
@@ -146,19 +189,19 @@
                 </div>
             </section>
 
-						<section>
-								<h2><a name="info-channel">Info channel</a></h2>
-								<p>Anyone can ask for informations about an existing channel</p>
-								<h3>Request</h3>
-								<code>GET /channels/info/:name/</code>
-								<div class="key-value">
-										name|The name of the channel.
-								</div>
-								<h3>Response</h3>
-								<div class="key-value">
-										channel|A <a href="#channel-object">channel object</a> representing the channel.
-								</div>
-						</section>
+            <section>
+                    <h2><a name="info-channel">Info channel</a></h2>
+                    <p>Anyone can ask for informations about an existing channel</p>
+                    <h3>Request</h3>
+                    <code>GET /channels/info/:name/</code>
+                    <div class="key-value">
+                            name|The name of the channel.
+                    </div>
+                    <h3>Response</h3>
+                    <div class="key-value">
+                            channel|A <a href="#channel-object">channel object</a> representing the channel.
+                    </div>
+            </section>
 
             <section>
                 <h2><a name="talk-in-channel">Talk in channel</a></h2>
@@ -419,12 +462,10 @@
                 <p>Whatever the URI may be, if the resource or action asked is unavailable for some reason or the action is illegal, a JSON containing a single entry which key is called <code>error</code> will be sent. The value of that entry is the error message.</p>
             </section>
         </article>
+        
         <script language="javascript" defer>
             const sections = document.getElementsByTagName('section')
-            for (let i in sections) {
-                sections[i].innerHTML += '<a href="#top">Back to top</a>'
-            }
-
+            for (let i in sections) {}
             [].forEach.call(document.getElementsByClassName('key-value'), function(tableData) {
                 const table = document.createElement('table')
                 table.innerHTML = '<thead><tr><th>Key</th><th>Value</th></tr></thead>'
