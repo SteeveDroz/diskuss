@@ -98,7 +98,7 @@
         </style>
     </head>
     <body>
-        <a href="#top">Back to top</a> 
+        <a href="#top">Back to top</a>
         <article>
             <section id="top">
                 <h1>Diskuss API v<%= version %></h1>
@@ -461,8 +461,14 @@
                 <h2><a name="error-handling">Error handling</a></h2>
                 <p>Whatever the URI may be, if the resource or action asked is unavailable for some reason or the action is illegal, a JSON containing a single entry which key is called <code>error</code> will be sent. The value of that entry is the error message.</p>
             </section>
+
+            <section>
+                <h2><a name="credits">Credits</a></h2>
+                <p>API by <a href="https://github.com/SteeveDroz">Steeve Droz</a></p>
+                <p>Logo and design by <a href="https://github.com/OwenGombas">Owen Gombas</a></p>
+            </section>
         </article>
-        
+
         <script language="javascript" defer>
             const sections = document.getElementsByTagName('section')
             for (let i in sections) {}
