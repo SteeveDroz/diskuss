@@ -247,6 +247,46 @@ app.delete('/user/:id/channels/:channel/kick/:nick/', function(req, res) {
     }
 })
 
+// Ban a user
+
+app.post('/user/:id/channels/:channel/ban/:nick/', function(req, res) {
+    const user = store.getUser(req.params.id)
+    if (user === undefined) {
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
+        return
+    }
+    const channel = store.getChannel(req.params.channel)
+    if (channel === undefined) {
+        res.status(404).send({
+            error: 'Unknown channel'
+        })
+        return
+    }
+    const bannedUser = store.getUserByNick(req.params.nick)
+    if (bannedUser === undefined) {
+        res.status(404).send({
+            error: 'Unknown username'
+        })
+        return
+    }
+
+    channel.banned.push(user.nick)
+    notice({
+        type: 'userBan',
+        nick: bannedUser.nick,
+        channel: channel
+    })
+    res.send({
+        status: 'User successfully banned',
+        user: bannedUser,
+        channel: channel
+    })
+})
+
+// Unban a user
+
 // Fetch channel informations
 
 app.get('/channels/info/:name/', function(req, res) {

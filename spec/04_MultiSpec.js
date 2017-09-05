@@ -685,7 +685,7 @@ describe('Multiuser app', function() {
     })
 
     it('makes user5 try to join the channel after a ban', function(done) {
-        agent.put('/user/' + id5 + '/channels/kick-ban/')
+        agent.put('/user/' + id5 + '/channels/kick-ban/join')
             .end(function(err, res) {
                 expect(res.status).toBe(404)
                 const message = res.body
