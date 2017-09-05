@@ -113,6 +113,10 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
     if (channel === undefined) {
         channel = new Channel(req.params.channel, user.nick)
         store.addChannel(channel)
+        notice({
+            type: 'channelCreate',
+            channel: channel
+        })
     }
     if (channel.isBanned(user)) {
         res.status(404).send({
@@ -556,6 +560,13 @@ function notice(message) {
             if (recipient !== undefined) {
                 recipient.notices.push(message)
             }
+            break
+
+        case 'channelCreate':
+            const users = store.users
+            Object.keys(users).forEach(function(nick) {
+                users[nick].notices.push(message)
+            })
             break
 
         default:
