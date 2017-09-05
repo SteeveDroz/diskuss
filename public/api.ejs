@@ -313,6 +313,19 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <th rowspan="3">channelCreate</th>
+                        <th>channel</th>
+                        <th>time</th>
+                        <th rowspan="3" colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <td>The channel newly created.</td>
+                        <td>The time of the event.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><code>{ type: 'channelCreate', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_1' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                    </tr>
+                    <tr>
                         <th rowspan="3">channelJoin</th>
                         <th>nick</th>
                         <th>channel</th>
