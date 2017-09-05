@@ -114,6 +114,12 @@ app.put('/user/:id/channels/:channel/join/', function(req, res) {
         channel = new Channel(req.params.channel, user.nick)
         store.addChannel(channel)
     }
+    if (channel.isBanned(user)) {
+        res.status(404).send({
+            error: 'Unable to join, you have been banned'
+        })
+        return
+    }
     user.channels[channel.name] = channel
     notice({
         type: 'channelJoin',
@@ -272,7 +278,7 @@ app.post('/user/:id/channels/:channel/ban/:nick/', function(req, res) {
         return
     }
 
-    channel.banned.push(user.nick)
+    channel.banned.push(bannedUser.nick)
     notice({
         type: 'userBan',
         nick: bannedUser.nick,
