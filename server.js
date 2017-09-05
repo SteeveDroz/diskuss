@@ -293,6 +293,45 @@ app.post('/user/:id/channels/:channel/ban/:nick/', function(req, res) {
 
 // Unban a user
 
+app.delete('/user/:id/channels/:channel/unban/:nick/', function(req, res) {
+    const user = store.getUser(req.params.id)
+    if (user === undefined) {
+        res.status(404).send({
+            error: 'Unknown user ID'
+        })
+        return
+    }
+    const channel = store.getChannel(req.params.channel)
+    if (channel === undefined) {
+        res.status(404).send({
+            error: 'Unknown channel'
+        })
+        return
+    }
+    const bannedUser = store.getUserByNick(req.params.nick)
+    if (bannedUser === undefined) {
+        res.status(404).send({
+            error: 'Unknown username'
+        })
+        return
+    }
+
+    const index = channel.banned.indexOf(bannedUser.nick)
+    if (index > -1) {
+        channel.banned.splice(index, 1)
+    }
+    notice({
+        type: 'userUnban',
+        nick: bannedUser.nick,
+        channel: channel
+    })
+    res.send({
+        status: 'User successfully unbanned',
+        user: bannedUser,
+        channel: channel
+    })
+})
+
 // Fetch channel informations
 
 app.get('/channels/info/:name/', function(req, res) {
@@ -502,6 +541,8 @@ function notice(message) {
         case 'channelDescription':
         case 'channelKeep':
         case 'userKick':
+        case 'userBan':
+        case 'userUnban':
         case 'channelOwner':
             const channel = store.getChannel(message.channel.name)
             if (channel !== undefined) {
