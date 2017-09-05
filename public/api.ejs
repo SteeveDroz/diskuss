@@ -253,6 +253,51 @@
         </section>
 
         <section>
+            <h2><a name="kick">Kick a user</h2>
+            <p>The owner of a channel can kick another user out. It corresponds to force the other user to leave.</p>
+            <h3>Request</h3>
+            <code>DELETE /user/:id/channels/:channel/kick/:nick/</code>
+            <div class="key-value">
+                id|The user GUID.|| channel|The name of the channel.|| nick|The nick of the user to kick.
+            </div>
+            <h3>Response</h3>
+            <div class="key-value">
+                status|The string "User successfully kicked".|| user|A <a href="#user-object">user object</a> representing the user who has been kicked.|| channel|A <a href="#channel-object">channel object</a> representing the channel from which the user
+                has been kicked.
+            </div>
+        </section>
+
+        <section>
+            <h2><a name="ban">Ban a user</a></h2>
+            <p>The owner of a channel can ban another. It corresponds to forbid them to join.</p>
+            <h3>Request</h3>
+            <code>POST /user/:id/channels/:channel/ban/:nick</code>
+            <div class="key-value">
+                id|The user GUID.|| channel|The name of the channel.|| nick|The nick of the user to ban.
+            </div>
+            <h3>Response</h3>
+            <div class="key-value">
+                status|The string "User successfully banned".|| user|A <a href="#user-object">user object</a> representing the user who has been banned.|| channel|A <a href="#channel-object">channel object</a> representing the channel from which the user
+                has been banned.
+            </div>
+        </section>
+
+        <section>
+            <h2><a name="unban">Unban a user</a></h2>
+            <p>The owner of a channel can unban another. It corresponds to allow them to join after a ban period.</p>
+            <h3>Request</h3>
+            <code>DELETE /user/:id/channels/:channel/unban/:nick</code>
+            <div class="key-value">
+                id|The user GUID.|| channel|The name of the channel.|| nick|The nick of the user to unban.
+            </div>
+            <h3>Response</h3>
+            <div class="key-value">
+                status|The string "User successfully unbanned".|| user|A <a href="#user-object">user object</a> representing the user who has been unbanned.|| channel|A <a href="#channel-object">channel object</a> representing the channel from which the
+                user has been unbanned.
+            </div>
+        </section>
+
+        <section>
             <h2><a name="give-channel-ownership">Give channel ownership</a></h2>
             <p>When a user owns a channel, they can give it to another user. The first user thereby loses the ownership.</p>
             <h3>Request</h3>
@@ -314,6 +359,19 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <th rowspan="3">channelCreate</th>
+                        <th>channel</th>
+                        <th>time</th>
+                        <th rowspan="3" colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <td>The channel newly created.</td>
+                        <td>The time of the event.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><code>{ type: 'channelCreate', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_1' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                    </tr>
                     <tr>
                         <th rowspan="3">channelJoin</th>
                         <th>nick</th>
@@ -407,6 +465,51 @@
                         <td colspan="4"><code>{ type: 'channelKeep', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_1' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
                     </tr>
                     <tr>
+                        <th rowspan="3">userKick</th>
+                        <th>nick</th>
+                        <th>channel</th>
+                        <th>time</th>
+                        <th rowspan="2"></th>
+                    </tr>
+                    <tr>
+                        <td>The nick of the kicked user.</td>
+                        <td>The channel concerned.</td>
+                        <td>The time of the event.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><code>{ type: 'userKick', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_2' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">userBan</th>
+                        <th>nick</th>
+                        <th>channel</th>
+                        <th>time</th>
+                        <th rowspan="2"></th>
+                    </tr>
+                    <tr>
+                        <td>The nick of the banned user.</td>
+                        <td>The channel concerned.</td>
+                        <td>The time of the event.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><code>{ type: 'userBan', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_2' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                    </tr>
+                    <tr>
+                        <th rowspan="3">userUnban</th>
+                        <th>nick</th>
+                        <th>channel</th>
+                        <th>time</th>
+                        <th rowspan="2"></th>
+                    </tr>
+                    <tr>
+                        <td>The nick of the unbanned user.</td>
+                        <td>The channel concerned.</td>
+                        <td>The time of the event.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><code>{ type: 'userUnban', nick: 'user_1', channel: { name: 'help', description: 'Get help here', keep: true, owner: 'user_2' }, time: '2000-12-31T23:59:59.999Z' }</code></td>
+                    </tr>
+                    <tr>
                         <th rowspan="3">channelOwner</th>
                         <th>channel</th>
                         <th>nick</th>
@@ -453,7 +556,7 @@
         </section>
     </article>
 
-    <script language="javascript" defer>
+    <script language="javascript">
         const sections = document.getElementsByTagName('section')
         for (let i in sections) {}
         [].forEach.call(document.getElementsByClassName('key-value'), function(tableData) {

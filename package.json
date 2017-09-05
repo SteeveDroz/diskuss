@@ -1,6 +1,6 @@
 {
     "name": "diskuss",
-    "version": "1.5.1",
+    "version": "1.6.0",
     "description": "A chat server that offers an API but no client",
     "author": "Steeve Droz <steeve.droz@rpn.ch>",
     "main": "server.js",
@@ -22,7 +22,7 @@
         "serve-favicon": "^2.3.0"
     },
     "devDependencies": {
-        "jasmine": "^2.4.1",
+        "jasmine": "^2.8.0",
         "supertest": "^2.0.0"
     },
     "scripts": {

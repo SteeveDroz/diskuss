@@ -15,28 +15,28 @@ describe('Valid app', function() {
             })
     })
 
-    it('connects to server', function(done){
+    it('connects to server', function(done) {
         agent.post('/users/register/toto/')
-			.end(function(err, res) {
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
-				id = res.body.id
-				expect(id).not.toBeUndefined()
-				done()
-			})
+                id = res.body.id
+                expect(id).not.toBeUndefined()
+                done()
+            })
     })
 
-	it('asks who is a user', function(done) {
-		agent.get('/users/whois/toto/')
-			.end(function(err, res) {
+    it('asks who is a user', function(done) {
+        agent.get('/users/whois/toto/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
-				const user = res.body
-				expect(user).not.toBeUndefined()
-				if (user !== undefined) {
-					expect(user.nick).toBe('toto')
-				}
-				done()
-			})
-	})
+                const user = res.body
+                expect(user).not.toBeUndefined()
+                if (user !== undefined) {
+                    expect(user.nick).toBe('toto')
+                }
+                done()
+            })
+    })
 
     it('joins a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/join/')
@@ -48,15 +48,15 @@ describe('Valid app', function() {
                     expect(channel.name).toBe('channel-1')
                     expect(channel.owner).toBe('toto')
                 }
-				const users = res.body.users
-				expect(users).not.toBeUndefined()
-				if (users !== undefined) {
-					expect(users.length).toBe(1)
-					if (users.length == 1) {
-						expect(users[0].nick).toBe('toto')
-					}
-				}
-				done()
+                const users = res.body.users
+                expect(users).not.toBeUndefined()
+                if (users !== undefined) {
+                    expect(users.length).toBe(1)
+                    if (users.length == 1) {
+                        expect(users[0].nick).toBe('toto')
+                    }
+                }
+                done()
             })
     })
 
@@ -76,33 +76,39 @@ describe('Valid app', function() {
 
     it('talks in channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/say/')
-            .send({ message: 'Hello, Channel 1!' })
+            .send({
+                message: 'Hello, Channel 1!'
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
                 expect(status).toEqual('Message sent correctly')
                 const message = res.body.message
                 expect(message).toEqual('Hello, Channel 1!')
-				done()
+                done()
             })
     })
 
     it('talks in another channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-2/say/')
-            .send({ message: 'Hello, Channel 2!' })
+            .send({
+                message: 'Hello, Channel 2!'
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
                 expect(status).toEqual('Message sent correctly')
                 const message = res.body.message
                 expect(message).toEqual('Hello, Channel 2!')
-				done()
+                done()
             })
     })
 
     it('sends a private message', function(done) {
         agent.put('/user/' + id + '/message/toto/')
-            .send({ message: 'Private message' })
+            .send({
+                message: 'Private message'
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -120,7 +126,9 @@ describe('Valid app', function() {
 
     it('changes the description of a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/description/')
-            .query({ description: 'First channel' })
+            .query({
+                description: 'First channel'
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -137,7 +145,9 @@ describe('Valid app', function() {
 
     it('keeps a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/keep/')
-            .send({ keep: true })
+            .send({
+                keep: true
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -159,10 +169,9 @@ describe('Valid app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(6)
-                    if (notices.length == 6) {
-                        expect(notices[0].type).toEqual('channelJoin')
-                        expect(notices[0].nick).toEqual('toto')
+                    expect(notices.length).toEqual(7)
+                    if (notices.length == 7) {
+                        expect(notices[0].type).toEqual('channelCreate')
                         expect(notices[0].channel).not.toBeUndefined()
                         if (notices[0].channel !== undefined) {
                             expect(notices[0].channel.name).toEqual('channel-1')
@@ -172,12 +181,12 @@ describe('Valid app', function() {
                             expect(notices[0].time.length).toBe(24)
                         }
 
-                        expect(notices[1].type).toEqual('channelMessage')
+                        expect(notices[1].type).toEqual('channelJoin')
                         expect(notices[1].nick).toEqual('toto')
+                        expect(notices[1].channel).not.toBeUndefined()
                         if (notices[1].channel !== undefined) {
                             expect(notices[1].channel.name).toEqual('channel-1')
                         }
-                        expect(notices[1].message).toEqual('Hello, Channel 1!')
                         expect(notices[1].time).not.toBeUndefined()
                         if (notices[1].time !== undefined) {
                             expect(notices[1].time.length).toBe(24)
@@ -186,53 +195,66 @@ describe('Valid app', function() {
                         expect(notices[2].type).toEqual('channelMessage')
                         expect(notices[2].nick).toEqual('toto')
                         if (notices[2].channel !== undefined) {
-                            expect(notices[2].channel.name).toEqual('channel-2')
+                            expect(notices[2].channel.name).toEqual('channel-1')
                         }
-                        expect(notices[2].message).toEqual('Hello, Channel 2!')
+                        expect(notices[2].message).toEqual('Hello, Channel 1!')
                         expect(notices[2].time).not.toBeUndefined()
                         if (notices[2].time !== undefined) {
                             expect(notices[2].time.length).toBe(24)
                         }
 
-                        expect(notices[3].type).toEqual('privateMessage')
-                        expect(notices[3].sender).toEqual('toto')
-                        expect(notices[3].recipient).toEqual('toto')
-                        expect(notices[3].message).toEqual('Private message')
+                        expect(notices[3].type).toEqual('channelMessage')
+                        expect(notices[3].nick).toEqual('toto')
+                        if (notices[3].channel !== undefined) {
+                            expect(notices[3].channel.name).toEqual('channel-2')
+                        }
+                        expect(notices[3].message).toEqual('Hello, Channel 2!')
                         expect(notices[3].time).not.toBeUndefined()
                         if (notices[3].time !== undefined) {
                             expect(notices[3].time.length).toBe(24)
                         }
 
-                        expect(notices[4].type).toEqual('channelDescription')
-                        expect(notices[4].nick).toEqual('toto')
-                        if (notices[4].channel !== undefined) {
-                            expect(notices[4].channel.name).toEqual('channel-1')
-                            expect(notices[4].channel.description).toEqual('First channel')
-                        }
+                        expect(notices[4].type).toEqual('privateMessage')
+                        expect(notices[4].sender).toEqual('toto')
+                        expect(notices[4].recipient).toEqual('toto')
+                        expect(notices[4].message).toEqual('Private message')
                         expect(notices[4].time).not.toBeUndefined()
                         if (notices[4].time !== undefined) {
                             expect(notices[4].time.length).toBe(24)
                         }
 
-                        expect(notices[5].type).toEqual('channelKeep')
+                        expect(notices[5].type).toEqual('channelDescription')
                         expect(notices[5].nick).toEqual('toto')
                         if (notices[5].channel !== undefined) {
                             expect(notices[5].channel.name).toEqual('channel-1')
-                            expect(notices[5].channel.keep).toEqual(true)
+                            expect(notices[5].channel.description).toEqual('First channel')
                         }
                         expect(notices[5].time).not.toBeUndefined()
                         if (notices[5].time !== undefined) {
                             expect(notices[5].time.length).toBe(24)
                         }
+
+                        expect(notices[6].type).toEqual('channelKeep')
+                        expect(notices[6].nick).toEqual('toto')
+                        if (notices[6].channel !== undefined) {
+                            expect(notices[6].channel.name).toEqual('channel-1')
+                            expect(notices[6].channel.keep).toEqual(true)
+                        }
+                        expect(notices[6].time).not.toBeUndefined()
+                        if (notices[6].time !== undefined) {
+                            expect(notices[6].time.length).toBe(24)
+                        }
                     }
                 }
-				done()
+                done()
             })
     })
 
     it('releases a channel', function(done) {
         agent.put('/user/' + id + '/channels/channel-1/keep/')
-            .send({ keep: false })
+            .send({
+                keep: false
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -253,7 +275,7 @@ describe('Valid app', function() {
                 expect(res.status).toBe(200)
                 const status = res.body.status
                 expect(status).toBe('Successfully disconnected from the server')
-				done()
+                done()
             })
     })
 

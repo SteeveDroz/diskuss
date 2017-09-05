@@ -2,46 +2,46 @@ const app = require('../server'),
     request = require('supertest')
 
 describe('Multiuser app', function() {
-	const agent = request.agent(app)
+    const agent = request.agent(app)
 
-	let id1, id2, id3
+    let id1, id2, id3, id4, id5
 
-	it('connects the first user', function(done) {
-		agent.post('/users/register/user1/')
-			.end(function(err, res) {
+    it('connects the first user', function(done) {
+        agent.post('/users/register/user1/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
-				id1 = res.body.id
-				expect(id1).not.toBeUndefined()
-				done()
-			})
-	})
+                id1 = res.body.id
+                expect(id1).not.toBeUndefined()
+                done()
+            })
+    })
 
-	it('connects the second user', function(done) {
-		agent.post('/users/register/user2/')
-			.end(function(err, res) {
+    it('connects the second user', function(done) {
+        agent.post('/users/register/user2/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
-				id2 = res.body.id
-				expect(id2).not.toBeUndefined()
-				done()
-			})
-	})
+                id2 = res.body.id
+                expect(id2).not.toBeUndefined()
+                done()
+            })
+    })
 
-	it('asks for the list of users', function(done) {
-		agent.get('/users/')
-			.end(function(err, res) {
+    it('asks for the list of users', function(done) {
+        agent.get('/users/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
-				const users = res.body
-				expect(users).not.toBeUndefined()
-				if (users !== undefined) {
-					expect(users.length).toBe(2)
-					if (users.length == 2) {
-						expect(users[0].nick).toBe('user1')
-						expect(users[1].nick).toBe('user2')
-					}
-				}
-				done()
-			})
-	})
+                const users = res.body
+                expect(users).not.toBeUndefined()
+                if (users !== undefined) {
+                    expect(users.length).toBe(2)
+                    if (users.length == 2) {
+                        expect(users[0].nick).toBe('user1')
+                        expect(users[1].nick).toBe('user2')
+                    }
+                }
+                done()
+            })
+    })
 
     it('asks for the list of channels before joining', function(done) {
         agent.get('/channels/')
@@ -56,27 +56,27 @@ describe('Multiuser app', function() {
             })
     })
 
-	it('makes user1 enter a channel', function(done) {
-		agent.put('/user/' + id1 + '/channels/talk/join/')
-			.end(function(err, res) {
+    it('makes user1 enter a channel', function(done) {
+        agent.put('/user/' + id1 + '/channels/talk/join/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const channel = res.body.channel
-				const users = res.body.users
+                const users = res.body.users
                 expect(channel).not.toBeUndefined()
                 if (channel !== undefined) {
                     expect(channel.name).toBe('talk')
                     expect(channel.owner).toBe('user1')
                 }
-				expect(users).not.toBeUndefined()
-				if (users !== undefined) {
-					expect(users.length).toBe(1)
-					if (users.length == 1) {
-						expect(users[0].nick).toBe('user1')
-					}
-				}
-				done()
-			})
-	})
+                expect(users).not.toBeUndefined()
+                if (users !== undefined) {
+                    expect(users.length).toBe(1)
+                    if (users.length == 1) {
+                        expect(users[0].nick).toBe('user1')
+                    }
+                }
+                done()
+            })
+    })
 
     it('asks for the list of channels after joining', function(done) {
         agent.get('/channels/')
@@ -94,9 +94,9 @@ describe('Multiuser app', function() {
             })
     })
 
-	it('makes user1 enter another channel', function(done) {
-		agent.put('/user/' + id1 + '/channels/chat/join/')
-			.end(function(err, res) {
+    it('makes user1 enter another channel', function(done) {
+        agent.put('/user/' + id1 + '/channels/chat/join/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const channel = res.body.channel
                 expect(channel).not.toBeUndefined()
@@ -104,17 +104,17 @@ describe('Multiuser app', function() {
                     expect(channel.name).toBe('chat')
                     expect(channel.owner).toBe('user1')
                 }
-				const users = res.body.users
-				expect(users).not.toBeUndefined()
-				if (users !== undefined) {
-					expect(users.length).toBe(1)
-					if (users.length == 1) {
-						expect(users[0].nick).toBe('user1')
-					}
-				}
-				done()
-			})
-	})
+                const users = res.body.users
+                expect(users).not.toBeUndefined()
+                if (users !== undefined) {
+                    expect(users.length).toBe(1)
+                    if (users.length == 1) {
+                        expect(users[0].nick).toBe('user1')
+                    }
+                }
+                done()
+            })
+    })
 
     it('asks for the list of channels after joining a second one', function(done) {
         agent.get('/channels/')
@@ -133,22 +133,24 @@ describe('Multiuser app', function() {
             })
     })
 
-	it('makes user1 talk in channel', function(done) {
-		agent.put('/user/' + id1 + '/channels/talk/say')
-			.send({message: 'Message 1'})
-			.end(function(err, res) {
+    it('makes user1 talk in channel', function(done) {
+        agent.put('/user/' + id1 + '/channels/talk/say')
+            .send({
+                message: 'Message 1'
+            })
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
-				const status = res.body.status
-				expect(status).toBe('Message sent correctly')
+                const status = res.body.status
+                expect(status).toBe('Message sent correctly')
                 const message = res.body.message
                 expect(message).toBe('Message 1')
-				done()
-			})
-	})
+                done()
+            })
+    })
 
-	it('makes user2 enter a channel', function(done) {
-		agent.put('/user/' + id2 + '/channels/talk/join/')
-			.end(function(err, res) {
+    it('makes user2 enter a channel', function(done) {
+        agent.put('/user/' + id2 + '/channels/talk/join/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const channel = res.body.channel
                 expect(channel).not.toBeUndefined()
@@ -156,39 +158,43 @@ describe('Multiuser app', function() {
                     expect(channel.name).toBe('talk')
                     expect(channel.owner).toBe('user1')
                 }
-				const users = res.body.users
-				expect(users).not.toBeUndefined()
-				if (users !== undefined) {
-					expect(users.length).toBe(2)
-					if (users.length == 2) {
-						expect(users[0].nick).toBe('user1')
-						expect(users[1].nick).toBe('user2')
-					}
-				}
-				done()
-			})
-	})
+                const users = res.body.users
+                expect(users).not.toBeUndefined()
+                if (users !== undefined) {
+                    expect(users.length).toBe(2)
+                    if (users.length == 2) {
+                        expect(users[0].nick).toBe('user1')
+                        expect(users[1].nick).toBe('user2')
+                    }
+                }
+                done()
+            })
+    })
 
-	it('makes user1 talk in channel again', function(done) {
-		agent.put('/user/' + id1 + '/channels/talk/say/')
-			.send({message: 'Message 2'})
-			.end(function(err, res) {
+    it('makes user1 talk in channel again', function(done) {
+        agent.put('/user/' + id1 + '/channels/talk/say/')
+            .send({
+                message: 'Message 2'
+            })
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
-				const status = res.body.status
-				expect(status).toBe('Message sent correctly')
+                const status = res.body.status
+                expect(status).toBe('Message sent correctly')
                 const message = res.body.message
                 expect(message).toBe('Message 2')
-				done()
-			})
-	})
+                done()
+            })
+    })
 
     it('makes user1 send a private message to user2', function(done) {
         agent.put('/user/' + id1 + '/message/user2/')
-            .send({ message: 'Private message' })
+            .send({
+                message: 'Private message'
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
-				const status = res.body.status
-				expect(status).toBe('Private message sent correctly')
+                const status = res.body.status
+                expect(status).toBe('Private message sent correctly')
                 const message = res.body.message
                 expect(message).toBe('Private message')
                 const recipient = res.body.recipient
@@ -202,7 +208,9 @@ describe('Multiuser app', function() {
 
     it('makes user1 change the channel description', function(done) {
         agent.put('/user/' + id1 + '/channels/talk/description/')
-            .query({ description: 'Talk in there' })
+            .query({
+                description: 'Talk in there'
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -219,7 +227,9 @@ describe('Multiuser app', function() {
 
     it('makes user1 keep a channel', function(done) {
         agent.put('/user/' + id1 + '/channels/talk/keep/')
-            .send({ keep: true })
+            .send({
+                keep: true
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -250,17 +260,17 @@ describe('Multiuser app', function() {
             })
     })
 
-	it('makes user1 check for notices', function(done) {
-		agent.get('/user/' + id1 + '/notices/')
-			.end(function(err, res) {
+    it('makes user1 check for notices', function(done) {
+        agent.get('/user/' + id1 + '/notices/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(8)
-                    if (notices.length == 8) {
-                        expect(notices[0].type).toEqual('channelJoin')
-                        expect(notices[0].nick).toEqual('user1')
+                    expect(notices.length).toEqual(10)
+                    if (notices.length == 10) {
+                        expect(notices[0].type).toEqual('channelCreate')
+                        expect(notices[0].channel).not.toBeUndefined()
                         if (notices[0].channel !== undefined) {
                             expect(notices[0].channel.name).toEqual('talk')
                         }
@@ -272,28 +282,27 @@ describe('Multiuser app', function() {
                         expect(notices[1].type).toEqual('channelJoin')
                         expect(notices[1].nick).toEqual('user1')
                         if (notices[1].channel !== undefined) {
-                            expect(notices[1].channel.name).toEqual('chat')
+                            expect(notices[1].channel.name).toEqual('talk')
                         }
                         expect(notices[1].time).not.toBeUndefined()
                         if (notices[1].time !== undefined) {
                             expect(notices[1].time.length).toBe(24)
                         }
 
-                        expect(notices[2].type).toEqual('channelMessage')
-                        expect(notices[2].nick).toEqual('user1')
-                        if (notices[3].channel !== undefined) {
-                            expect(notices[3].channel.name).toEqual('talk')
+                        expect(notices[2].type).toEqual('channelCreate')
+                        expect(notices[2].channel).not.toBeUndefined()
+                        if (notices[2].channel !== undefined) {
+                            expect(notices[2].channel.name).toEqual('chat')
                         }
-                        expect(notices[2].message).toEqual('Message 1')
                         expect(notices[2].time).not.toBeUndefined()
                         if (notices[2].time !== undefined) {
                             expect(notices[2].time.length).toBe(24)
                         }
 
                         expect(notices[3].type).toEqual('channelJoin')
-                        expect(notices[3].nick).toEqual('user2')
+                        expect(notices[3].nick).toEqual('user1')
                         if (notices[3].channel !== undefined) {
-                            expect(notices[3].channel.name).toEqual('talk')
+                            expect(notices[3].channel.name).toEqual('chat')
                         }
                         expect(notices[3].time).not.toBeUndefined()
                         if (notices[3].time !== undefined) {
@@ -305,7 +314,124 @@ describe('Multiuser app', function() {
                         if (notices[4].channel !== undefined) {
                             expect(notices[4].channel.name).toEqual('talk')
                         }
-                        expect(notices[4].message).toEqual('Message 2')
+                        expect(notices[4].message).toEqual('Message 1')
+                        expect(notices[4].time).not.toBeUndefined()
+                        if (notices[4].time !== undefined) {
+                            expect(notices[4].time.length).toBe(24)
+                        }
+
+                        expect(notices[5].type).toEqual('channelJoin')
+                        expect(notices[5].nick).toEqual('user2')
+                        if (notices[5].channel !== undefined) {
+                            expect(notices[5].channel.name).toEqual('talk')
+                        }
+                        expect(notices[5].time).not.toBeUndefined()
+                        if (notices[5].time !== undefined) {
+                            expect(notices[5].time.length).toBe(24)
+                        }
+
+                        expect(notices[6].type).toEqual('channelMessage')
+                        expect(notices[6].nick).toEqual('user1')
+                        if (notices[6].channel !== undefined) {
+                            expect(notices[6].channel.name).toEqual('talk')
+                        }
+                        expect(notices[6].message).toEqual('Message 2')
+                        expect(notices[6].time).not.toBeUndefined()
+                        if (notices[6].time !== undefined) {
+                            expect(notices[6].time.length).toBe(24)
+                        }
+
+                        expect(notices[7].type).toEqual('channelDescription')
+                        expect(notices[7].nick).toEqual('user1')
+                        if (notices[7].channel !== undefined) {
+                            expect(notices[7].channel.name).toEqual('talk')
+                            expect(notices[7].channel.description).toEqual('Talk in there')
+                        }
+                        expect(notices[7].time).not.toBeUndefined()
+                        if (notices[7].time !== undefined) {
+                            expect(notices[7].time.length).toBe(24)
+                        }
+
+                        expect(notices[8].type).toEqual('channelKeep')
+                        expect(notices[8].nick).toEqual('user1')
+                        if (notices[8].channel !== undefined) {
+                            expect(notices[8].channel.name).toEqual('talk')
+                            expect(notices[8].channel.keep).toEqual(true)
+                        }
+                        expect(notices[8].time).not.toBeUndefined()
+                        if (notices[8].time !== undefined) {
+                            expect(notices[8].time.length).toBe(24)
+                        }
+
+                        expect(notices[9].type).toBe('channelOwner')
+                        expect(notices[9].channel).not.toBeUndefined()
+                        if (notices[9].channel !== undefined) {
+                            expect(notices[9].channel.name).toBe('talk')
+                            expect(notices[9].channel.owner).toBe('user2')
+                        }
+                        expect(notices[9].time).not.toBeUndefined()
+                        if (notices[9].time !== undefined) {
+                            expect(notices[9].time.length).toBe(24)
+                        }
+                    }
+                }
+                done()
+            })
+    })
+
+    it('makes user2 check for notices', function(done) {
+        agent.get('/user/' + id2 + '/notices/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const notices = res.body
+                expect(notices).not.toBeUndefined()
+                if (notices !== undefined) {
+                    expect(notices.length).toEqual(8)
+                    if (notices.length == 8) {
+                        expect(notices[0].type).toEqual('channelCreate')
+                        expect(notices[0].channel).not.toBeUndefined()
+                        if (notices[0].channel !== undefined) {
+                            expect(notices[0].channel.name).toEqual('talk')
+                        }
+                        expect(notices[0].time).not.toBeUndefined()
+                        if (notices[0].time !== undefined) {
+                            expect(notices[0].time.length).toBe(24)
+                        }
+
+                        expect(notices[1].type).toEqual('channelCreate')
+                        expect(notices[1].channel).not.toBeUndefined()
+                        if (notices[1].channel !== undefined) {
+                            expect(notices[1].channel.name).toEqual('chat')
+                        }
+                        expect(notices[1].time).not.toBeUndefined()
+                        if (notices[1].time !== undefined) {
+                            expect(notices[1].time.length).toBe(24)
+                        }
+
+                        expect(notices[2].type).toEqual('channelJoin')
+                        expect(notices[2].nick).toEqual('user2')
+                        if (notices[2].channel !== undefined) {
+                            expect(notices[2].channel.name).toEqual('talk')
+                        }
+                        expect(notices[2].time).not.toBeUndefined()
+                        if (notices[2].time !== undefined) {
+                            expect(notices[2].time.length).toBe(24)
+                        }
+
+                        expect(notices[3].type).toEqual('channelMessage')
+                        expect(notices[3].nick).toEqual('user1')
+                        if (notices[3].channel !== undefined) {
+                            expect(notices[3].channel.name).toEqual('talk')
+                        }
+                        expect(notices[3].message).toEqual('Message 2')
+                        expect(notices[3].time).not.toBeUndefined()
+                        if (notices[3].time !== undefined) {
+                            expect(notices[3].time.length).toBe(24)
+                        }
+
+                        expect(notices[4].type).toBe('privateMessage')
+                        expect(notices[4].sender).toBe('user1')
+                        expect(notices[4].message).toBe('Private message')
                         expect(notices[4].time).not.toBeUndefined()
                         if (notices[4].time !== undefined) {
                             expect(notices[4].time.length).toBe(24)
@@ -332,8 +458,7 @@ describe('Multiuser app', function() {
                         if (notices[6].time !== undefined) {
                             expect(notices[6].time.length).toBe(24)
                         }
-
-                        expect(notices[7].type).toBe('channelOwner')
+                        expect(notices[7].type).toEqual('channelOwner')
                         expect(notices[7].channel).not.toBeUndefined()
                         if (notices[7].channel !== undefined) {
                             expect(notices[7].channel.name).toBe('talk')
@@ -344,117 +469,42 @@ describe('Multiuser app', function() {
                             expect(notices[7].time.length).toBe(24)
                         }
                     }
-				}
-				done()
-			})
-	})
+                }
+                done()
+            })
+    })
 
-	it('makes user2 check for notices', function(done) {
-		agent.get('/user/' + id2 + '/notices/')
-			.end(function(err, res) {
+    it('disconnects user1', function(done) {
+        agent.del('/user/' + id1 + '/disconnect/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
-                const notices = res.body
-                expect(notices).not.toBeUndefined()
-                if (notices !== undefined) {
-                    expect(notices.length).toEqual(6)
-                    if (notices.length == 6) {
-                        expect(notices[0].type).toEqual('channelJoin')
-                        expect(notices[0].nick).toEqual('user2')
-                        if (notices[0].channel !== undefined) {
-                            expect(notices[0].channel.name).toEqual('talk')
-                        }
-                        expect(notices[0].time).not.toBeUndefined()
-                        if (notices[0].time !== undefined) {
-                            expect(notices[0].time.length).toBe(24)
-                        }
+                const status = res.body.status
+                expect(status).toBe('Successfully disconnected from the server')
+                done()
+            })
+    })
 
-                        expect(notices[1].type).toEqual('channelMessage')
-                        expect(notices[1].nick).toEqual('user1')
-                        if (notices[1].channel !== undefined) {
-                            expect(notices[1].channel.name).toEqual('talk')
-                        }
-                        expect(notices[1].message).toEqual('Message 2')
-                        expect(notices[1].time).not.toBeUndefined()
-                        if (notices[1].time !== undefined) {
-                            expect(notices[1].time.length).toBe(24)
-                        }
-
-                        expect(notices[2].type).toBe('privateMessage')
-                        expect(notices[2].sender).toBe('user1')
-                        expect(notices[2].message).toBe('Private message')
-                        expect(notices[2].time).not.toBeUndefined()
-                        if (notices[2].time !== undefined) {
-                            expect(notices[2].time.length).toBe(24)
-                        }
-
-                        expect(notices[3].type).toEqual('channelDescription')
-                        expect(notices[3].nick).toEqual('user1')
-                        if (notices[3].channel !== undefined) {
-                            expect(notices[3].channel.name).toEqual('talk')
-                            expect(notices[3].channel.description).toEqual('Talk in there')
-                        }
-                        expect(notices[3].time).not.toBeUndefined()
-                        if (notices[3].time !== undefined) {
-                            expect(notices[3].time.length).toBe(24)
-                        }
-
-                        expect(notices[4].type).toEqual('channelKeep')
-                        expect(notices[4].nick).toEqual('user1')
-                        if (notices[4].channel !== undefined) {
-                            expect(notices[4].channel.name).toEqual('talk')
-                            expect(notices[4].channel.keep).toEqual(true)
-                        }
-                        expect(notices[4].time).not.toBeUndefined()
-                        if (notices[4].time !== undefined) {
-                            expect(notices[4].time.length).toBe(24)
-                        }
-                        expect(notices[5].type).toEqual('channelOwner')
-                        expect(notices[5].channel).not.toBeUndefined()
-                        if (notices[5].channel !== undefined) {
-                            expect(notices[5].channel.name).toBe('talk')
-                            expect(notices[5].channel.owner).toBe('user2')
-                        }
-                        expect(notices[5].time).not.toBeUndefined()
-                        if (notices[5].time !== undefined) {
-                            expect(notices[5].time.length).toBe(24)
-                        }
-                    }
-				}
-				done()
-			})
-	})
-
-	it('disconnects user1', function(done) {
-		agent.del('/user/' + id1 + '/disconnect/')
-			.end(function(err, res) {
-                expect(res.status).toBe(200)
-				const status = res.body.status
-				expect(status).toBe('Successfully disconnected from the server')
-				done()
-			})
-	})
-
-	it('makes user2 check for notices again', function(done) {
-		agent.get('/user/' + id2 + '/notices/')
-			.end(function(err, res) {
+    it('makes user2 check for notices again', function(done) {
+        agent.get('/user/' + id2 + '/notices/')
+            .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 expect(notices.length).toEqual(1)
-				if (notices.length == 1) {
-					expect(notices[0].type).toEqual('channelLeave')
-					expect(notices[0].nick).toEqual('user1')
-                        if (notices[0].channel !== undefined) {
-                            expect(notices[0].channel.name).toEqual('talk')
-                        }
+                if (notices.length == 1) {
+                    expect(notices[0].type).toEqual('channelLeave')
+                    expect(notices[0].nick).toEqual('user1')
+                    if (notices[0].channel !== undefined) {
+                        expect(notices[0].channel.name).toEqual('talk')
+                    }
                     expect(notices[0].time).not.toBeUndefined()
                     if (notices[0].time !== undefined) {
                         expect(notices[0].time.length).toBe(24)
                     }
-				}
-            done()
-			})
-	})
+                }
+                done()
+            })
+    })
 
     it('connects user3', function(done) {
         agent.post('/users/register/user3/')
@@ -486,7 +536,9 @@ describe('Multiuser app', function() {
 
     it('tries to make user3 keep the channel', function(done) {
         agent.put('/user/' + id3 + '/channels/talk/keep/')
-            .send({ keep: true })
+            .send({
+                keep: true
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(404)
                 const error = res.body.error
@@ -496,8 +548,8 @@ describe('Multiuser app', function() {
     })
 
     it('waits for 6 seconds', function(done) {
-        setTimeout(done, 6000 /* 6 seconds */)
-    }, 10000 /* Jasmine timeout */)
+        setTimeout(done, 6000 /* 6 seconds */ )
+    }, 10000 /* Jasmine timeout */ )
 
     it('makes user2 check for notices after 6 seconds', function(done) {
         agent.get('/user/' + id2 + '/notices/')
@@ -553,7 +605,9 @@ describe('Multiuser app', function() {
 
     it('makes user2 release a channel', function(done) {
         agent.put('/user/' + id2 + '/channels/talk/keep/')
-            .send({ keep: false })
+            .send({
+                keep: false
+            })
             .end(function(err, res) {
                 expect(res.status).toBe(200)
                 const status = res.body.status
@@ -573,6 +627,176 @@ describe('Multiuser app', function() {
                 expect(res.status).toBe(200)
                 const status = res.body.status
                 expect(status).toBe('Successfully disconnected from the server')
+                done()
+            })
+    })
+
+    it('connects user 4', function(done) {
+        agent.post('/users/register/user4/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                id4 = res.body.id
+                expect(id4).not.toBeUndefined()
+                done()
+            })
+    })
+
+    it('connects user 5', function(done) {
+        agent.post('/users/register/user5/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                id5 = res.body.id
+                expect(id5).not.toBeUndefined()
+                done()
+            })
+    })
+
+    it('makes user4 enter a channel', function(done) {
+        agent.put('/user/' + id4 + '/channels/kick-ban/join/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                done()
+            })
+    })
+
+    it('makes user5 enter a channel', function(done) {
+        agent.put('/user/' + id5 + '/channels/kick-ban/join/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const users = res.body.users
+                expect(users).not.toBeUndefined()
+                if (users !== undefined) {
+                    expect(users.length).toBe(2)
+                    if (users.length == 2) {
+                        expect(users[0].nick).toBe('user4')
+                        expect(users[1].nick).toBe('user5')
+                    }
+                }
+                done()
+            })
+    })
+
+    it('empties user4 notices', function(done) {
+        agent.get('/user/' + id4 + '/notices/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                done()
+            })
+    })
+
+    it('makes user4 kick user5 out of the channel', function(done) {
+        agent.delete('/user/' + id4 + '/channels/kick-ban/kick/user5')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('User successfully kicked')
+                const user = res.body.user
+                expect(user).not.toBeUndefined()
+                if (user !== undefined) {
+                    expect(user.nick).toBe('user5')
+                }
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('kick-ban')
+                }
+                done()
+            })
+    })
+
+    it('makes user4 ban user5 from the channel', function(done) {
+        agent.post('/user/' + id4 + '/channels/kick-ban/ban/user5/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('User successfully banned')
+                const user = res.body.user
+                expect(user).not.toBeUndefined()
+                if (user !== undefined) {
+                    expect(user.nick).toBe('user5')
+                }
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('kick-ban')
+                }
+                done()
+            })
+    })
+
+    it('makes user5 try to join the channel after a ban', function(done) {
+        agent.put('/user/' + id5 + '/channels/kick-ban/join')
+            .end(function(err, res) {
+                expect(res.status).toBe(404)
+                const message = res.body
+                expect(message).not.toBeUndefined()
+                if (message !== undefined) {
+                    expect(message.error).toBe('Unable to join, you have been banned')
+                }
+                done()
+            })
+    })
+
+    it('makes user4 unban user5 from the channel', function(done) {
+        agent.delete('/user/' + id4 + '/channels/kick-ban/unban/user5/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const status = res.body.status
+                expect(status).toBe('User successfully unbanned')
+                const user = res.body.user
+                expect(user).not.toBeUndefined()
+                if (user !== undefined) {
+                    expect(user.nick).toBe('user5')
+                }
+                const channel = res.body.channel
+                expect(channel).not.toBeUndefined()
+                if (channel !== undefined) {
+                    expect(channel.name).toBe('kick-ban')
+                }
+                done()
+            })
+    })
+
+    it('makes user4 check for notices', function(done) {
+        agent.get('/user/' + id4 + '/notices/')
+            .end(function(err, res) {
+                expect(res.status).toBe(200)
+                const notices = res.body
+                expect(notices).not.toBeUndefined()
+                if (notices !== undefined) {
+                    expect(notices.length).toEqual(3)
+                    if (notices.length == 3) {
+                        expect(notices[0].type).toEqual('userKick')
+                        expect(notices[0].nick).toEqual('user5')
+                        if (notices[0].channel !== undefined) {
+                            expect(notices[0].channel.name).toEqual('kick-ban')
+                        }
+                        expect(notices[0].time).not.toBeUndefined()
+                        if (notices[0].time !== undefined) {
+                            expect(notices[0].time.length).toBe(24)
+                        }
+
+                        expect(notices[1].type).toEqual('userBan')
+                        expect(notices[1].nick).toEqual('user5')
+                        if (notices[1].channel !== undefined) {
+                            expect(notices[1].channel.name).toEqual('kick-ban')
+                        }
+                        expect(notices[1].time).not.toBeUndefined()
+                        if (notices[1].time !== undefined) {
+                            expect(notices[1].time.length).toBe(24)
+                        }
+
+                        expect(notices[2].type).toEqual('userUnban')
+                        expect(notices[2].nick).toEqual('user5')
+                        if (notices[2].channel !== undefined) {
+                            expect(notices[2].channel.name).toEqual('kick-ban')
+                        }
+                        expect(notices[2].time).not.toBeUndefined()
+                        if (notices[2].time !== undefined) {
+                            expect(notices[2].time.length).toBe(24)
+                        }
+                    }
+                }
                 done()
             })
     })

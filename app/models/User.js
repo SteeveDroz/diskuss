@@ -12,24 +12,24 @@ class User {
     }
 
     static guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1)
-      }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1)
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
     }
 
     static copy(other) {
         const user = new User(other.nick)
         user.id = other.id
         user.channels = {}
-        for(let name in other.channels) {
+        for (let name in other.channels) {
             user.channels[name] = other.channels[name]
         }
         return user
     }
-    
+
     isInChannel(channel) {
         return this.channels.indexOf(channel) >= 0
     }
@@ -41,7 +41,7 @@ class User {
         publicUser.lastSeen = undefined
         return publicUser
     }
-    
+
     update() {
         this.lastSeen = Date.now()
     }
