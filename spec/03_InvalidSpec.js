@@ -208,9 +208,10 @@ describe('Invalid app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toBe(1)
-                    if (notices.length == 1) {
-                        expect(notices[0].type).toBe('channelJoin')
+                    expect(notices.length).toBe(2)
+                    if (notices.length == 2) {
+                        expect(notices[0].type).toBe('channelCreate')
+                        expect(notices[1].type).toBe('channelJoin')
                     }
                 }
                 done()

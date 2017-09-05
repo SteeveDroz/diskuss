@@ -169,10 +169,9 @@ describe('Valid app', function() {
                 const notices = res.body
                 expect(notices).not.toBeUndefined()
                 if (notices !== undefined) {
-                    expect(notices.length).toEqual(6)
-                    if (notices.length == 6) {
-                        expect(notices[0].type).toEqual('channelJoin')
-                        expect(notices[0].nick).toEqual('toto')
+                    expect(notices.length).toEqual(7)
+                    if (notices.length == 7) {
+                        expect(notices[0].type).toEqual('channelCreate')
                         expect(notices[0].channel).not.toBeUndefined()
                         if (notices[0].channel !== undefined) {
                             expect(notices[0].channel.name).toEqual('channel-1')
@@ -182,12 +181,12 @@ describe('Valid app', function() {
                             expect(notices[0].time.length).toBe(24)
                         }
 
-                        expect(notices[1].type).toEqual('channelMessage')
+                        expect(notices[1].type).toEqual('channelJoin')
                         expect(notices[1].nick).toEqual('toto')
+                        expect(notices[1].channel).not.toBeUndefined()
                         if (notices[1].channel !== undefined) {
                             expect(notices[1].channel.name).toEqual('channel-1')
                         }
-                        expect(notices[1].message).toEqual('Hello, Channel 1!')
                         expect(notices[1].time).not.toBeUndefined()
                         if (notices[1].time !== undefined) {
                             expect(notices[1].time.length).toBe(24)
@@ -196,43 +195,54 @@ describe('Valid app', function() {
                         expect(notices[2].type).toEqual('channelMessage')
                         expect(notices[2].nick).toEqual('toto')
                         if (notices[2].channel !== undefined) {
-                            expect(notices[2].channel.name).toEqual('channel-2')
+                            expect(notices[2].channel.name).toEqual('channel-1')
                         }
-                        expect(notices[2].message).toEqual('Hello, Channel 2!')
+                        expect(notices[2].message).toEqual('Hello, Channel 1!')
                         expect(notices[2].time).not.toBeUndefined()
                         if (notices[2].time !== undefined) {
                             expect(notices[2].time.length).toBe(24)
                         }
 
-                        expect(notices[3].type).toEqual('privateMessage')
-                        expect(notices[3].sender).toEqual('toto')
-                        expect(notices[3].recipient).toEqual('toto')
-                        expect(notices[3].message).toEqual('Private message')
+                        expect(notices[3].type).toEqual('channelMessage')
+                        expect(notices[3].nick).toEqual('toto')
+                        if (notices[3].channel !== undefined) {
+                            expect(notices[3].channel.name).toEqual('channel-2')
+                        }
+                        expect(notices[3].message).toEqual('Hello, Channel 2!')
                         expect(notices[3].time).not.toBeUndefined()
                         if (notices[3].time !== undefined) {
                             expect(notices[3].time.length).toBe(24)
                         }
 
-                        expect(notices[4].type).toEqual('channelDescription')
-                        expect(notices[4].nick).toEqual('toto')
-                        if (notices[4].channel !== undefined) {
-                            expect(notices[4].channel.name).toEqual('channel-1')
-                            expect(notices[4].channel.description).toEqual('First channel')
-                        }
+                        expect(notices[4].type).toEqual('privateMessage')
+                        expect(notices[4].sender).toEqual('toto')
+                        expect(notices[4].recipient).toEqual('toto')
+                        expect(notices[4].message).toEqual('Private message')
                         expect(notices[4].time).not.toBeUndefined()
                         if (notices[4].time !== undefined) {
                             expect(notices[4].time.length).toBe(24)
                         }
 
-                        expect(notices[5].type).toEqual('channelKeep')
+                        expect(notices[5].type).toEqual('channelDescription')
                         expect(notices[5].nick).toEqual('toto')
                         if (notices[5].channel !== undefined) {
                             expect(notices[5].channel.name).toEqual('channel-1')
-                            expect(notices[5].channel.keep).toEqual(true)
+                            expect(notices[5].channel.description).toEqual('First channel')
                         }
                         expect(notices[5].time).not.toBeUndefined()
                         if (notices[5].time !== undefined) {
                             expect(notices[5].time.length).toBe(24)
+                        }
+
+                        expect(notices[6].type).toEqual('channelKeep')
+                        expect(notices[6].nick).toEqual('toto')
+                        if (notices[6].channel !== undefined) {
+                            expect(notices[6].channel.name).toEqual('channel-1')
+                            expect(notices[6].channel.keep).toEqual(true)
+                        }
+                        expect(notices[6].time).not.toBeUndefined()
+                        if (notices[6].time !== undefined) {
+                            expect(notices[6].time.length).toBe(24)
                         }
                     }
                 }

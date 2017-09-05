@@ -10,6 +10,7 @@ The change log is more taken care of:
 - The "dev" chapter has been added.
 
 Users can now be kicked out of channels by owner.
+Users can also be banned and unbanned by owner.
 
 ## [v1.5.0]: Information update
 
