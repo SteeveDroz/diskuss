@@ -11,6 +11,7 @@ The change log is more taken care of:
 
 Users can now be kicked out of channels by owner.
 Users can also be banned and unbanned by owner.
+Users connected to the server all receive a notice when a new channel is created.
 
 ## [v1.5.0]: Information update
 
